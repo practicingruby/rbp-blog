@@ -102,14 +102,15 @@ div#wrapper {
 
 div#header {
   border-bottom:1px solid #DDDDDD;
-  height:120px;
+  height:90px;
   margin:0 auto;
   padding:0;
   position:relative;
   width:900px;
 }
 
-div#header h2.tagline { margin:0; font-size:90%; }
+div#header h1 { margin-bottom: 0.2em; }
+div#header h2.tagline { margin:0; font-size:100%; }
 
 div#content {
   margin:0 auto;
