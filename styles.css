@@ -122,13 +122,13 @@ div#main {
 
 div#navbar {
   float:right;
-  margin-left:20px;
+  margin:10px 0 0 20px;
   width:300px;
 }
 
 div#navbar div#about {
  font-size: 130%;
- margin:10px 0 0; 
+ margin:1em 0 0; 
 }
 
 div#footer {
