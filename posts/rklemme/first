@@ -7,7 +7,7 @@ We slowly add line by line.
 
 * Try out *all* the character _modifiers_.
 * Insert some links to "interesting stuff":http://www.shibumi.org/eoti.htm
-* E = mc^2^
+* E = mc ^2^
 * Provide a Ruby listing
 
 h3. My first Ruby program
@@ -18,4 +18,5 @@ This program will demonstrate the sheer beauty of Ruby and my stupidness
     puts "Jelly world!"
   end
 </code></pre>
+
 And this is the last comment on the page.
