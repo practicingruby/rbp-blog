@@ -117,7 +117,7 @@ div#content {
 div#main {
   float:left;
   margin:10px 0 0;
-  width:900px;
+  width:580px;
 }
 
 div#navbar {
@@ -131,3 +131,11 @@ div#footer {
   width:100%;
 }
 
+div#meta {
+  border-top:1px solid #DDDDDD;
+  color:#999999;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:90%;
+  margin:0 auto;
+  width:900px;
+}
