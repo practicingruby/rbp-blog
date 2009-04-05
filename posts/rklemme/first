@@ -1,0 +1,18 @@
+=title Textile Finger Training
+=description This serves the sole purpose to dust off my rusty textile knowledge
+=entry
+*Now* we're cooking!  Things that I need to do:
+* Try out *all* the character _modifiers_.
+* Insert some links to "interesting stuff":http://www.shibumi.org/eoti.htm
+* E = mc^2^
+* Provide a Ruby listing
+
+h3. My first Ruby program
+
+This program will demonstrate the sheer beaty of Ruby and my stupidness
+
+ 5.times do |i|
+   puts "Jelly world!"
+ end
+
+And this is the last comment on the page.
