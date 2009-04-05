@@ -3,10 +3,25 @@
     <link href="/styles.css", rel="stylesheet", type="text/css">
   </head>
   <body>
-    <h1><a href="http://blog.rubybestpractices.com">Ruby Best Practices</a></h1>
-    <h2>Increase Your Productivity -- Write Better Code</h2>
-    <a href="/about">About this blog</a>
-    <%= yield %>
-    Replace this footer
+    <div class="wrapper">
+      <div id="header">
+        <h1><a href="http://blog.rubybestpractices.com">Ruby Best Practices</a></h1>
+        <h2>Increase Your Productivity -- Write Better Code</h2>
+     </div>
+     <div id="main">
+       <div id="content">
+        <%= yield %>
+      </div>
+
+      <div id="navbar">
+        <div><a href="/about">About this blog</a></div>
+      </div>
+
+    </div>
+
+    <div id="footer">
+      <p>Footer text goes here</p>
+    </div>
+  </div>
   </body>
 </html>

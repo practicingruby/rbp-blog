@@ -1,5 +1,133 @@
-body { 
-  margin-left: 12%;
-  margin-top: 5%;
-  width: 900px;
+html, body, form, fieldset {
+  -x-system-font:none;
+  font-family:Georgia,"Times New Roman",Times,serif;
+  font-size:100%;
+  font-size-adjust:none;
+  font-stretch:normal;
+  font-style:normal;
+  font-variant:normal;
+  font-weight:normal;
+  line-height:150%;
+  margin:0;
+  padding:0;
 }
+h1, h2, h3, h4, h5, h6, p, pre, blockquote, ul, ol, dl, address {
+  margin:1em 0;
+  padding:0;
+}
+li, dd, blockquote {
+  margin-left:1em;
+}
+form label {
+  cursor:pointer;
+}
+fieldset {
+  border:medium none;
+}
+input, select, textarea {
+  font-size:100%;
+  padding:2px;
+}
+textarea {
+  font-size:130%;
+}
+
+body {
+  color:#333333;
+  font-size:80%;
+}
+
+a, a:link {
+  color:#333333;
+}
+
+a:visited {
+  color:#666666;
+}
+
+a:hover {
+  color:#000000;
+  text-decoration:none;
+}
+
+a img {
+  border:0 none;
+}
+
+h1, h2, h3, h4 {
+  font-weight:normal;
+}
+
+h2 {
+  font-size:150%;
+}
+
+h3 {
+  font-size:130%;
+}
+
+h4 {
+  font-size:100%;
+  font-weight:bold;
+}
+
+h5 {
+  font-size:90%;
+}
+
+h6 {
+  font-size:80%;
+  font-weight:normal;
+  text-transform:uppercase;
+}
+
+code, kbd {
+  font-size:120%;
+}
+
+hr {
+  background-color:#BFDCA0;
+  border:1px solid #BFDCA0;
+  height:1px;
+}
+
+dt {
+  font-weight:bold;
+}
+
+/* layout */
+div#wrapper {
+  background-color:#FFFFFF;
+}
+
+div#header {
+  border-bottom:1px solid #DDDDDD;
+  height:120px;
+  margin:0 auto;
+  padding:0;
+  position:relative;
+  width:900px;
+}
+
+div#content {
+  margin:0 auto;
+  width:900px;
+}
+
+div#main {
+  float:left;
+  margin:10px 0 0;
+  width:900px;
+}
+
+div#navbar {
+  float:right;
+  margin-left:20px;
+  width:300px;
+}
+
+div#footer {
+  float:left;
+  width:100%;
+}
+
