@@ -13,9 +13,9 @@ We slowly add line by line.
 h3. My first Ruby program
 
 This program will demonstrate the sheer beauty of Ruby and my stupidness
-<code>
- 5.times do
-   puts "Jelly world!"
- end
-</code>
+<pre><code>
+  5.times do
+    puts "Jelly world!"
+  end
+</code></pre>
 And this is the last comment on the page.
