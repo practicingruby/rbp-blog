@@ -126,6 +126,11 @@ div#navbar {
   width:300px;
 }
 
+div#navbar div#about {
+ font-size: 130%;
+ margin:10px 0 0; 
+}
+
 div#footer {
   float:left;
   width:100%;
