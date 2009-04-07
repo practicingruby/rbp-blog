@@ -13,9 +13,10 @@ We slowly add line by line.
 h3. My first Ruby program
 
 This program will demonstrate the sheer beauty of Ruby and my stupidness
-<pre><code>
+<pre style="background-color:#F0F0F0;"><code>
   5.times do
     puts "Jelly world!"
   end
+
 </code></pre>
 And this is the last comment on the page.
