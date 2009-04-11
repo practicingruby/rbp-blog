@@ -2,9 +2,12 @@ title: Ruby Best Practices
 domain: blog.rubybestpractices.com
 description: Increase your productivity -- Write Better Code
 authors:
-  gregory: Gregory Brown
-  JEG2: James Edward Gray II
-  jia: Jia Wu
+  gregory: 
+    name: Gregory Brown
+    email: gregory.t.brown@gmail.com
   jamesbritt: James Britt
-  laktek: Lakshan Perera
-  rklemme: Robert Klemme
+    name: James Britt
+    email: james.britt@gmail.com
+  rklemme: 
+    name: Robert Klemme
+    email: shortcutter@gmail.com
