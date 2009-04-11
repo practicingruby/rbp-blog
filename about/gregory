@@ -9,7 +9,7 @@ Gregory Brown is the author of <a href="http://rubybestpractices.com">Ruby Best 
 h3. Upcoming Events
 
 * Speaking at GoRuCo: May 30th, 2009
-* RBP generally available for purchase: June 15th
+* RBP generally available for purchase: June 15th, 2009
 
 <div align="right">
 "All posts by Gregory":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
