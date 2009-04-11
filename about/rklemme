@@ -12,11 +12,11 @@ I live and work in Germany. I am with a medium sized company that creates (and s
 
 <p>
 My primary development language is Java and I do a lot SQL and PL/SQL development for those parts of our software that deal with Oracle databases. I am using Ruby on a daily basis for different tasks, mostly for
-<ul>
-<li>Development tools (script based analysis and manipulation of source code, automation of version control system tasks etc.),</li>
-<li>Analysis of system behavior (log file based performance analysis, bug investigation etc.),</li>
-<li>Experimenting (especially finding solutions for interesting problems posted to <a href="http://blade.nagaokaut.ac.jp/ruby/ruby-talk/index.shtml">ruby-talk</a>).</li>
-</ul>
+
+* Development tools (script based analysis and manipulation of source code, automation of version control system tasks etc.),
+* Analysis of system behavior (log file based performance analysis, bug investigation etc.),
+* Experimenting (especially finding solutions for interesting problems posted to <a href="http://blade.nagaokaut.ac.jp/ruby/ruby-talk/index.shtml">ruby-talk</a>).
+
 When I am writing code (not just Ruby) I try to make it well structured, clear and efficient. This is what I will try to convey in <a href="../posts/rklemme/">my blog articles</a>. Suggestions for improvements are welcome!
 </p>
 
