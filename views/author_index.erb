@@ -1,4 +1,4 @@
-<h1> <a href="<%= @author.bio_uri %>" ></a> <%= @author.name %>'s Posts ( <a href = "<%= @author.feed_uri %>" >feed</a>) </h1>
+<h1> <a href="<%= @author.bio_uri %>" ><%= @author.name %></a>'s Posts ( <a href = "<%= @author.feed_uri %>" >feed</a>) </h1>
 
 <% @entries.each do |e| %>
 <h3><%= e.title %></h3>
