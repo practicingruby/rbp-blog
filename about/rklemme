@@ -1,31 +1,26 @@
-<h2>Robert Klemme</h2>
+<div style="width: 100px; float: left;">
+!<%= @author.gravatar %>!
+</div>
+
+<div style="margin-left: 100px;">
+
+<h3>Robert Klemme</h3>
 
 <p>
-I have a degree in computer science (with some sprinkles of philosophy) and
-live and work in Germany, Europe.  I work as a senior software engineer for a
-medium sized company that creates
-(and sells!) billing systems for telephone companies. These systems are amazingly complex beasts
-as they have a lot connections to other systems, databases, telephone network software
-and need real time as well as mass data processing capabilities.
-In my work I cover the
-whole range of software engineering tasks from design to trouble shooting.
+I live and work in Germany. I am with a medium sized company that creates (and sells!) billing systems for telephone companies. These systems are amazingly complex beasts as they have a lot connections to other systems, databases, telephone network software and need real time as well as mass data processing capabilities. In my work I cover the whole range of software engineering tasks from design to trouble shooting.
 </p>
 
 <p>
-My primary development language is Java and I do a lot SQL and PL/SQL development
-for those parts of our software that deal with Oracle databases. I am using Ruby
-on a daily basis for different tasks, mostly for
-
+My primary development language is Java and I do a lot SQL and PL/SQL development for those parts of our software that deal with Oracle databases. I am using Ruby on a daily basis for different tasks, mostly for
 <ul>
-<li>Development tools (script based analysis and manipulation of source code,
-automation of version control system tasks etc.),</li>
-<li>Analysis of system behavior (log file based performance analysis,
-bug investigation etc.),</li>
-<li>Experimenting (especially finding solutions for interesting problems posted
-to <a href="http://blade.nagaokaut.ac.jp/ruby/ruby-talk/index.shtml">ruby-talk</a>).</li>
+<li>Development tools (script based analysis and manipulation of source code, automation of version control system tasks etc.),</li>
+<li>Analysis of system behavior (log file based performance analysis, bug investigation etc.),</li>
+<li>Experimenting (especially finding solutions for interesting problems posted to <a href="http://blade.nagaokaut.ac.jp/ruby/ruby-talk/index.shtml">ruby-talk</a>).</li>
 </ul>
-
-When I am writing code (not just Ruby) I try to make it well structured, clear and efficient.
-This is what I will try to convey in <a href="../posts/rklemme/">my blog articles</a>.
-Suggestions for improvements are welcome!
+When I am writing code (not just Ruby) I try to make it well structured, clear and efficient. This is what I will try to convey in <a href="../posts/rklemme/">my blog articles</a>. Suggestions for improvements are welcome!
 </p>
+
+<div align="right">
+"All posts by Robert":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
+</div>
+</div>
