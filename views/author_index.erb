@@ -1,5 +1,4 @@
-<h1> <a href = "/about/<%= @author%>.html" ></a><%= Korma::Blog.author_names[@author] %>'s Posts ( <a href = "/feed/<%= @author %>.xml" >feed</a>) </h1>
-
+<h1> <a href="<%= @author.bio %>" ></a> <%= @author.name %>'s Posts ( <a href = "<%= @author.feed %>" >feed</a>) </h1>
 
 <% @entries.each do |e| %>
 <h3><%= e.title %></h3>
