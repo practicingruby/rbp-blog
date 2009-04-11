@@ -21,6 +21,7 @@
           <% Korma::Blog.authors.to_a[0..3].each do |_,a| %>
             <a href="<%= a.index_uri %>"><img src="<%= a.gravatar(40) %>"></a>
           <% end %>
+          <br/>
           <% Korma::Blog.authors.to_a[4..-1].each do |_,a| %>
             <a href="<%= a.index_uri %>"><img src="<%= a.gravatar(40) %>"></a>
           <% end %>
