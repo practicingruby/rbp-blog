@@ -1,3 +1,13 @@
-<h2>About RBP Blog</h2>
+<h2>About the "Ruby Best Practices" Blog</h2>
 
-Coming soon!
+This blog was initially organized by <a href="/about/gregory.html">Gregory Brown</a> as a complementary resource to the <a href="http://rubybestpractices.com">O'Reilly book</a> of the same name.  The goal was to put together a small group of highly motivated Rubyists to provide excellent technical content for the community.
+
+With <a href="/about/jamesbritt.html">James Britt</a>, <a href="/about/wyhaines.html">Kirk Haines</a>, <a href="/about/rklemme.html">Robert Klemme</a>, <a href="/about/jm.html">Jeremy McAnally</a>, <a href="/about/seanohalpin.html">Sean O'Halpin</a>, <a href="/about/judofyr.html">Magnus Holm</a> and <a href="/about/laktek.html">Lakshan Perera</a> rounding out the team, it's safe to say we have that goal well covered.
+
+The focus here tends to be a bit code heavy with some emphasis on high level design.  The contributors hope to show idiomatic Ruby in practice, while preserving the necessary context and reasoning to help you understand why it is interesting. This way, our recommendations come straight from the trenches rather than some detached ivory tower.
+
+We hope this blog is fun, educational, and valuable to our readers.  We look forward to your discussions, and hope that you'll keep things civil and smart.  Our group is one that's made up of folks who know what MINASWAN is, and we hope to attract readers who respond in kind.
+
+If you've been looking for a no-fluff, just stuff Ruby resource that will help you improve your craft, you've found it.  Please enjoy, and feel free to let us know what you think.
+
+<i>- The RBP Bloggers</i>
