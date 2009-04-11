@@ -17,7 +17,10 @@
         <div id="about">
           <p>About: <a href="/about">blog</a> |
           <a href="http://rubybestpractices.com">book</a> |
-          <a href="">contributing</a>
+          <a href="">contributing</a></p>
+          <% Korma::Blog.authors.each do |a| %>
+            <a href="<%= a.index_uri %>"><img src="<%= a.gravatar(25) %>"></a>
+          <% end %>
         </div>
       </div>
 
