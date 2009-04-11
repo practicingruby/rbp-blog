@@ -15,9 +15,18 @@
 
       <div id="navbar">
         <div id="about">
+          <div align="center">
+          <% Korma::Blog.authors.to_a[0..3].each do |_,a| %>
+            <a href="<%= a.index_uri %>"><img src="<%= a.gravatar(40) %>"></a>
+          <% end %>
+          <br/>
+          <% Korma::Blog.authors.to_a[4..-1].each do |_,a| %>
+            <a href="<%= a.index_uri %>"><img src="<%= a.gravatar(40) %>"></a>
+          <% end %>
+          </div>
           <p>About: <a href="/about">blog</a> |
           <a href="http://rubybestpractices.com">book</a> |
-          <a href="">contributing<a>
+          <a href="">contributing</a></p>
         </div>
       </div>
 
@@ -25,7 +34,9 @@
 
     <div id="footer">
       <div id="meta">
-        <p>Footer text goes here</p>
+        <p>All content is under Copyright (C) 2009 by the individual authors of this blog and is hereby released under the <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-Noncommercial-Share Alike 3.0 Unported</a> license.<br/>If you have any questions, please contact the author of the material you are interested in using.</p>
+
+        <p>If you enjoy reading this blog, you might also like to read the <a href="http://rubybestpractices.com">Ruby Best Practices</a> book, by Gregory Brown.</p>
       </div>
     </div>
   </div>
