@@ -15,9 +15,6 @@
 
       <div id="navbar">
         <div id="about">
-          <p>About: <a href="/about">blog</a> |
-          <a href="http://rubybestpractices.com">book</a> |
-          <a href="">contributing</a></p>
           <div align="center">
           <% Korma::Blog.authors.to_a[0..3].each do |_,a| %>
             <a href="<%= a.index_uri %>"><img src="<%= a.gravatar(40) %>"></a>
@@ -27,6 +24,9 @@
             <a href="<%= a.index_uri %>"><img src="<%= a.gravatar(40) %>"></a>
           <% end %>
           </div>
+          <p>About: <a href="/about">blog</a> |
+          <a href="http://rubybestpractices.com">book</a> |
+          <a href="">contributing</a></p>
         </div>
       </div>
 
