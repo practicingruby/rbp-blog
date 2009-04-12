@@ -1,7 +1,7 @@
 =title Using Blocks for Robustness
 =description One way to look at Ruby's blocks is as anonymous functions and one of the uses of them is to make your code more robust.
 =entry
-Ruby's blocks can be used for many purposes - in fact, they might well be the most used features of the language. Today we will start looking at a frequent idiom, analyze its implications for robustness and demonstrate how blocks can greatly improve it.
+Ruby's blocks can be used for many purposes -- in fact, they might well be the most used features of the language. Today we will start looking at a frequent idiom, analyze its implications for robustness and demonstrate how blocks can greatly improve it.
 
 h3. Robustness
 
@@ -90,10 +90,10 @@ So, whenever you do file IO in a Ruby program, remember you can use
 * the block form of <tt>File.open</tt> or
 * <tt>File.foreach</tt>
 
-to make your code more robust without really paying a price.
+to make your code more robust without paying a significant price.
 
-You can even resort to <tt>File.readlines</tt> if you have to read the whole file into memory and at least save a bit of typing.
+You can even resort to <tt>File.readlines</tt> if you have to read the whole file into memory and at least save a bit of typing.  If you make it a habit to always use these idioms chances are that you'll save a lot file IO related bug hunting in the future.
 
-Next time we'll look into how to create a method like <tt>File.open</tt> which uses a block to ensure automatic reasource deallocation.
+Next time I will look into how to create a method like <tt>File.open</tt> which uses a block to ensure automatic resource deallocation.
 
 fn1. Here is a "definition of robust":http://www.linfo.org/robust.html and a "Wikipedia Article about Robustness Principle":http://en.wikipedia.org/wiki/Robustness_Principle.
