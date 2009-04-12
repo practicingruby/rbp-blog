@@ -6,11 +6,7 @@
 
 h3. Gregory Brown
 
-I'm the author of the O'Reilly book <a href="http://rubybestpractices.com">Ruby
-Best Practices</a> and a fairly crunchy person when it comes down to it. I took off half a year in 2008 to work on the PDF generation library
-"Prawn":http://prawn.majesticseacreature.com, supported by the "kindness ofthe
-Ruby community":http://majesticseacreature.com/mendicant. I live in New Haven,
-CT with my girlfriend, some small animals, and a bamboo plant that seems to live without water.
+I'm the author of the O'Reilly book <a href="http://rubybestpractices.com">Ruby Best Practices</a> and a fairly crunchy person when it comes down to it. I took off half a year in 2008 to work on the PDF generation library "Prawn":http://prawn.majesticseacreature.com, supported by the "kindness ofthe Ruby community":http://majesticseacreature.com/mendicant. I live in New Haven, CT with my girlfriend, some small animals, and a bamboo plant that seems to live without water.
 
 h3. Upcoming Events
 
@@ -21,7 +17,7 @@ h3. Contact
 
 I can be found on Twitter as "@rubypractices":http://twitter.com/rubypractices and "@seacreature":http://twitter.com/seacreature .
 
-I also runsthe "Majestic Sea Creature":http://majesticseacreature.com blog, and if you're really interested in stalking me, my non-technical writings are at "Meta-Metta":http://metametta.blogspot.com, which I swear I'll eventually dust off.
+I also run the "Majestic Sea Creature":http://majesticseacreature.com blog, and if you're really interested in stalking me, my non-technical writings are at "Meta-Metta":http://metametta.blogspot.com, which I swear I'll eventually dust off.
 
 <div align="right">
 "All posts by Gregory":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
