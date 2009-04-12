@@ -2,3 +2,97 @@
 =description One way to look at Ruby's blocks is as anonymous functions and one of the uses of them is to make your code more robust.
 =entry
 Ruby's blocks can be used for many purposes - in fact, they might well be the most used features of the language. Today we will start looking at a frequent idiom, analyze its implications and demonstrate how blocks can greatly improve it.
+
+h2. A common file handling idiom - and its consequences
+
+When you read through ruby-talk you will find code that looks like "this":http://groups.google.com/group/comp.lang.ruby/msg/168977b073d02ad7 (I just did some minimal adjustments to formatting and corrected obvious errors):
+
+<pre><code>
+  while running
+    sleep 10
+
+    # read file into an array
+    f = File.open("mylogfile.log")
+    saved = File.open("archive.log", "a")
+    results = f.readlines
+    # Is there a way to remove everything that's been read here?
+    f.close
+
+    results.each_line do |sending|
+      conn_to_db.print("data #{sending}")
+      # Make sure we keep a backup
+      saved.puts("#{sending}")
+    end
+
+    # Close the archive file
+    saved.close
+  end
+
+</code></pre>
+
+The logic is straightforward: a file is opened, all its lines are read and then it is closed again. Similar for the second file which is opened for appending, then written to and finally closed. Sure, the second file could be opened later, but this is not where I want to draw your attention to.
+
+Rather, please notice that <tt>File.open</tt> is used together with an explicit <tt>close</tt>. Closing the file IO object ensures that all pending output is written to the file and operating system resources associated with the underlying file handle are freed. While not closing a read only file _usually_ does not have dramatic consequences, not closing a file opened for writing likely _has_ dramatic consequences. You can see it by running this bit of code through Ruby 1.8.*:
+
+<pre><code>
+  NAME = "foo"
+
+  f1 = File.open NAME, "w"
+  f1.puts "text 1"
+  # forgot to close f1
+  f2 = File.open NAME, "a"
+  f2.puts "text 2"
+  # forgot to close f2
+
+</code></pre>
+
+On my system (CentOS 5.3, Ruby 1.8.5) I see only the first line in the file but the second <tt>puts</tt> has no effect.  Even if you add a <tt>f2.close</tt> at the end of the script you won't see any difference.  You need to add the <tt>f1.close</tt> before you open <tt>f2</tt> to actually see two lines in the output file.
+
+h2. File.close is the solution, or is it?
+
+We just remember to always add a <tt>f.close</tt> whenever we have opened a file and be done. Everything written to the IO object will reach the file and we do not need to worry about anything any more.  Or do we?  Unfortunately, this is not sufficient.  Especially in situations like the one shown above where exceptions can happen (we do not know what <tt>conn_to_db.print</tt> does, but it looks like another IO operation which could fail) we need to take additional measures to _ensure_ the file is really closed.
+
+We can use <tt>begin ... rescue ... end</tt> to do proper exception handling and make sure file descriptors are closed properly.  But this tends to get verbose.  Fortunately there is another option: <tt>File.open</tt> accepts a block and ensures that the file descriptor is closed regardless how the block is left.
+
+h2. Large files
+
+For reading files there is an even better alternative: <tt>File.foreach</tt> will read a file line by line (or using a different separator given as second argument) and hand each string to the block that is provided.  This saves an additional <tt>io.each {|line| ...}</tt> inside <tt>the File.open</tt> block -- less typing and one level of indentation less.  Also, as added benefit we can efficiently process large files because we do not have to hold the complete file in memory when using iterative solutions.
+
+h2. Example rewritten
+
+With these tools equipped we are now ready to rewrite the original bit to a more robust version:
+
+<pre><code>
+  while running
+    sleep 10
+
+    # read file and write to archive
+    File.open("archive.log", "a") do |saved|
+      File.foreach("mylogfile.log") do |sending|
+        conn_to_db.print("data #{sending}")
+        # Make sure we keep a backup
+        saved.puts(sending) # removed superfluous string interpolation
+      end
+    end
+  end
+
+</code></pre>
+
+Note, that if the timing of the original script is critical we might want to use <tt>File.readlines</tt> in order to read in all lines of "mylogfile.log" before starting to write to the "archive.log" as the original code does.
+
+h2. Conclusion
+
+Using Ruby's blocks goes a long way to making programs and scripts that deal with file IO more robust with regard to
+
+* exceptions occurring somewhere along the way,
+* large files.
+
+So, whenever you do file in a Ruby program, remember you can use
+
+* the block form of <tt>File.open</tt> or
+* <tt>File.foreach</tt>
+
+to make your code more robust.
+
+You can even resort to <tt>File.readlines</tt> if you have to read the whole file into memory and at least save a bit of typing.  Next time we'll look into how to create a method like <tt>File.open</tt> using a block to ensure automatic reasource deallocation.
+
