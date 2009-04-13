@@ -1,8 +1,13 @@
-<h2>James Britt</h2>
+<h2 style='text-align:right; margin-bottom:-50px; color:#f63;'>James Britt</h2>
+
+<img src='http://lh5.ggpht.com/_oDEe-hfi7ic/SeKTEVvhnDI/AAAAAAAAAMQ/4EDGfvdczg4/self-portrait_los-angeles-06_med.jpg' alt='James Britt' style='float:right; padding:50px 0 30px 30px;' height='360px' />
 
 I’m a software developer and writer living in "Scottsdale, Arizona":http://www.google.com/maps?q=Scottsdale,+AZ,+USA&sa=X&oi=map&ct=title. My primary development language is Ruby.
 
 I run "Ruby-doc.org":http://www.ruby-doc.org, the main documentation site for the Ruby language. I also created "RubyStuff.com":http://www.rubystuff.com, where you can find a nice range of Ruby-themed paraphernalia.  You can never have too many Ruby T-shirts.
+
+
+
 
 I was Editor-in-Chief for "Ruby Code &amp; Style":http://www.artima.com/rubycs for about a year.
 
