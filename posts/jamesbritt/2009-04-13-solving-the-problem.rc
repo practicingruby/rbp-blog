@@ -45,7 +45,7 @@ For example:
 
 Early versions also used Haml for site-wide templates.  Not being a fan of Haml, I added in a configurable option to use Erb.  It was nice and all, but it was a feature without a requirement. No one was asking for configurable templating, so that option was dropped and Erb replaced Haml as the default.
 
-Least you wonder why working code was removed, consider that any code you have is something you have to maintain. As bug-free and robust as you may like to think it, no code is easier to maintain than <em>no</em> code.  Configurable templating was simply not a problem we were needed to solve, and a smaller, simpler code base is more valuable than a maybe "nice to have."
+If you are wondering why working code was removed, consider that any code you have is something you have to maintain. As bug-free and robust as you may like to think it, no code is easier to maintain than <em>no</em> code.  Configurable templating was simply not a problem we were needed to solve, and a smaller, simpler code base is more valuable than a maybe "nice to have."
 
 There was some discussion about the need or value of allowing comments.  In the end they were deemed good, but there was no good argument for hosting them as part of the blog site itself.  That meant a 3rd-party solution (in this case, "Disqus":http://disqus.com/) was perfectly acceptable. Again, a goal was to have comments, not to write a commenting system (as entertaining as that may be). 
 
