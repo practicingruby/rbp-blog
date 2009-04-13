@@ -1,0 +1,14 @@
+<div style="width: 100px; float: left;">
+!<%= @author.gravatar %>!
+</div>
+
+<div style="margin-left: 100px;">
+
+h3. Magnus Holm
+
+<script src="http://gist.github.com/94468.js"></script>
+
+<div align="right">
+"All posts by Magnus":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
+</div>
+</div>
