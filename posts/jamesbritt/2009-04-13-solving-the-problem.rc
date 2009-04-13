@@ -39,7 +39,7 @@ For example:
 
 <pre>
    #!/bin/sh
-   # File .gt/hooks/post-commit   
+   # File .git/hooks/post-commit   
    /usr/local/bin/ruby /home/james/data/vendor/korma/korma.rb /home/james/data/vendor/rbp-blog /home/james/data/vendor/korma/www
 </pre>
 
@@ -51,5 +51,5 @@ There was some discussion about the need or value of allowing comments.  In the 
 
 Using Git allowed for yet another feature for free: moderated blog contributions.  While The Ruby Best Practices blog has a core team of eight people (see "here":http://img509.imageshack.us/img509/2944/rbpdharmainitiative.jpg for my take on the RBP team logo) we want to invite others to play as well.  Doing so is simple: clone the "rbp-blog repo":http://github.com/sandal/rbp-blog/tree/master, add your own content, and issue a pull request back to the master branch.  Anyone with commit rights to the master can merge it in.   No-code features FTW.
 
-None of the blog design requirements are written in stone, but by identifying the real needs, addressing what was deemed essential, offloading what we could, and skipping the feature bling, we have a system that is easy to understand, easy to maintain, and easy to change.
+None of the blog design requirements are written in stone, and they may change tomorrow, but by identifying the real needs, addressing what was deemed essential, offloading what we could, and skipping the feature bling, we have a system that is easy to understand, easy to maintain, and easy to change.
 
