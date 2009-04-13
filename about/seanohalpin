@@ -1,0 +1,28 @@
+<div style="width: 100px; float: left;">
+!<%= @author.gravatar %>!
+</div>
+
+<div style="margin-left: 100px;">
+
+h3. Sean O'Halpin
+
+I'm currently a Senior Software Engineer in "Audio and Music Interactive":http://www.bbc.co.uk/blogs/radiolabs/ at the BBC in London, UK specialising in Ruby and message queues.
+
+I was previously System Architect at Aegis Media UK where I set up the
+first Rails team in the UK.
+
+I've been programming in Ruby since around the time 1.4 was released and started using it in production when 1.6 came out. My main interest is in metaprogramming, particularly DSLs.
+
+I've written three open source Ruby projects:
+
+* "doodle":http://github.com/seanohalpin/doodle/tree/master: a DSL for extended attribute accessors including validation and conversion
+* "ffi-ncurses":http://github.com/seanohalpin/ffi-ncurses/tree/master: a Foreign Function Interface to the ncurses terminal display library
+* "smqueue":http://github.com/seanohalpin/smqueue/tree/master: a simple API for messaging systems
+
+I presented about message queuing and virtualisation at RubyConf UK in
+2006 ("slides":http://monkeymind.textdriven.com/rails-conf-2006.tar.gz) and about "unobtrusive metaprogramming":http://rubymanor.org/videos/ at Ruby Manor in London in 2008.
+
+<div align="right">
+"All posts by Sean":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
+</div>
+</div>
