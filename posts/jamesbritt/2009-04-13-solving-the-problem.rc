@@ -1,0 +1,55 @@
+=title Solve <em>the</em> problem, not just <em>a</em> problem
+=description Geeks are prone to build complex tools to solve problems, but the real goal is to solve the <em>right</em> problems. The Korma blogging tool hits that sweet spot.
+=entry
+So you decide you want a way for a number of people to post short articles to a Web site, and maybe allow for other people to leave comments. What do you do?  That's easy: jump to the white board and start sketching out a vast array of boxes, blobs, and arrows that define a sophisticated content management system with multi-level admin roles, content versioning, threaded discussion boards, syntax highlighting, the works. 
+
+Right?
+
+Don't be too quick to judge.  It's easy to fall into the trap of defining the wrong requirements for a project.
+
+Part of the reason is that building software is (or should be) fun, and often bigger projects are more fun. There is also the tendency to think about "what if", imagining all the things that maybe one day who knows you never can tell might be needed.
+
+People also tend to think in terms of what's familiar, of how things have been done in the past or by others. 
+
+There are many ways to satisfy the needs described in the first paragraph.  Some don't require writing any software at all. 
+
+For the Ruby Best Practices blog, the general goals were modest.  Allow a core set of people to easily add new content.  Allow other people to contribute content as well, but only with the OK from someone in that core group. (BTW, there are eight of us in the RBP blog team.  See "here":http://img509.imageshack.us/img509/2944/rbpdharmainitiative.jpg for my take on the RBP team logo) 
+
+We wanted to allow the use of Textile, and not make people use a browser for editing.  Basically, turn simple flat files into a Web site with minimal fuss.
+
+"Korma":http://github.com/sandal/korma/tree/master takes an interesting approach to building Web sites.  The whole app is ~230 lines of Ruby. Its key function is to take content from a Git repository, run it through some templating, and write out the site files.
+
+Relying on Git for that back end is stunningly perfect. Git provides versioning, access control, and distributed contributions.
+
+It becomes the database layer common to most blogging tools. For free.  Right off the bat, no need to write any admin tools or content versioning code  .   
+
+At the heart of Korma is the "grit":http://github.com/mojombo/grit/tree/master gem. As the project blurb says, "Grit gives you object oriented read/write access to Git repositories via Ruby."  Very sweet.
+
+The @korma.rb@ file takes two arguments.  The first is required, and is the path to a git repository.  The second argument is optional; it tells Korma what directory to use for the generated content, and defaults to 'www', relative to where you invoke the program.
+
+The app uses grit to reach into the current contents of the repo and parse the needed files. Files have to be committed to be accessible to Korma.
+
+There is a configuration file that describes some basic site metadata, such as the base URL, the site title, and the author list.  When called, @korma.rb@ grabs this config file, sets some @Korma::Blog@ properties, and then writes out the static files.
+
+An early version of Korma used "Sinatra":http://www.sinatrarb.com/; basically, Korma was a lightweight Web app to serve the blog posts. But as simple as it was, it was overkill, since there was no real dynamic content.  It made no sense to have the Web app regenerate the HTML on each request, since it changed so infrequently. 
+
+A next version replaced the Web app part with static files, making it a straightforward command-line program.   This solved another problem: how to automate the regeneration of files. The answer: use Git's post-commit hook to invoke the program.
+
+For example:
+
+<pre>
+   #!/bin/sh
+   # File .git/hooks/post-commit   
+   /usr/local/bin/ruby /home/james/data/vendor/korma/korma.rb /home/james/data/vendor/rbp-blog /home/james/data/vendor/korma/www
+</pre>
+
+Early versions also used Haml for site-wide templates.  Not being a fan of Haml, I added in a configurable option to use Erb.  It was nice and all, but it was a feature without a requirement. No one was asking for configurable templating, so that option was dropped and Erb replaced Haml as the default.
+
+If you are wondering why working code was removed, consider that any code you have is something you have to maintain. As bug-free and robust as you may like to think it, no code is easier to maintain than <em>no</em> code.  Configurable templating was simply not a problem we were needed to solve, and a smaller, simpler code base is more valuable than a maybe "nice to have."
+
+There was some discussion about the need or value of allowing comments.  In the end they were deemed good, but there was no good argument for hosting them as part of the blog site itself.  That meant a 3rd-party solution (in this case, "Disqus":http://disqus.com/) was perfectly acceptable. Again, a goal was to have comments, not to write a commenting system (as entertaining as that may be). 
+
+Using Git allows for yet another feature for free: easy one-off  contributions.  In many systems, allowing anyone to contribute means creating an account, granting some sort of access, managing all the new user annoynaces. Or, an existing user has to play proxy, accepting content and entering it into the system on behalf of the real author.  That's work!  With git, one can clone the repo, add new content, and issue a pull request back to the master branch.  Anyone with commit rights to the master can then merge it in (or politely decline).   No-code features FTW.
+
+None of the blog design requirements are written in stone, and they may change tomorrow, but by identifying the real needs, addressing what was deemed essential, offloading what we could, and skipping the feature bling, we have a system that is easy to understand, easy to maintain, and easy to change.
+
