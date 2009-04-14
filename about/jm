@@ -1,0 +1,25 @@
+<div style="width: 100px;  float: left;">
+!<%= @author.gravatar %>!
+</div>
+
+<div style="margin-left: 100px;">
+
+h2. Jeremy McAnally
+
+I'm a developer at <a href="http://entp.com/">entp</a>, and in my spare time, I write books (such as the <a href="http://humblelittlerubybook.com/">Humble Little Ruby Book</a> and <a href="http://manning.com/mcanally">Ruby in Practice</a>) and open source (such as <a href="http://github.com/jeremymcanally/foundry">foundry</a>, <a href="http://github.com/jeremymcanally/context">context</a>, <a href="http://github.com/jeremymcanally/matchy">matchy</a>, and <a href="http://github.com/jeremymcanally/">a ton of other stuff</a>).  When not doing all that, I typically lounge and indulge in a variety of scholarly hobbies, such as watching Looney Tunes, reading books on early American history, and "kicking it" with my wife and dogs.
+
+h3. Upcoming Stuff
+
+* My book is now available: <a href="http://manning.com/mcanally">http://manning.com/mcanally</a>
+* Watch this space for announcements about the Ruby Hoedown, the south's regional Ruby conference
+
+h3. Contact
+
+I can be found on Twitter as "@jm":http://twitter.com/jm .
+
+My blogging habits are sporaddic at best, and tend to land at <a href="http://omgbloglol.com">omgbloglol.com</a> when I get the itch to write.
+
+<div align="right">
+"All posts by Jeremy":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
+</div>
+</div>
