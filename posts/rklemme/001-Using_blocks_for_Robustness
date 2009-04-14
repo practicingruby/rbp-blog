@@ -30,7 +30,7 @@ When you read through ruby-talk you will find code that looks like "this":http:/
 
 </code></pre>
 
-The logic is straightforward: a file is opened, all its lines are read and then it is closed again. Similar for the second file which is opened for appending, then written to and finally closed. Sure, the second file could be opened later, but this is not where I want to draw your attention to.
+The logic is straightforward: a file is opened, all its lines are read and then it is closed again. Similarly, the second file is opened for appending, then written to and finally closed. Sure, the second file could be opened later, but this is not where I want to draw your attention to.
 
 Rather, please notice that <tt>File.open</tt> is used together with an explicit <tt>close</tt>. Closing the file IO object ensures that all pending output is written to the file and operating system resources associated with the underlying file handle are freed. While not closing a read only file _usually_ does not have dramatic consequences, not closing a file opened for writing likely _has_ dramatic consequences. You can see it by running this bit of code through Ruby 1.8.*:
 
