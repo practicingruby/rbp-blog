@@ -5,7 +5,7 @@ Ruby's blocks can be used for many purposes -- in fact, they might well be the m
 
 h3. Robustness
 
-When talking about robustness of software[1] we mean the degree to which it is able to function properly under changed circumstances.  Those changes could be internally (i.e. introduced by a code change) or externally (e.g. by changed input data).  Sometimes achieving robustness is a hard task especially for complex software like operating systems.  In this article we'll look at robustness at a smaller scale.
+When talking about robustness of software[1] we mean the degree to which it is able to function properly under changed circumstances.  Those changes could be internal (i.e. introduced by a code change) or external (e.g. by changed input data).  Sometimes achieving robustness is a hard task especially for complex software like operating systems.  In this article we'll look at robustness at a smaller scale.
 
 h3. A common file handling idiom
 
