@@ -56,7 +56,7 @@ We can use <tt>begin ... rescue ... end</tt> to do proper exception handling and
 
 h3. Large files
 
-When dealing with files as shown in the code example above there is another potential source of trouble: if files can grow arbitrary large they will burn a lot of memory when read as a whole or even terminate the program because there is not enough memory available.
+When dealing with files as shown in the code example above there is another potential source of trouble: if files can grow arbitrarily large they will burn a lot of memory when read as a whole or even terminate the program because there is not enough memory available.
 
 For reading files there is an even better alternative: <tt>File.foreach</tt> will read a file line by line (or using a different separator given as second argument) and hand each string to the block that is provided.  This saves an additional <tt>io.each {|line| ...}</tt> inside <tt>the File.open</tt> block -- less typing and one level of indentation less.  Also, as added benefit we can efficiently process large files because we do not have to hold the complete file in memory when using iterative solutions.
 
