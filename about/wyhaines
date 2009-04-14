@@ -8,3 +8,7 @@ h2. Kirk Haines
 
 I have been making a living off of Ruby programming since early 2002.  I am
 currently a developer for Engine Yard, working on the Vertebra project, but in my free time, I hack on things like EventMachine, Swiftiply, and the awesome, venerable IOWA web framework.
+<div align="right">
+"All posts by Kirk":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
+</div>
+</div>
