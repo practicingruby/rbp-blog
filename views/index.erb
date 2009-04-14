@@ -6,7 +6,7 @@
   <h3><a href='<%= e.url %>'><%= e.title %></a></h3>
   <span><%= e.description %></span>
   <p> <em> <%= e.published_date.strftime("%Y-%m-%d %H:%M") %> by  <a href= '<%= e.author.index_uri %>'><%= e.author.name  %></a></em> 
-  <a href="<%= e.url %>#disqus_thread">View Comments</a> </p>
+   (<a href="<%= e.url %>#disqus_thread">View Comments</a>) </p>
 
 <% end %>
 
