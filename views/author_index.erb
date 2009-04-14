@@ -3,9 +3,10 @@
 <% @entries.each do |e| %>
   <h3><a href = '<%= e.url%>' ><%= e.title %></h3></a>
 
+<p>
+  <em><%= e.published_date.strftime("%Y-%m-%d %H:%M") %> (<a href="<%= e.url %>#disqus_thread">View Comments</a>) </em>
+</p>
+
 <span><%= e.description %></span>
 
-<p>
-<em><%= e.published_date.strftime("%Y-%m-%d %H:%M") %></em>
-</p>
 <% end %>
