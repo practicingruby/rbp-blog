@@ -1,0 +1,10 @@
+<div style="width: 100px;  float: left;">
+!<%= @author.gravatar %>!
+</div>
+
+<div style="margin-left: 100px;">
+
+h2. Kirk Haines
+
+I have been making a living off of Ruby programming since early 2002.  I am
+currently a developer for Engine Yard, working on the Vertebra project, but in my free time, I hack on things like EventMachine, Swiftiply, and the awesome, venerable IOWA web framework.
