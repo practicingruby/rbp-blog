@@ -1,0 +1,6 @@
+/* Float doubled-margin bug */
+
+div#main, div#sub, div.feature { display: inline; }
+
+div#content textarea { width: 570px; }
+
