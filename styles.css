@@ -100,7 +100,8 @@ pre {
 }
 
 tt {
-  font-size:120%;
+  font-size:110%;
+  background-color:#F7F7F7;
 }
 
 /* layout */
