@@ -22,7 +22,7 @@ With this, we can do all the ordinary CRUD operations within our application, so
 
 <script src="http://gist.github.com/96205.js"></script>
 
-Now, if you've been cargo culting from Rails documentation, or if you've actually needed to implement services before, this may look familiar even if you haven't worked with ActiveResource previously.  In the <tt>respond_to</tt> block, the XML format is what matters, as it's what bridges our resource to its corresponding database model.
+This may look familiar even if you haven't worked with ActiveResource previously, as it's basically the same boiler plate you'll find in a lot of Rails documentation.  In the <tt>respond_to</tt> block, <tt>format.xml</tt> is what matters here, as it is what connects our resource to the services which consume it.  The good news is we won't have to actually work with the XML data, as you'll see in a moment.
 
 While there are a few things left to do to make this code usable in a real application, we can already test basic interactions with a secondary application.  Using any other rails app we'd like, we can add an <tt>ActiveResource</tt> model by creating a file called _app/models/customer.rb_ and setting it up like this:
 
