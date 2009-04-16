@@ -50,8 +50,7 @@ After dropping a <tt>before_filter</tt> in your <tt>CustomersController</tt> tha
 
 <script src="http://gist.github.com/96243.js"></script>
 
-If you forget to do this, you won't be able to retrieve or modify any of the customer data.  This means that any application that does not know the shared secret may not use the resource.  Although this is hardly a fancy solution,
-it gets the job done.   Now, let's take a look at how to make integration even easier and get rid of some of these hard coded values at the per-model level.
+If you forget to do this, you won't be able to retrieve or modify any of the customer data.  This means that any application that does not know the shared secret may not use the resource.  Although this is hardly a fancy solution,it gets the job done.   Now, let's take a look at how to make integration even easier and get rid of some of these hard coded values at the per-model level.
 
 h3. Simplifying Integration
 
@@ -88,9 +87,7 @@ Since Rails handles the mapping of resource names to class names for you, you ca
 
 h3. Just Starting a Conversation
 
-I didn't go into great detail about how to use the various technologies I've
-touched on here, but I've hopefully provided a glimpse into what is possible
-to those who are uninitiated, as well as provided some food for thought to those who already have some experience in building decentralized Rails apps.  
+I didn't go into great detail about how to use the various technologies I've touched on here, but I've hopefully provided a glimpse into what is possible to those who are uninitiated, as well as provided some food for thought to those who already have some experience in building decentralized Rails apps.  
 
 To provide some extra insight into the approach I've been using on my latest project, we basically keep everything in one big git repository, with separate folders for each application.  At the root, there is a shared/ folder in which we keep some shared library files, including some support infrastructure for things like a simple Single-Sign-On mechanism and a database backed cross-application logging system.   We also vendor one copy of Rails there and simply symlink vendor/rails in our individual apps, except for when we need a specific version for a particular service.   
 
