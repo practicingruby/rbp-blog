@@ -1,0 +1,36 @@
+=title Rails Modularity for the Lazy
+=description 
+If given the choice, would you rather maintain one gigantic Rails application, or a handful of smaller ones?  Using some simple organizational techniques along with ActiveResource, you can still tackle the big problems without the big headaches that come along with them in a monolithic system.
+=entry
+When we develop standalone systems or work on libraries and frameworks, modularity seems to come naturally.  When something seems to gain a life of its own, we pull it off into its own package or subsystem to keep things clean.  This is a natural extension of the sorts of design decisions we make at the object level in our software, and helps us work on complicated problems, often working alongside other hackers, without losing our wits.
+
+It seems a bit surprising that these helpful guiding principals can often evaporate when we bring our software to the web.  Sure, we may make use of plugins and gems for foundational support, but if you take a good look at a Rails application that has more than 50 models or so, you'll be hard pressed to find a unified purpose behind all that logic. 
+
+However, if you try to break things down into core sets of functionality, you may find that certain vertical slices can be made that allow you to break out bits of functionality into their own separate focus areas. For example, you may discover that part of your application is actually a mini CRM system.  Or maybe you've snuck in a small reporting system without noticing it consciously.   The list goes on, but the underlying idea here is that the larger a system gets, the harder it is to define its core purpose.
+
+While splitting out these subsystems may seem like the obvious choice in a standalone application, there seems to be a certain amount of FUD about this strategy when it comes to the web.  This probably originates from a time before REST, in which interaction between web applications was overly complex,making the costs of fragmentation higher than the benefits of a modular architecture.  These days, we live in better times and work with better frameworks, and should reap the benefits that come along with it.
+
+But actions speak louder than words, so let's take a look at some of the underlying tech and how to use it.  Building on the CRM scenario, I'll start by showing how to access a Customer model from another application using ActiveResource.
+
+h3. Sharing Model Data via ActiveResource
+
+Suppose that we've got a CRM system that has a Customer model that has a schema that looks something like this:
+
+<script src="http://gist.github.com/96191.js"></script>
+
+With this, we can do all the ordinary CRUD operations within our application, so I won't bore you with the details.  What we're interested in is how to accomplish these same goals from an external application.  So within our CRM system, this essentially boils down to simply providing a RESTful interface to our Customer resource.  After adding <tt>map.resources :customers</tt> to our _config/routes.rb_ file, we code up a <tt>CustomersController</tt> that looks something like this:
+
+<script src="http://gist.github.com/96205.js"></script>
+
+Now, if you've been cargo culting from Rails documentation, or if you've actually needed to implement services before, this may look familiar even if you haven't worked with ActiveResource previously.  In the <tt>respond_to</tt> block, the XML format is what matters, as it's what bridges our resource to its corresponding database model.
+
+While there are a few things left to do to make this code usable in a real application, we can already test basic interactions with a secondary application.  Using any other rails app we'd like, we can add an <tt>ActiveResource</tt> model by creating a file called _app/models/customer.rb_ and setting it up like this:
+
+<script src="http://gist.github.com/96208.js"></script>
+
+Now here comes the interesting part.  If you fire up <tt>script/console</tt> on the client side application that is interfacing with the CRM system, you can see the same familiar CRUD operations, but taking place from a completely separate application:
+
+<script src="http://gist.github.com/96215.js"></script>
+
+While the behavior isn't downright identical to <tt>ActiveRecord</tt>, it bears a striking resemblance and allows you to retain much of the
+functionality that is needed for basic data manipulation.
