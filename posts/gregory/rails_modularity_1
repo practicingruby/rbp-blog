@@ -1,0 +1,105 @@
+=title Rails Modularity for Lazy Bastards
+=description 
+If given the choice, would you rather maintain one gigantic Rails application, or a handful of smaller ones?  Using some simple organizational techniques along with ActiveResource, you can still tackle the big problems without the big headaches that come along with monolithic systems.
+=entry
+
+<em>NOTE: If you're reading this via RSS you probably can't see the embedded gists.  We need to work out a suitable syntax highlighting solution, but in the mean time, please just view this article at its <a href="http://blog.rubybestpractices.com/posts/gregory/rails_modularity_1.html">original source</a></em>
+
+When we develop standalone systems or work on libraries and frameworks, modularity seems to come naturally.  When something seems to gain a life of its own, we pull it off into its own package or subsystem to keep things clean.  This is a natural extension of the sorts of design decisions we make at the object level in our software, and helps us work on complicated problems, often working alongside other hackers, without losing our wits.
+
+It seems a bit surprising that these helpful guiding principals can often evaporate when we bring our software to the web.  Sure, we may make use of plugins and gems for foundational support, but if you take a good look at a Rails application that has more than 50 models or so, you'll be hard pressed to find a unified purpose behind all that logic. 
+
+However, if you try to break things down into core sets of functionality, you may find that certain vertical slices can be made that allow you to break out bits of functionality into their own separate focus areas. For example, you may discover that part of your application is actually a mini CRM system.  Or maybe you've snuck in a small reporting system without noticing it consciously.   The list goes on, but the underlying idea here is that the larger a system gets, the harder it is to define its core purpose.
+
+While splitting out these subsystems may seem like the obvious choice in a standalone application, there seems to be a certain amount of FUD about this strategy when it comes to the web.  This probably originates from a time before REST, in which interaction between web applications was overly complex,making the costs of fragmentation higher than the benefits of a modular architecture.  These days, we live in better times and work with better frameworks, and should reap the benefits that come along with it.
+
+But actions speak louder than words, so let's take a look at some of the underlying tech and how to use it.  Building on the CRM scenario, I'll start by showing how to access a Customer model from another application using ActiveResource.
+
+h3. Sharing Model Data via ActiveResource
+
+Suppose that we've got a CRM system that has a Customer model that has a schema that looks something like this:
+
+<script src="http://gist.github.com/96191.js"></script>
+
+With this, we can do all the ordinary CRUD operations within our application, so I won't bore you with the details.  What we're interested in is how to accomplish these same goals from an external application.  So within our CRM system, this essentially boils down to simply providing a RESTful interface to our Customer resource.  After adding <tt>map.resources :customers</tt> to our _config/routes.rb_ file, we code up a <tt>CustomersController</tt> that looks something like this:
+
+<script src="http://gist.github.com/96205.js"></script>
+
+This may look familiar even if you haven't worked with ActiveResource previously, as it's basically the same boiler plate you'll find in a lot of Rails documentation.  In the <tt>respond_to</tt> block, <tt>format.xml</tt> is what matters here, as it is what connects our resource to the services which consume it.  The good news is we won't have to actually work with the XML data, as you'll see in a moment.
+
+While there are a few things left to do to make this code usable in a real application, we can already test basic interactions with a secondary application.  Using any other rails app we'd like, we can add an <tt>ActiveResource</tt> model by creating a file called _app/models/customer.rb_ and setting it up like this:
+
+<script src="http://gist.github.com/96208.js"></script>
+
+Now here comes the interesting part.  If you fire up <tt>script/console</tt> on the client side application that is interfacing with the CRM system, you can see the same familiar CRUD operations, but taking place from a completely separate application:
+
+<script src="http://gist.github.com/96215.js"></script>
+
+While the interface and behavior isn't downright identical to <tt>ActiveRecord</tt>, it bears a striking resemblance and allows you to retain much of the functionality that is needed for basic data manipulation.
+
+Now that we can see the basic functionality in action, let's go back and fix a few key issues.  We definitely want to add some sort of authentication to this system, as it is currently allowing any third party application to modify and destroy records.  We also will most likely want a more flexible option for locating services than just hard coding a server address in each model file.  Once these two things are in place, we'll have the beginnings of a decentralized Rails based application.
+
+h3. API Keys with HTTP Basic Authentication
+
+I want to preface this section by saying I'm typically not the one responsible for any sort of security hardening in the applications I work on.   That means that I'm by no means an expert in how to make your applications safe from the malignant forces of the interweb.   That having been said, what follows is a simple technique that seems to work for me when it comes to slapping a simple authentication model in place.
+
+First, in the app that is providing the service, in this case, our fictional CRM system, you'll want something like this in your <tt>ApplicationController</tt>:
+
+<script src="http://gist.github.com/96241.js"></script>
+
+Here, <tt>API_KEY</tt> is some shared secret that is known by both your service providing application, and any client that wishes to use your service.  In this blog post, I'll be using the string <tt>"kittens"</tt>, but you'll obviously want to pick something longer, and with significantly more entropy.
+
+After dropping a <tt>before_filter</tt> in your <tt>CustomersController</tt> that points to <tt>basic_http_auth</tt>, you'll need to update your ActiveResource model definition.
+
+<script src="http://gist.github.com/96243.js"></script>
+
+If you forget to do this, you won't be able to retrieve or modify any of the customer data.  This means that any application that does not know the shared secret may not use the resource.  Although this is hardly a fancy solution, it gets the job done.   Now, let's take a look at how to make integration even easier and get rid of some of these hard coded values at the per-model level.
+
+h3. Simplifying Integration
+
+So far, the work has been pretty simple, but it's important to keep in mind that if we really want to break up our applications into small, manageable subsystems, we might need to deal with a lot of remote resources.
+
+Pulled directly from some commercial work I've been doing with Brad Ediger of Madriska Media Group (and of "Advanced Rails":http://oreilly.com/catalog/9780596510329/ fame), what follows is a helper file that provides two useful features for working with remote resources via ActiveResource:
+
+<script src="http://gist.github.com/96248.js"></script>
+
+The <tt>ServiceLocator</tt> part was Brad's idea, and it represents a simple way to map the URLs of different services to a label based on what environment you are currently running in.  A basic _config/services.yml_ file might look something like this:
+
+<pre>
+development:
+  crm: localhost:3000
+  reports: localhost:3001
+
+production:
+  crm: crm.example.com
+  reports: reports.example.com
+</pre>
+
+This is nice, because it allows us to configure the locations of our various services all in one place.  The interface is very simple and straightforward:
+
+<pre>
+>> ServiceLocator[:crm]
+=> "localhost:3000"
+</pre>
+
+However, upon seeing this feature, I decided to take it a step farther.  Though it might sacrifice a bit of purity, the <tt>Service()</tt> method is actually a parameterized class constructor that builds up a subclass filling out the API key and service address for you. What that means is that you can replace your initial <tt>Customer</tt> definition with this:
+
+<script src="http://gist.github.com/96251.js"></script>
+
+Since Rails handles the mapping of resource names to class names for you, you can easily support as many remote classes from a single service as you'd like this way.   When I read this aloud in my head, I tend to think of <tt>SomeClass < Service(:some_service)</tt> as "SomeClass is a resource provided by some_service".   Feel free to forego the magic here if this concerns you, but I personally find it pleasing to the eyes.
+
+h3. Just Starting a Conversation
+
+I didn't go into great detail about how to use the various technologies I've touched on here, but I've hopefully provided a glimpse into what is possible to those who are uninitiated, as well as provided some food for thought to those who already have some experience in building decentralized Rails apps.  
+
+To provide some extra insight into the approach I've been using on my latest project, we basically keep everything in one big git repository, with separate folders for each application.  At the root, there is a _shared/_ folder in which we keep some shared library files, including some support infrastructure for things like a simple SSO mechanism and a database backed cross-application logging system.   We also vendor one copy of Rails there and simply symlink _vendor/rails_ in our individual apps, except for when we need a specific version for a particular service.   
+
+The overarching idea is that there is a foundational support library that our individual apps sit on top of, and that they communicate with each other only through the service interfaces we expose.  We've obviously got more complicated needs, and thus finer grained controls than what I've covered in this article, but the basic ActiveResource functionality seems to be serving us well.
+
+What I'd like to know is what other folks have been doing to help manage the complexity of their larger Rails apps.  Do you think the rough sketch of ideas I've laid out here sounds promising?  Do you foresee potential pitfalls that I haven't considered?  Leave a comment and let me know.  
+
+
+
+
+
+
