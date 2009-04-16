@@ -19,9 +19,7 @@ h3. Sharing Model Data via ActiveResource
 
 Suppose that we've got a CRM system that has a Customer model that has a schema that looks something like this:
 
-<script src="http://gist.github.com/96191.js"></script>
-<noscript>
-<pre>
+<pre name="code" class="ruby">
   create_table :customers do |t|
     t.string :first_name
     t.string :last_name
@@ -31,13 +29,10 @@ Suppose that we've got a CRM system that has a Customer model that has a schema 
     t.timestamps
   end
 </pre>
-</noscript>
 
 With this, we can do all the ordinary CRUD operations within our application, so I won't bore you with the details.  What we're interested in is how to accomplish these same goals from an external application.  So within our CRM system, this essentially boils down to simply providing a RESTful interface to our Customer resource.  After adding <tt>map.resources :customers</tt> to our _config/routes.rb_ file, we code up a <tt>CustomersController</tt> that looks something like this:
 
-<script src="http://gist.github.com/96205.js"></script>
-<noscript>
-<pre>
+<pre name="code" class="ruby">
   class CustomersController < ApplicationController
   
     def index
@@ -82,26 +77,20 @@ With this, we can do all the ordinary CRUD operations within our application, so
  
   end
 </pre>
-</noscript>
 
 This may look familiar even if you haven't worked with ActiveResource previously, as it's basically the same boiler plate you'll find in a lot of Rails documentation.  In the <tt>respond_to</tt> block, <tt>format.xml</tt> is what matters here, as it is what connects our resource to the services which consume it.  The good news is we won't have to actually work with the XML data, as you'll see in a moment.
 
 While there are a few things left to do to make this code usable in a real application, we can already test basic interactions with a secondary application.  Using any other rails app we'd like, we can add an <tt>ActiveResource</tt> model by creating a file called _app/models/customer.rb_ and setting it up like this:
 
-<script src="http://gist.github.com/96208.js"></script>
-<noscript>
-<pre>
+<pre name="code" class="ruby">
   class Customer < ActiveResource::Base
     self.site = "http://localhost:3000/"
   end
 </pre>
-</noscript>
 
 Now here comes the interesting part.  If you fire up <tt>script/console</tt> on the client side application that is interfacing with the CRM system, you can see the same familiar CRUD operations, but taking place from a completely separate application:
 
-<script src="http://gist.github.com/96215.js"></script>
-<noscript>
-<pre>
+<pre name="code" class="ruby">
   >> Customer.create(:first_name => "Gregory", :last_name => "Brown")
   => #<Customer:0x20d2120 @prefix_options={}, @attributes={"evening_phone"=>nil, "updated_at"=>Thu Apr 16 03:53:59 UTC 2009, "daytime_phone"=>nil, "id"=>1, "first_name"=>"Gregory", "last_name"=>"Brown", "created_at"=>Thu Apr 16 03:53:59 UTC 2009, "email"=>nil}>
  
@@ -117,7 +106,6 @@ Now here comes the interesting part.  If you fire up <tt>script/console</tt> on 
   >> Customer.find(:all)
   => []
 </pre>
-</noscript>
 
 While the interface and behavior isn't downright identical to <tt>ActiveRecord</tt>, it bears a striking resemblance and allows you to retain much of the functionality that is needed for basic data manipulation.
 
@@ -129,9 +117,7 @@ I want to preface this section by saying I'm typically not the one responsible f
 
 First, in the app that is providing the service, in this case, our fictional CRM system, you'll want something like this in your <tt>ApplicationController</tt>:
 
-<script src="http://gist.github.com/96241.js"></script>
-<noscript>
-<pre>
+<pre name="code" class="ruby">
   def basic_http_auth
     authenticated = false
     authenticate_with_http_basic do |login, password|
@@ -143,22 +129,18 @@ First, in the app that is providing the service, in this case, our fictional CRM
     raise "Authentication failed" unless authenticated
   end
 </pre>
-</noscript>
 
 Here, <tt>API_KEY</tt> is some shared secret that is known by both your service providing application, and any client that wishes to use your service.  In this blog post, I'll be using the string <tt>"kittens"</tt>, but you'll obviously want to pick something longer, and with significantly more entropy.
 
 After dropping a <tt>before_filter</tt> in your <tt>CustomersController</tt> that points to <tt>basic_http_auth</tt>, you'll need to update your ActiveResource model definition.
 
-<script src="http://gist.github.com/96243.js"></script>
-<noscript>
-<pre>
+<pre name="code" class="ruby">
   class Customer < ActiveResource::Base
     self.site = "http://localhost:3000/"
     self.user = "api"
     self.password = "kittens"
   end
 </pre>
-</noscript>
 
 If you forget to do this, you won't be able to retrieve or modify any of the customer data.  This means that any application that does not know the shared secret may not use the resource.  Although this is hardly a fancy solution, it gets the job done.   Now, let's take a look at how to make integration even easier and get rid of some of these hard coded values at the per-model level.
 
@@ -168,9 +150,7 @@ So far, the work has been pretty simple, but it's important to keep in mind that
 
 Pulled directly from some commercial work I've been doing with Brad Ediger of Madriska Media Group (and of "Advanced Rails":http://oreilly.com/catalog/9780596510329/ fame), what follows is a helper file that provides two useful features for working with remote resources via ActiveResource:
 
-<script src="http://gist.github.com/96248.js"></script>
-<noscript>
-<pre>
+<pre name="code" class="ruby">
   require 'yaml'
   require 'activeresource'
  
@@ -198,7 +178,6 @@ Pulled directly from some commercial work I've been doing with Brad Ediger of Ma
     end
   end
 </pre>
-</noscript>
 
 The <tt>ServiceLocator</tt> part was Brad's idea, and it represents a simple way to map the URLs of different services to a label based on what environment you are currently running in.  A basic _config/services.yml_ file might look something like this:
 
@@ -214,21 +193,18 @@ The <tt>ServiceLocator</tt> part was Brad's idea, and it represents a simple way
 
 This is nice, because it allows us to configure the locations of our various services all in one place.  The interface is very simple and straightforward:
 
-<pre>
+<pre name="code" class="ruby">
   >> ServiceLocator[:crm]
   => "localhost:3000"
 </pre>
 
 However, upon seeing this feature, I decided to take it a step farther.  Though it might sacrifice a bit of purity, the <tt>Service()</tt> method is actually a parameterized class constructor that builds up a subclass filling out the API key and service address for you. What that means is that you can replace your initial <tt>Customer</tt> definition with this:
 
-<script src="http://gist.github.com/96251.js"></script>
-<noscript>
-<pre>
+<pre name="code" class="ruby">
   class Customer < Service(:crm)
     # my custom methods here.
   end
 </pre>
-</noscript>
 
 Since Rails handles the mapping of resource names to class names for you, you can easily support as many remote classes from a single service as you'd like this way.   When I read this aloud in my head, I tend to think of <tt>SomeClass < Service(:some_service)</tt> as "SomeClass is a resource provided by some_service".   Feel free to forego the magic here if this concerns you, but I personally find it pleasing to the eyes.
 
