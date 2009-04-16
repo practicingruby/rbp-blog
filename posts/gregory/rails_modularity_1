@@ -179,7 +179,7 @@ Pulled directly from some commercial work I've been doing with Brad Ediger of Ma
 
 The <tt>ServiceLocator</tt> part was Brad's idea, and it represents a simple way to map the URLs of different services to a label based on what environment you are currently running in.  A basic _config/services.yml_ file might look something like this:
 
-<pre>
+<pre name="code">
   development:
     crm: localhost:3000
     reports: localhost:3001
