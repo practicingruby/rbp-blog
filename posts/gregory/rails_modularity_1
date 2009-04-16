@@ -1,4 +1,4 @@
-=title Rails Modularity for the Lazy
+=title Rails Modularity for Lazy Bastards
 =description 
 If given the choice, would you rather maintain one gigantic Rails application, or a handful of smaller ones?  Using some simple organizational techniques along with ActiveResource, you can still tackle the big problems without the big headaches that come along with them in a monolithic system.
 =entry
@@ -34,3 +34,4 @@ Now here comes the interesting part.  If you fire up <tt>script/console</tt> on 
 
 While the behavior isn't downright identical to <tt>ActiveRecord</tt>, it bears a striking resemblance and allows you to retain much of the
 functionality that is needed for basic data manipulation.
+
