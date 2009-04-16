@@ -99,6 +99,11 @@ pre {
   background-color:#F7F7F7;
 }
 
+tt {
+  font-size:110%;
+  background-color:#F7F7F7;
+}
+
 /* layout */
 div#wrapper {
   background-color:#FFFFFF;
