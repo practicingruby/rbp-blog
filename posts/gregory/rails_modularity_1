@@ -2,9 +2,6 @@
 =description 
 If given the choice, would you rather maintain one gigantic Rails application, or a handful of smaller ones?  Using some simple organizational techniques along with ActiveResource, you can still tackle the big problems without the big headaches that come along with monolithic systems.
 =entry
-
-<em>NOTE: If you're reading this via RSS you probably can't see the embedded gists.  We need to work out a suitable syntax highlighting solution, but in the mean time, please just view this article at its <a href="http://blog.rubybestpractices.com/posts/gregory/rails_modularity_1.html">original source</a></em>
-
 When we develop standalone systems or work on libraries and frameworks, modularity seems to come naturally.  When something seems to gain a life of its own, we pull it off into its own package or subsystem to keep things clean.  This is a natural extension of the sorts of design decisions we make at the object level in our software, and helps us work on complicated problems, often working alongside other hackers, without losing our wits.
 
 It seems a bit surprising that these helpful guiding principals can often evaporate when we bring our software to the web.  Sure, we may make use of plugins and gems for foundational support, but if you take a good look at a Rails application that has more than 50 models or so, you'll be hard pressed to find a unified purpose behind all that logic. 
