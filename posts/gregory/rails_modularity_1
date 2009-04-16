@@ -55,7 +55,8 @@ With this, we can do all the ordinary CRUD operations within our application, so
       customer = Customer.create(params[:customer])
       respond_to do |format|
         format.html { redirect_to entry }
-        format.xml { render :xml => customer, :status => :created, :location => customer }
+        format.xml { render :xml => customer, :status   => :created, 
+                                              :location => customer }
       end
     end
  
