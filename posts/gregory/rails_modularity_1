@@ -50,7 +50,7 @@ After dropping a <tt>before_filter</tt> in your <tt>CustomersController</tt> tha
 
 <script src="http://gist.github.com/96243.js"></script>
 
-If you forget to do this, you won't be able to retrieve or modify any of the customer data.  This means that any application that does not know the shared secret may not use the resource.  Although this is hardly a fancy solution,it gets the job done.   Now, let's take a look at how to make integration even easier and get rid of some of these hard coded values at the per-model level.
+If you forget to do this, you won't be able to retrieve or modify any of the customer data.  This means that any application that does not know the shared secret may not use the resource.  Although this is hardly a fancy solution, it gets the job done.   Now, let's take a look at how to make integration even easier and get rid of some of these hard coded values at the per-model level.
 
 h3. Simplifying Integration
 
