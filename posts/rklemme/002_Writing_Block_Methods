@@ -28,9 +28,9 @@ ensure
 end
 </pre>
 
-Code in an <tt>else</tt> clause after <tt>rescue</tt> is executed when the block is left normally, i.e. without an exception being thrown. Code after <tt>ensure</tt> is executed under all circumstances -- regardless whether an exception is thrown or not. This is the feature that we'll exploit for our cleanup.
+Code in an <tt>else</tt> clause after <tt>rescue</tt> is executed when the block is left normally, i.e. without an exception being thrown. Note that in case of an exception it is irrelevant whether it is caught in this <tt>begin ... end</tt> block or not -- <tt>else</tt> will not be executed. Code after <tt>ensure</tt> is executed under all circumstances -- regardless whether an exception is thrown or not. This is the feature that we'll exploit for our cleanup.
 
-An important thing to know is that the result of the "ensure" code does not affect the block's result which is normally the value of the last expression evaluated between <tt>begin</tt> and the first <tt>rescue</tt>.  Results of <tt>rescue</tt> and <tt>else</tt> clauses _are_ retained when they are executed.
+An important thing to know is that the result of the "ensure" code does not affect the block's result which is normally the value of the last expression evaluated between <tt>begin</tt> and the first <tt>rescue</tt>. So anything the cleanup code returns is invisible to the caller (which makes perfect sense if you think about it). Results of <tt>rescue</tt> and <tt>else</tt> clauses _are_ retained when they are executed.
 
 h3. Cooking
 
