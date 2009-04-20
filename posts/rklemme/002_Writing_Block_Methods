@@ -1,5 +1,5 @@
 =title Writing Block Methods with automatic Resource Cleanup
-=description <a href="posts/rklemme/001-Using_blocks_for_Robustness.html">Last time</a> I demonstrated how using library methods with blocks can improve robustness of a program. This time I will show how such methods are implemented. It is actually really simple.
+=description <a href="posts/rklemme/001-Using_blocks_for_Robustness.html">Last time</a> I demonstrated how using library methods with blocks can improve robustness of a program. This time I will show how such methods are implemented.
 =entry
 After we have seen how <tt>File.open</tt> with a block is safer than without we will look into how such methods are created today.
 
@@ -10,9 +10,9 @@ We need two ingredients:
 # <tt>yield</tt>
 # A <tt>begin ... end</tt> block with <tt>ensure</tt>
 
-<tt>yield</tt> is a keyword and invokes the block which is passed to a method. If there is no block you'll earn yourself a <tt>LocalJumpError</tt>. Result of evaluating <tt>yield</tt> is the value of the block (remember, we also called them anonymous functions).
+<tt>yield</tt> is a keyword and invokes the block which is passed to a method. If the caller did not provide a block he'll earn a <tt>LocalJumpError</tt>. Result of evaluating <tt>yield</tt> is the value of the block (remember, we also called them "anonymous functions").
 
-As you will probably know <tt>begin ... end</tt> blocks can be used to properly catch exceptions and handle them. But this construct has two more features apart from <tt>rescue</tt>; a full blown block might look like this:
+As you will probably know <tt>begin ... end</tt> blocks can be used to catch exceptions and handle them properly. But this construct has two more features apart from <tt>rescue</tt>; a full blown block might look like this:
 
 <pre name="code" class="ruby">
 begin
@@ -30,7 +30,7 @@ end
 
 Code in an <tt>else</tt> clause after <tt>rescue</tt> is executed when the block is left normally, i.e. without an exception being thrown. Code after <tt>ensure</tt> is executed under all circumstances -- regardless whether an exception is thrown or not. This is the feature that we'll exploit for our cleanup.
 
-An important thing to know is that the result of the "ensure" code does not affect the block's result which is normally the value of the last expression evaluated between <tt>begin</tt> and the first <tt>rescue</tt>.  Results of <tt>rescue</tt> and <tt>else</tt> clauses are retained when they are executed.
+An important thing to know is that the result of the "ensure" code does not affect the block's result which is normally the value of the last expression evaluated between <tt>begin</tt> and the first <tt>rescue</tt>.  Results of <tt>rescue</tt> and <tt>else</tt> clauses _are_ retained when they are executed.
 
 h3. Cooking
 
