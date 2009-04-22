@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Ruby Best Practices - <%= @post ?  @post.title : "Blog" %></title>
+    <title>Ruby Best Practices - <%= @post ?  @post.title.gsub( %r{</?[^>]+?>}, '' ) : "Blog" %></title>
 
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://blog.rubybestpractices.com/feed.xml">
     <link href="/styles.css", rel="stylesheet", type="text/css">
