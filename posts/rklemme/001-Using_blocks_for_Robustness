@@ -11,7 +11,7 @@ h3. A common file handling idiom
 
 When you read through ruby-talk you will find code that looks like "this":http://groups.google.com/group/comp.lang.ruby/msg/168977b073d02ad7 (I just did some minimal adjustments to formatting and corrected obvious errors):
 
-<pre><code>
+<pre name="code" class="ruby">
   # read file into an array
   f = File.open("mylogfile.log")
   saved = File.open("archive.log", "a")
@@ -27,14 +27,13 @@ When you read through ruby-talk you will find code that looks like "this":http:/
 
   # Close the archive file
   saved.close
-
-</code></pre>
+</pre>
 
 The logic is straightforward: a file is opened, all its lines are read and then it is closed again. Similarly, the second file is opened for appending, then written to and finally closed. Sure, the second file could be opened later, but this is not where I want to draw your attention to.
 
 Rather, please notice that <tt>File.open</tt> is used together with an explicit <tt>close</tt>. Closing the file IO object ensures that all pending output is written to the file and operating system resources associated with the underlying file handle are freed. While not closing a read only file _usually_ does not have dramatic consequences, not closing a file opened for writing likely _has_ dramatic consequences. You can see it by running this bit of code through Ruby 1.8.*:
 
-<pre><code>
+<pre name="code" class="ruby">
   NAME = "foo"
 
   f1 = File.open NAME, "w"
@@ -43,8 +42,7 @@ Rather, please notice that <tt>File.open</tt> is used together with an explicit 
   f2 = File.open NAME, "a"
   f2.puts "text 2"
   # forgot to close f2
-
-</code></pre>
+</pre>
 
 On my system (CentOS 5.3, Ruby 1.8.5) I see only the first line in the file but the second <tt>puts</tt> has no effect.  Even if you add a <tt>f2.close</tt> at the end of the script you won't see any difference.  You need to add the <tt>f1.close</tt> before you open <tt>f2</tt> to actually see two lines in the output file.
 
@@ -64,7 +62,7 @@ h3. Example rewritten
 
 With these tools equipped we are now ready to rewrite the original bit to a more robust version:
 
-<pre><code>
+<pre name="code" class="ruby">
   # read file and write to archive
   File.open("archive.log", "a") do |saved|
     File.foreach("mylogfile.log") do |sending|
@@ -73,8 +71,7 @@ With these tools equipped we are now ready to rewrite the original bit to a more
       saved.puts(sending) # removed superfluous string interpolation
     end
   end
-
-</code></pre>
+</pre>
 
 Note, that if the timing of the original script is critical we might want to use <tt>File.readlines</tt> in order to read in all lines of "mylogfile.log" before starting to write to the "archive.log" as the original code does.
 

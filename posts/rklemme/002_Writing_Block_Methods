@@ -1,0 +1,65 @@
+=title Writing Block Methods with automatic Resource Cleanup
+=description <a href="posts/rklemme/001-Using_blocks_for_Robustness.html">Last time</a> I demonstrated how using library methods with blocks can improve robustness of a program. This time I will show how such methods are implemented.
+=entry
+After we have seen how <tt>File.open</tt> with a block is safer than without we will look into how such methods are created today.
+
+h3. Ingredients
+
+We need two ingredients:
+
+# <tt>yield</tt>
+# A <tt>begin ... end</tt> block with <tt>ensure</tt>
+
+<tt>yield</tt> is a keyword and invokes the block which is passed to a method. If the caller did not provide a block he'll earn a <tt>LocalJumpError</tt>. Result of evaluating <tt>yield</tt> is the value of the block (remember, we also called them "anonymous functions").
+
+As you will probably know <tt>begin ... end</tt> blocks can be used to catch exceptions and handle them properly. But this construct has two more features apart from <tt>rescue</tt>; a full blown block might look like this:
+
+<pre name="code" class="ruby">
+begin
+  # do our work
+rescue SomeException => e
+  # oops!
+rescue Exception => e
+  # deal with other errors
+else
+  # good, no exception surfaced!
+ensure
+  # good or bad, this needs to be done
+end
+</pre>
+
+Code in an <tt>else</tt> clause after <tt>rescue</tt> is executed when the block is left normally, i.e. without an exception being thrown. Note that in case of an exception it is irrelevant whether it is caught in this <tt>begin ... end</tt> block or not -- <tt>else</tt> will not be executed. Code after <tt>ensure</tt> is executed under all circumstances -- regardless whether an exception is thrown or not. This is the feature that we'll exploit for our cleanup.
+
+An important thing to know is that the result of the "ensure" code does not affect the block's result which is normally the value of the last expression evaluated between <tt>begin</tt> and the first <tt>rescue</tt>. So anything the cleanup code returns is invisible to the caller (which makes perfect sense if you think about it). Results of <tt>rescue</tt> and <tt>else</tt> clauses _are_ retained when they are executed.
+
+h3. Cooking
+
+Assume we have a class that distributes stdin to a set of files much the same as the "'tee' command line utility":http://en.wikipedia.org/wiki/Tee_(command) does. This class features a method <tt>open</tt> which opens files and another method <tt>close</tt> which closes all file descriptors. Then we can create a class method similar to <tt>File.open()</tt> which does the automatic cleanup via an <tt>ensure</tt> section:
+
+<pre name="code" class="ruby">
+class Tee
+  def self.open(file_names, mode = "w")
+    tee = new(file_names, mode)
+    tee.open
+
+    if block_given?
+      begin
+        yield tee
+      ensure
+        tee.close
+      end
+    else
+      tee
+    end
+  end
+end
+</pre>
+
+This code does actually work similar to <tt>File.open</tt> because it acts differently depending on the presence of a block:
+
+* If there is no block, then the "tee" is created and opened. It is the return value of the method.
+* If there is a block, then that is called with the opened "tee" instance and after termination this is closed.
+
+That's really all there is to it. A final remark: in order to ensure that this pattern works properly you need to make sure the initialization is done _before_ the <tt>begin</tt>. Otherwise any exceptions thrown during initialization will trigger the cleanup code which then will act on an incomplete or completely different object altogether (chances are that you will get <tt>NoMethodError</tt> from <tt>nil</tt> in this case).
+
+You can also look at the "full code":http://gist.github.com/98693 if you want to see the complete story.
