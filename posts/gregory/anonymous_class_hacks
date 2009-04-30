@@ -1,0 +1,261 @@
+=title Fun with Class.new
+=description 
+Building anonymous classes may sound a bit esoteric, but can actually comein handy in a number of ways. I've collected three and a half of my favorite tricks for your enjoyment.
+=entry
+If you've worked with Ruby for at least a little while, you might already know that classes in Ruby are objects themselves, in particular, instances of <tt>Class</tt>.  Before I get into the fun stuff, let's quickly recap what that means.
+
+Here's the ordinary way we define classes, as you all have seen.
+
+<pre name="code" class="ruby">
+  class Point
+    def initialize(x,y)
+      @x, @y = x,y
+    end
+    
+    attr_reader :x, :y
+    
+    def distance(point)
+      Math.hypot(point.x - x, point.y - y)
+    end
+  end 
+</pre>
+
+The interesting thing is that the previous definition is essentially functionally equivalent to the following:
+
+<pre name="code" class="ruby">
+  Point = Class.new do
+    def initialize(x,y)
+      @x, @y = x,y
+    end
+  
+    attr_reader :x, :y
+  
+    def distance(point)
+      Math.hypot(point.x - x, point.y - y)
+    end
+  end
+</pre>
+
+This always struck me as a beautiful design decision in Ruby, because it reflects the inherent simplicity of the object model, and exposes useful low level hooks for us to use.  I'd like to share just a few tricks with you that have been useful to me which leverage this neat concept of anonymously defined classes.
+
+h3. Cleaner Exception Definitions
+
+This sort of code has always bugged me:
+
+<pre name="code" class="ruby">
+  module Prawn
+    module Errors
+     
+       class FailedObjectConversion < StandardError; end
+     
+       class InvalidPageLayout < StandardError; end        
+     
+       class NotOnPage < StandardError; end
+
+       class UnknownFont < StandardError; end   
+
+       class IncompatibleStringEncoding < StandardError; end     
+
+       class UnknownOption < StandardError; end
+
+    end
+  end
+</pre>
+
+Although there are valid reasons for subclassing a StandardError, typically the only reason I am doing it is to get a named exception to rescue.  I don't plan to ever add any functionality to its subclass beyond a named constant.  However, if we notice that <tt>Class.new</tt> can be used to create subclasses, you can write something that more clearly reflects this intention:
+
+<pre name="code" class="ruby">
+  module Prawn
+    module Errors
+       FailedObjectConversion = Class.new(StandardError)
+            
+       InvalidPageLayout = Class.new(StandardError)     
+     
+       NotOnPage = Class.new(StandardError)
+
+       UnknownFont = Class.new(StandardError)
+
+       IncompatibleStringEncoding = Class.new(StandardError)     
+
+       UnknownOption = Class.new(StandardError) 
+
+    end
+  end
+</pre>
+
+This feels a bit nicer to me, because although it's somewhat clear that these are still subclasses, I don't have an ugly empty class definition that will never be filled.  Of course, we could make this more DRY if we mix in a little <tt>const_set</tt> hackery:
+
+<pre name="code" class="ruby">
+module Prawn
+  module Errors
+  
+    exceptions = %w[ FailedObjectConversion InvalidPageLayout NotOnPage
+                    UnknownFont IncompatibleStringEncoding UnknownOption ]
+
+    exceptions.each { |e| const_set(e, Class.new(StandardError)) }
+
+  end
+end
+</pre>
+
+Even with this concise definition, you'll still get the functionality you'd
+expect:
+
+<pre>
+>> Prawn::Errors::IncompatibleStringEncoding.ancestors
+=> [Prawn::Errors::IncompatibleStringEncoding, StandardError, Exception, Object, Kernel]
+>> raise Prawn::Errors::IncompatibleStringEncoding, "Bad string encoding"
+Prawn::Errors::IncompatibleStringEncoding: Bad string encoding
+	from (irb):33
+	from :0
+</pre>
+
+You can even take it farther than this, dynamically building up error classes by a naming convention.  If that sounds interesting to you and you don't mind the fuzziness of a <tt>const_missing</tt> hook, you'll want to check out James Gray's blog post <a href="http://blog.grayproductions.net/articles/summoning_error_classes_as_needed">"Summoning Error Classes As Needed"</a>.  Though I tend to be a bit more conservative, there are definitely certain places where a hack like this can come in handy.
+
+The drawback of using any of these methods discussed here is that they don't really play well with RDoc.   However, there are easy ways to work around this, and James details some of them in his post.   In general, it's a small price to pay for greater clarity and less work in your code.
+
+Continuing on the theme of dynamically building up subclasses, we can move on to the next trick.
+
+h3. Safer Class Level Unit Testing
+
+In my experience, it's a little bit tricky to test code that maintains state at the class level.  I've tried everything from mocking out calls, to creating a bunch of explicit subclasses, and even have done something like <tt>klass = SomeClass.dup</tt> before in my unit tests.  While all of these solutions may do the trick depending on the context, there is a simple and elegant way that involves (you guessed it) <tt>Class.new</tt>.
+
+Here's a quick example from a patch I submitted to the builder that verifies a fix I made to the BlankSlate class:
+
+<pre name="code" class="ruby">
+  def test_reveal_should_not_bind_to_an_instance
+    with_object_id = Class.new(BlankSlate) do
+      reveal(:object_id)
+    end
+
+    obj1 = with_object_id.new
+    obj2 = with_object_id.new
+
+    assert obj1.object_id != obj2.object_id,
+       "Revealed methods should not be bound to a particular instance"
+  end
+</pre>
+
+Notice here that although we are doing class level logic, this test is still atomic and does not leave a mess behind in its wake.  We get to use the real <tt>reveal()</tt> method, which means we don't need to think up the mocking interface.  Because we only store this anonymous subclass in a local variable, we know that our other tests won't be adversely affected by it, it'll just disappear when the code falls out of scope.  The code is clear and expressive, which is a key factor in tests.
+
+If you're looking for more examples like this, you'll want to look over the rest of the <tt>BlankSlate</tt> "test case":http://github.com/jimweirich/builder/blob/c41c8914bec84f0009869e96ad6ebb39987896d3/test/test_blankslate.rb .  I just followed Jim Weirich's lead here, so you'll see a few other examples that use a similar trick.
+
+For those interested, the thing that sparked my interest in writing this article today was a tiny bit of domain specific code I had cooked up for my day to day work, which needed to implement a nice interface for filtering search queries at the class level before they were executed.
+
+<pre>
+  class FreightOffer::Rail < FreightOffer
+    hard_constraint do |query|
+      query[:delivery] - query[:pickup] > 5.days
+    end
+
+    soft_constraint do |query|
+      query[:asking_price] < 5000.to_money
+    end
+  end
+</pre>
+
+While it's easy to test these constraints once they're set up for a particular model, I wanted to be able to test drive the constraint interface itself at the abstract level. The best way I could come up with was to write tests that used <tt>Class.new</tt> to generate subclasses of <tt>FreightOffer</tt> to test against, which worked well.  While I won't post those tests here, it's a good exercise if you want to get the feel for this technique.
+
+The next trick is a little bit different than the first two, but can really come in handy when you want to inject a little syntactic diabetes into the mix.
+
+h3. Parameterized Subclassing
+
+You might recognize the following example, since it is part of the "sample chapter":http://cachefly.oreilly.com/catalogs/Mastering_the_Dynamic_Toolkit.pdf of "Ruby Best Practices":http://rubybestpractices.com .  More than just a shameless plug though, I think this particular example shows off an interesting technique for dynamically building up subclasses in a low level system.
+
+Let's start with some vanilla code and see how we can clean it up, then we'll finally take a look under the hood.  What follows is a <tt>Fatty::Formatter</tt>, which abstracts the task of producing output in a number of different formats.  
+
+<pre name="code" class="ruby">
+  class MyReport < Fatty::Formatter 
+  
+    module Helpers 
+      def full_name 
+        "#{params[:first_name]} #{params[:last_name]}" 
+      end 
+    end 
+    
+    class Txt < Fatty::Format 
+      include MyReport::Helpers 
+       def render 
+        "Hello #{full_name} from plain text" 
+       end 
+    end 
+    
+    # use a custom Fatty::Format subclass for extra features 
+    class PDF < Prawn::FattyFormat 
+      include MyReport::Helpers 
+      def render 
+        doc.text "Hello #{full_name} from PDF" 
+        doc.render 
+      end 
+    end 
+    formats.update(:txt => Txt, :pdf => PDF) 
+  end
+</code>
+
+The <tt>MyReport</tt> class in the previous code sample is little more than a glorified "Hello World" example that outputs text and PDF.   It is pretty easy to follow and doesn't really do anything fancy.  However, we can certainly clean it up and make it look better:
+
+<pre name="code" class="ruby">
+  class MyReport < Fatty::Formatter 
+    
+    helpers do 
+      def full_name 
+        "#{params[:first_name]} #{params[:last_name]}" 
+      end 
+    end 
+    
+    format :txt do 
+      def render 
+        "Hello #{full_name} from plain text" 
+      end 
+    end 
+    
+    format :pdf, :base => Prawn::FattyFormat do 
+      def render 
+        doc.text "Hello #{full_name} from PDF" 
+        doc.render 
+      end 
+    end 
+    
+  end
+</pre> 
+
+I think you'll agree that this second sample induces the kind of familiar sugar shock that Ruby coders know and love.  It accomplishes the same goals and actually wraps the lower level code rather than replacing it.  But is there some sort of dark magic behind this?  Let's peek behind the curtain:
+
+<pre name="code" class="ruby">
+  def format(name, options={}, &block) 
+    formats[name] = Class.new(options[:base] || Fatty::Format, &block) 
+  end
+</pre>
+
+As you can see, it is nothing more than a hash of <tt>formats</tt> maintained at the class level, combined with a call to <tt>Class.new</tt> to generate the subclass.  No smoke and mirrors, just the same old Ruby tricks we've been using throughout this article.  The curious may wonder how <tt>helpers()</tt> works here, and though it's slightly tangential, you'll see it is similarly simple.
+
+<pre name="code" class="ruby">
+  def helpers(helper_module=nil, &block) 
+    @helpers = helper_module || Module.new(&block) 
+  end 
+</pre>
+
+Though I won't get into it here, fun tricks can be done with anonymous modules as well.  Can you think of any that are particularly interesting?  If so, let me know in the comments.
+
+Although I only showed a part of the picture, you might want to check out the rest of "Fatty's source":http://github.com/sandal/fatty/blob/392d65ee9b4be167cfe568f0669b64694ef2bbff/lib/fatty.rb.  I call it a '67 line replacement for "Ruport":http://rubyreports.org', which is a major exaggeration, but it is really surprising how much you can get out of a few dynamic Ruby tricks when you combine them together properly.  A lot of these ideas were actually inspired by the Sinatra web framework, so that's another project to add to your code reading list if you're looking to learn new tricks.
+
+Anyway, I'm getting off topic now, and it's about time we wrap up anyway.  I'll go on one more tiny tangent, and then send you on your way.
+
+h3. Shortcutting with Struct
+
+With all this talk about using anonymous sub-classes, I can't help but recap one of the "oldest tricks in the book":http://blog.grayproductions.net/articles/all_about_struct.  The method <tt>Struct.new</tt> can be handy for shortcutting class creation.  Using it, the very first example in this post could be simplified down to:
+
+<pre name="code" class="ruby">
+class Point < Struct.new(:x, :y)
+  def distance(point)
+    Math.hypot(point.x - x, point.y - y)
+  end
+end
+</pre>
+
+The constructor and accessors are provided for free by <tt>Struct</tt> here.  Of course, the real reason I mentioned this was to get you thinking.  If Struct.new() can work this way, and we know that <tt>Class.new</tt> can accept a block definition that provides a closure, what other cool uses of parameterized subclasses can we cook up?
+
+h3. Please Share Your Thoughts
+
+I wrote this article in hopes that it'll be a jumping off point for discussion on more cool tricks I haven't seen before, or failing that, ones that other readers haven't seen before.  While there certainly is a lot of nasty, scary looking "meta-programming" out there that makes people feel like this stuff is hard and esoteric, there are many techniques that lead to simple, elegant, and beautiful dynamic code.  Please let me know what you think of these techniques, and definitely share one of your own if you'd like. 
+
