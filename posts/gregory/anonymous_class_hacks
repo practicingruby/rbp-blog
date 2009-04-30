@@ -187,6 +187,7 @@ Let's start with some vanilla code and see how we can clean it up, then we'll fi
         doc.render 
       end 
     end 
+    
     formats.update(:txt => Txt, :pdf => PDF) 
   end
 </pre>
