@@ -36,7 +36,7 @@ The interesting thing is that the previous definition is essentially functionall
   end
 </pre>
 
-This always struck me as a beautiful design decision in Ruby, because it reflects the inherent simplicity of the object model while exposing useful low level hooks for us to use.  I'd like to share just a few tricks with you that have been useful to me which leverage this neat concept of anonymously defined classes.
+This always struck me as a beautiful design decision in Ruby, because it reflects the inherent simplicity of the object model while exposing useful low level hooks for us to use.  Building on this this neat concept of anonymously defined classes, I'll share a few tricks that have been useful to me in real projects.
 
 h3. Cleaner Exception Definitions
 
