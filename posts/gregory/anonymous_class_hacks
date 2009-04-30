@@ -141,7 +141,7 @@ If you're looking for more examples like this, you'll want to look over the rest
 
 For those interested, the thing that sparked my interest in writing this article today was a tiny bit of domain specific code I had cooked up for my day to day work, which needed to implement a nice interface for filtering search queries at the class level before they were executed.
 
-<pre>
+<pre name="code" class="ruby">
   class FreightOffer::Rail < FreightOffer
     hard_constraint do |query|
       query[:delivery] - query[:pickup] > 5.days
