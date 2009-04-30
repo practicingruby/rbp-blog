@@ -36,7 +36,7 @@ The interesting thing is that the previous definition is essentially functionall
   end
 </pre>
 
-This always struck me as a beautiful design decision in Ruby, because it reflects the inherent simplicity of the object model, and exposes useful low level hooks for us to use.  I'd like to share just a few tricks with you that have been useful to me which leverage this neat concept of anonymously defined classes.
+This always struck me as a beautiful design decision in Ruby, because it reflects the inherent simplicity of the object model while exposing useful low level hooks for us to use.  I'd like to share just a few tricks with you that have been useful to me which leverage this neat concept of anonymously defined classes.
 
 h3. Cleaner Exception Definitions
 
@@ -98,8 +98,7 @@ module Prawn
 end
 </pre>
 
-Even with this concise definition, you'll still get the functionality you'd
-expect:
+Even with this concise definition, you'll still get the functionality you'd expect:
 
 <pre>
 >> Prawn::Errors::IncompatibleStringEncoding.ancestors
@@ -118,7 +117,7 @@ Continuing on the theme of dynamically building up subclasses, we can move on to
 
 h3. Safer Class Level Unit Testing
 
-In my experience, it's a little bit tricky to test code that maintains state at the class level.  I've tried everything from mocking out calls, to creating a bunch of explicit subclasses, and even have done something like <tt>klass = SomeClass.dup</tt> before in my unit tests.  While all of these solutions may do the trick depending on the context, there is a simple and elegant way that involves (you guessed it) <tt>Class.new</tt>.
+In my experience, it's a little bit tricky to test code that maintains state at the class level.  I've tried everything from mocking out calls, to creating a bunch of explicit subclasses, and even have done something like <tt>klass = SomeClass.dup</tt> in my unit tests.  While all of these solutions may do the trick depending on the context, there is a simple and elegant way that involves (you guessed it) <tt>Class.new</tt>.
 
 Here's a quick example from a patch I submitted to the builder that verifies a fix I made to the BlankSlate class:
 
@@ -190,7 +189,7 @@ Let's start with some vanilla code and see how we can clean it up, then we'll fi
     end 
     formats.update(:txt => Txt, :pdf => PDF) 
   end
-</code>
+</pre>
 
 The <tt>MyReport</tt> class in the previous code sample is little more than a glorified "Hello World" example that outputs text and PDF.   It is pretty easy to follow and doesn't really do anything fancy.  However, we can certainly clean it up and make it look better:
 
@@ -237,7 +236,7 @@ As you can see, it is nothing more than a hash of <tt>formats</tt> maintained at
 
 Though I won't get into it here, fun tricks can be done with anonymous modules as well.  Can you think of any that are particularly interesting?  If so, let me know in the comments.
 
-Although I only showed a part of the picture, you might want to check out the rest of "Fatty's source":http://github.com/sandal/fatty/blob/392d65ee9b4be167cfe568f0669b64694ef2bbff/lib/fatty.rb.  I call it a '67 line replacement for "Ruport":http://rubyreports.org', which is a major exaggeration, but it is really surprising how much you can get out of a few dynamic Ruby tricks when you combine them together properly.  A lot of these ideas were actually inspired by the Sinatra web framework, so that's another project to add to your code reading list if you're looking to learn new tricks.
+Although I only showed a part of the picture, you might want to check out the rest of "Fatty's source":http://github.com/sandal/fatty/blob/392d65ee9b4be167cfe568f0669b64694ef2bbff/lib/fatty.rb.  I call it a '67 line replacement for "Ruport":http://rubyreports.org', which is a major exaggeration, but it is really surprising how much you can get out of a few dynamic Ruby tricks when you combine them together properly.  A lot of these ideas were actually inspired by the "Sinatra":http://www.sinatrarb.com/ web framework, so that's another project to add to your code reading list if you're looking to learn new tricks.
 
 Anyway, I'm getting off topic now, and it's about time we wrap up anyway.  I'll go on one more tiny tangent, and then send you on your way.
 
@@ -253,7 +252,7 @@ class Point < Struct.new(:x, :y)
 end
 </pre>
 
-The constructor and accessors are provided for free by <tt>Struct</tt> here.  Of course, the real reason I mentioned this was to get you thinking.  If Struct.new() can work this way, and we know that <tt>Class.new</tt> can accept a block definition that provides a closure, what other cool uses of parameterized subclasses can we cook up?
+The constructor and accessors are provided for free by <tt>Struct</tt> here.  Of course, the real reason I mentioned this was to get you thinking.  If <tt>Struct.new</tt> can work this way, and we know that <tt>Class.new</tt> can accept a block definition that provides a closure, what other cool uses of parameterized subclasses can we cook up?
 
 h3. Please Share Your Thoughts
 
