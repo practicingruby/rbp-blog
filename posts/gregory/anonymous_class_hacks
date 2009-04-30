@@ -239,7 +239,7 @@ Though I won't get into it here, fun tricks can be done with anonymous modules a
 
 Although I only showed a part of the picture, you might want to check out the rest of "Fatty's source":http://github.com/sandal/fatty/blob/392d65ee9b4be167cfe568f0669b64694ef2bbff/lib/fatty.rb.  I call it a '67 line replacement for "Ruport":http://rubyreports.org', which is a major exaggeration, but it is really surprising how much you can get out of a few dynamic Ruby tricks when you combine them together properly.  A lot of these ideas were actually inspired by the "Sinatra":http://www.sinatrarb.com/ web framework, so that's another project to add to your code reading list if you're looking to learn new tricks.
 
-Anyway, I'm getting off topic now, and it's about time we wrap up anyway.  I'll go on one more tiny tangent, and then send you on your way.
+Anyway, I'm getting off topic now, and it's about time to wrap up anyway.  I'll go on one more tiny tangent, and then send you on your way.
 
 h3. Shortcutting with Struct
 
