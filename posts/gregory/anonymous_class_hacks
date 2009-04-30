@@ -119,7 +119,7 @@ h3. Safer Class Level Unit Testing
 
 In my experience, it's a little bit tricky to test code that maintains state at the class level.  I've tried everything from mocking out calls, to creating a bunch of explicit subclasses, and even have done something like <tt>klass = SomeClass.dup</tt> in my unit tests.  While all of these solutions may do the trick depending on the context, there is a simple and elegant way that involves (you guessed it) <tt>Class.new</tt>.
 
-Here's a quick example from a patch I submitted to the builder that verifies a fix I made to the BlankSlate class:
+Here's a quick example from a patch I submitted to the _builder_ library that verifies a fix I made to the <tt>BlankSlate</tt> class:
 
 <pre name="code" class="ruby">
   def test_reveal_should_not_bind_to_an_instance
