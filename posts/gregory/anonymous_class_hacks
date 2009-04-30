@@ -1,6 +1,6 @@
 =title Fun with Class.new
 =description 
-Building anonymous classes may sound a bit esoteric, but can actually comein handy in a number of ways. I've collected three and a half of my favorite tricks for your enjoyment.
+Building anonymous classes may sound a bit esoteric, but can actually come in handy in a number of ways. I've collected three and a half of my favorite tricks for your enjoyment.
 =entry
 If you've worked with Ruby for at least a little while, you might already know that classes in Ruby are objects themselves, in particular, instances of <tt>Class</tt>.  Before I get into the fun stuff, let's quickly recap what that means.
 
