@@ -62,7 +62,7 @@ This sort of code has always bugged me:
   end
 </pre>
 
-Although there are valid reasons for subclassing a StandardError, typically the only reason I am doing it is to get a named exception to rescue.  I don't plan to ever add any functionality to its subclass beyond a named constant.  However, if we notice that <tt>Class.new</tt> can be used to create subclasses, you can write something that more clearly reflects this intention:
+Although there are valid reasons for subclassing a <tt>StandardError</tt>, typically the only reason I am doing it is to get a named exception to rescue.  I don't plan to ever add any functionality to its subclass beyond a named constant.  However, if we notice that <tt>Class.new</tt> can be used to create subclasses, you can write something that more clearly reflects this intention:
 
 <pre name="code" class="ruby">
   module Prawn
