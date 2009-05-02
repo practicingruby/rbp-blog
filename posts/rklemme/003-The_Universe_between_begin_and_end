@@ -25,12 +25,12 @@ ensure
 end
 </pre>
 
-Note that you can replace @begin@ with @def...@ to define a method with "integrated" exception handling.  That way you can avoid one level of nesting.
+Note that you can replace @begin@ with @def meth...@ to define a method with "integrated" exception handling.  That way you can avoid one level of nesting.
 
 There are various interesting aspects to each section:
 
 * control flow (most particularly, how is the section left?),
-* result (if any)
+* result (if any),
 * documentation (what does it tell me that code is in a particular section?).
 
 We'll keep these in the back of our heads when exploring section after section.
@@ -89,7 +89,7 @@ end
 
 h3. @ensure@
 
-This section is the last one before the final @end@.  Code in this section will be executed regardless of how the main section is left, i.e. even in case of @raise@, @throw@, @return@ and @break@!  The result if the section is ignored unless you choose to explicitly @return@ it or raise an exception.  While raising exceptions might be reasonable in some cases, it should generally be avoided because those exceptions will shadow errors coming from the main section or from @rescue@ clauses:
+This section is the last one before the final @end@.  Code in this section will be executed regardless of how the main section is left, i.e. even in case of @raise@, @throw@, @return@ and @break@!  The result of the section is ignored unless you choose to explicitly @return@ it or raise an exception.  While raising exceptions might be reasonable in some cases, it should generally be avoided because those exceptions will shadow errors coming from the main section or from @rescue@ clauses:
 
 <pre name="code" class="ruby">
 irb(main):007:0> def f
@@ -131,9 +131,9 @@ irb(main):025:0>
 
 There's a reason why the result of executing @ensure@ section is ignored: this code has nothing to do with the "business logic" which should go into the main section but is solely for cleaning up.  Assume you open a file with @io = File.open@ (which I hope you won't do after reading a "previous post":001-Using_blocks_for_Robustness.html), have search code in the main section and place @io.close@ in an @ensure@ section.  Then you would not want to shadow the result of the search by the result from the close operation.
 
-Although ehsanul "questioned the utility of @ensure@":http://blog.rubybestpractices.com/posts/rklemme/002_Writing_Block_Methods.html#dsq-cite-8562863 I certainly use it more often than @else@.  While @else@ section code can be put somewhere else in some cases, there is no other place of code which can easily replace an @ensure@ clause and guarantee the same robustness of the code at the same time.  This is nicely demonstrated by his suggested alternative which uses only @rescue@ without @Exception@ -- this does not catch all exceptions!  "Robustness" in this case refers not only to runtime robustness but also robustness of the code against maintenance (i.e. changes).
+Although ehsanul "questioned the utility":http://blog.rubybestpractices.com/posts/rklemme/002_Writing_Block_Methods.html#dsq-cite-8562863 of @ensure@ I certainly use it more often than @else@.  While @else@ section code can be put somewhere else in some cases, there is no other place of code which can easily replace an @ensure@ clause and guarantee the same robustness of the code at the same time.  This is nicely demonstrated by his suggested alternative which uses only @rescue@ without @Exception@ -- this does not catch all exceptions!  "Robustness" in this case refers not only to runtime robustness but also robustness of the code against maintenance (i.e. changes).
 
-Let's assume you have caught all exceptions via @rescue@ clauses which do not raise and placed your cleanup code after @end@ as it was suggested.  Code works as expected and everything is fine.  Ok, you might have to use a local variable to make sure the proper value is returned from your method but this is just a nuisance.  Now all these changes will put execution of your cleanup code at danger:
+Let's assume you have caught all exceptions via @rescue@ clauses which do not raise and placed your cleanup code after @end@ as it was suggested.  Code works as expected and everything is fine.  You might have to use a local variable to make sure the proper value is returned from your method but this is just a nuisance.  Now all these changes will put execution of your cleanup code at danger:
 
 * A @rescue@ clause is removed.
 * A previously uncaught exception type is thrown from the main section (the change need not be in your piece of code).
@@ -143,7 +143,7 @@ Let's assume you have caught all exceptions via @rescue@ clauses which do not ra
 
 And lastly, readability should not be underestimated!  Placing code in an @ensure@ section tells the reader immediately that he can ignore it when trying to understand what the main purpose of the code is.  This is "only" cleanup which makes sure some resources that were used for the calculation are not kept longer than needed.  Whereas, if you place that code after @end@ it could belong to the normal flow of the core business logic.
 
-h3. Best Practices
+h3. Guidelines
 
 So after all the detail here are some rules which I hope will guide you in making the most appropriate use of @begin ... end@ blocks.
 
