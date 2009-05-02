@@ -61,7 +61,8 @@ This section does make sense only if there is a @rescue@ as well.  (You'll get a
 Now, some of the "discussion":http://blog.rubybestpractices.com/posts/rklemme/002_Writing_Block_Methods.html#dsq-cite-8500023 revolved around the utility of this section and whether code placed here is equivalent to code placed in other places.  While at first sight it may seem that you can just place it at the end of the main section a closer look reveals some subtlties, some of which have been mentioned already:
 
 * If the code raises an exception, it might be rescued when placed in the main section but it won't be rescued when placed in @else@ section.
-* Placing the code after @end@ generally has the same effect as putting it in an @else@ section but: when using a shortcut version of @begin ... end@ in a method definition there is no place "after end" - at least nothing that is executed as part of the method invocation:
+* Placing the code after @end@ generally has a similar effect as putting it in an @else@ section but if there is an @ensure@ section order of execution is reversed.  This can make a serious difference if the @else@ code uses a resource which is cleaned up in @ensure@.
+* When using the version of @begin ... end@ in a method definition there is no place "after end" - at least nothing that is executed as part of the method invocation:
 
 <pre name="code" class="ruby">
 def do_the_work
@@ -75,3 +76,13 @@ end
 
 h3. @ensure@
 
+
+h3. Best Practices
+
+So after all the detail here are some rules which can guide you in making the most appropriate use of @begin ... end@ blocks.
+
+# If you have cleanup code that must be executed under all circumstances, put it in @ensure@.
+# @rescue@ the most specific exception you can handle.
+# Do not @rescue@ exceptions that you cannot or do not want to handle.
+
+Keep in mind that these are just guidelines and you have to check on a case by case basis which is the most appropriate solution.  As Buddha says: verify the teaching with your own mind.
