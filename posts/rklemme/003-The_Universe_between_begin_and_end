@@ -141,7 +141,7 @@ Let's assume you have caught all exceptions via @rescue@ clauses which do not ra
 * An @else@ section is introduced and code might throw.
 * Code in @else@ section is changed to raise an exception.
 
-And lastly, readability should not be underestimated!  Placing code in an @ensure@ section tells the reader immediately that he can ignore it when trying to understand what the main purpose of the code is.  This is "only" cleanup which makes sure some resources that were used for the calculation are not kept longer than needed.  Whereas, if you place that code after @end@ it could belong to the normal flow of the core business logic.
+And lastly, do not underestimate readability!  Placing code in an @ensure@ section tells the reader immediately that he can ignore it when trying to understand what the main purpose of the code is.  This is "only" cleanup which makes sure some resources that were used for the calculation are not kept longer than needed.  Whereas, if you place that code after @end@ it could belong to the normal flow of the core business logic.
 
 h3. Guidelines
 
