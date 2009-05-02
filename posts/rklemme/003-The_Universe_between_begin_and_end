@@ -35,9 +35,9 @@ There are various interesting aspects to each section:
 
 We'll keep these in the back of our heads when exploring section after section.
 
-h3. @begin@ - main section
+h3. @begin@
 
-This section begins right after the @begin</begin> - no surprises so far.  This is where you place the code that should do the work you want to get done.  If evaluation reaches the end of this section normally the result of the last expression evaluated is also the result of this section.  In the absence of @rescue@ or @else@ that value is propagated to the surrounding context.
+This is the main section where you place the code that does the work you want to get done.  If evaluation reaches the end of this section normally the result of the last expression evaluated is also the result of this section.  In the absence of @rescue@ or @else@ that value is propagated to the surrounding context.
 
 If we look at control flow things start to get a bit more involved.  First, you should note that there are these additional ways this section (actually _any_ section of code) can be terminated:
 
@@ -46,7 +46,7 @@ If we look at control flow things start to get a bit more involved.  First, you 
 * an exception is triggered via @raise@,
 * @throw@ is invoked.
 
-I'm sure you haven't thought of all of them.  (Did *I* miss another one?)  All these have one thing in common: the end of the section is not reached normally and the code produces a different result.
+How many of those did you think of?  (Did I miss another one?)  All these have one thing in common: the end of the section is not reached normally and the code produces a different result.
 
 h3. @rescue@
 
@@ -55,6 +55,17 @@ This can have an optional @ExceptionType => variable@ in which case exceptions o
 If there are multiple @rescue@ clauses, order matters.  You must rescue most specific errors first and less specificerrors later because otherwise a super class @rescue@ clause will shadow a sub class clause which comes later.  Only one rescue clause of a group is ever executed.
 
 In case a rescue clause is executed the result of the whole block is that of the code in the rescue clause.  In other words: when catching exceptions the exception code replaces the block's result.  Unless, that is, you invoke @raise@ or @retry@.
+
+The tricky part about @rescue@ is which exceptions to catch.  If you cannot handle an exception, you should not catch it because otherwise you will prevent other code that is capable of handling it to work.  Actually, as long as you do not @raise@ again, nobody outside will notice that there was an error in the first place.  A special case is @raise@ without arguments: sometimes it is reasonable to catch all exceptions, log the event and rethrow:
+
+<pre name="code" class="ruby">
+def f
+  do_work
+rescue Exception => e
+  log.error "There was an error: #{e.message}"
+  raise
+end
+</pre>
 
 h3. @else@
 
