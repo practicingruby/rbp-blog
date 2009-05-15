@@ -2,6 +2,8 @@
 =description 
 Building anonymous classes may sound a bit esoteric, but they can actually come in handy in a number of ways. I've collected three and a half of my favorite tricks for your enjoyment.
 =entry
+<i>Update:  My apologies to those who visited via ruby.about.com for the tasteless advertisements they layered onto this page via a frame.  Luckily, there are "technical solutions":http://github.com/sandal/rbp-blog/commit/97df49430262beb8ddbb067fba5f1756efd4aac5 to at least some social problems, and you may now browse again in peace :)</i>
+
 If you've worked with Ruby for at least a little while, you might already know that classes in Ruby are objects themselves, in particular, instances of <tt>Class</tt>.  Before I get into the fun stuff, let's quickly recap what that means.
 
 Here's the ordinary way we define classes, as you all have seen.
