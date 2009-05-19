@@ -75,7 +75,7 @@ Now, if you indeed place @catch@ and @throw@ in different methods you have estab
 
 It's fairly easy to complicate things even more by placing @catch@ and @throw@ methods in different classes or by nesting two or more @catch@ constructs.  It's fairly safe to say that these obfuscating effects are best avoided by using @catch ... throw@ in a single method only -- and in that case there are other control flow constructs that we can usually use.  In fact I am still searching for more convincing examples of @catch ... throw@ usage; so far the best contender has been a jump out of multiple nested loops.  Although, to me the "multiple nested loops" item has a slight "code smell":http://c2.com/xp/CodeSmell.html of its own.  But, read on...
 
-[_Addition:_] Actually, you can "find":http://svn.ruby-lang.org/cgi-bin/viewvc.cgi/branches/ruby_1_9_1/lib/find.rb?view=markup a good application of @catch ... throw@ in Ruby's standard library.  In this case it is elegant and @catch ... throw@ has the advantage of not interfering with exception handling: assume more complex code in the block which is passed to @Find.find@ which has a @rescue@ internally then using exceptions behind the scene might have surprising effects.
++[_Addition:_]+ Actually, you can "find":http://svn.ruby-lang.org/cgi-bin/viewvc.cgi/branches/ruby_1_9_1/lib/find.rb?view=markup a good application of @catch ... throw@ in Ruby's standard library.  In this case it is elegant and @catch ... throw@ has the advantage of not interfering with exception handling: assume more complex code in the block which is passed to @Find.find@ which has a @rescue@ internally then using exceptions behind the scene might have surprising effects.
 
 h3. level-1n
 
@@ -97,7 +97,7 @@ require 'find'
 
 def find_ruby_files(*dirs)
   Find.find *dirs do |file|
-    yield file if test ?f, file and /\.rb$/i =~ file
+    yield file if test ?f, file and /\.rb\z/i =~ file
   end
 ensure
   puts 'exit find_ruby_files'
