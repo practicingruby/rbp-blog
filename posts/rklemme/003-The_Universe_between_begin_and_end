@@ -1,5 +1,5 @@
 =title The Universe between <code>begin</code> and <code>end</code>
-=timestamp 2009.05.01 10:00 UTC
+=timestamp 2009.05.01 10:10 UTC
 =description The article was inspired by <a href="posts/rklemme/002_Writing_Block_Methods.html">last article's</a> comments.  Much has been said in the comments already and today I'll mostly try to combine and organize it to give an overview from <tt>begin</tt> to <tt>end</tt>.
 =entry
 This time we'll explore the space between @begin@ and @end@.  Today's article won't be as much about individual best practices but rather I will try to explore various aspects of @begin ... end@ blocks so you can decide how to make best use of this tool.  In fact, there are so many aspects that this construct sometimes reminds me of a swiss army knife - not so much because you can do everything with it but rather because it has so many features that you can use.  When it comes to control structuring elements @begin ... end@ is probably the most complex thing found in Ruby.
