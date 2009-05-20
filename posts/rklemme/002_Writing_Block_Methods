@@ -1,4 +1,5 @@
 =title Writing Block Methods with automatic Resource Cleanup
+=timestamp 2009.04.20 19:47 UTC
 =description <a href="posts/rklemme/001-Using_blocks_for_Robustness.html">Last time</a> I demonstrated how using library methods with blocks can improve robustness of a program. This time I will show how such methods are implemented.
 =entry
 After we have seen how <tt>File.open</tt> with a block is safer than without we will look into how such methods are created today.

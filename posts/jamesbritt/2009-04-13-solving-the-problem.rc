@@ -1,4 +1,5 @@
 =title Solve <em>the</em> problem, not just <em>a</em> problem
+=timestamp 2009.04.13 20:11 UTC
 =description Geeks are prone to build complex tools to solve problems, but the real goal is to solve the <em>right</em> problems. The Korma blogging tool hits that sweet spot.
 =entry
 So you decide you want a way for a number of people to post short articles to a Web site, and maybe allow for other people to leave comments. What do you do?  That's easy: jump to the white board and start sketching out a vast array of boxes, blobs, and arrows that define a sophisticated content management system with multi-level admin roles, content versioning, threaded discussion boards, syntax highlighting, the works. 

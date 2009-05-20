@@ -1,4 +1,5 @@
 =title Rails Modularity for Lazy Bastards
+=timestamp 2009-04-16 04:31 UT
 =description 
 If given the choice, would you rather maintain one gigantic Rails application, or a handful of smaller ones?  Using some simple organizational techniques along with ActiveResource, you can still tackle the big problems without the big headaches that come along with monolithic systems.
 =entry

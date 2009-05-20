@@ -1,4 +1,5 @@
 =title Control flow features and readability
+=timestamp 2009.05.19 20:46 UTC
 =description When we program we routinely pick different control flow freatures. Often we do not think much about our choice and in fact in many situations it is obvious what we should do.  I got curious about the nature of control flow features with respect to their effects on readability when I realized that <tt>catch ... throw</tt> is an extreme rare thing to see.  Let's look a bit closer at this.
 =entry
 First of all I would like to thank our readers who participate in discussions so actively!  These discussions provide interesting food for thought as well as inspirations for new blog entries.  Today's article was partly inspired by the question that surfaced recently: "Why is @catch .. throw@ seen so infrequently?"

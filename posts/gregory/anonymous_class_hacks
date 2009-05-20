@@ -1,4 +1,5 @@
 =title Fun with Class.new
+=timestamp 2009.04.30 17:55
 =description 
 Building anonymous classes may sound a bit esoteric, but they can actually come in handy in a number of ways. I've collected three and a half of my favorite tricks for your enjoyment.
 =entry

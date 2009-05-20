@@ -1,4 +1,5 @@
 =title Using Blocks for Robustness
+=timestamp 2009.04.09 14:25 UTC
 =description One way to look at Ruby's blocks is as anonymous functions and one of the uses of them is to make your code more robust.
 =entry
 Ruby's blocks can be used for many purposes -- in fact, they might well be the most used feature of the language. Today we will start looking at a frequently-used idiom, analyze its implications for robustness and demonstrate how blocks can greatly improve it.
