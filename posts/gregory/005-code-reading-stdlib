@@ -19,8 +19,7 @@ I'm going to walk through the process I generally follow when I'm reading code f
 
 I've chosen the Observable library here because it is small, self-contained, and easy to understand.  There are many libraries like this in the stdlib, so if you feel motivated after reading this post, you might want to go searching for a few other low hanging fruit to test your skills on.  
 
-I've done what I can to boil the process down to a few repeatable steps, so
-you're welcome to follow along at home if you'd like.
+I've done what I can to boil the process down to a few repeatable steps, so you're welcome to follow along at home if you'd like.
 
 h4. Start with a simple example.
 
@@ -29,78 +28,78 @@ I don't like diving into code without at least a little bit of context.  So this
 We're dealing with the Observer design pattern (also known as Pub-Sub), and the first idea that came to mind here for me was a simple chat model.  Users could subscribe to a room and the room would publish the messages that were processed to them.  I wanted the transcripts to be personalized, so that they looked something like this:
 
 <pre>
-= Greg's Transcript =
-Me: Hi
-Jia: Hello
-Me: Fun, huh?
-Jia: Yeah!
+  = Greg's Transcript =
+  Me: Hi
+  Jia: Hello
+  Me: Fun, huh?
+  Jia: Yeah!
 
-= Jia's Transcript =
-Gregory: Hi
-Me: Hello
-Gregory: Fun, huh?
-Me: Yeah!
+  = Jia's Transcript =
+  Gregory: Hi
+  Me: Hello
+  Gregory: Fun, huh?
+  Me: Yeah!
 </pre>
 
 Thinking from the outside in, we can imagine the Ruby code used to generate this output:
 
 <pre name="code" class="ruby">
-room = Room.new
+  room = Room.new
 
-greg   = Person.new("Gregory", room)
-jia    = Person.new("Jia", room)
+  greg   = Person.new("Gregory", room)
+  jia    = Person.new("Jia", room)
 
-greg.says "Hi"
-jia.says "Hello"
+  greg.says "Hi"
+  jia.says "Hello"
 
-greg.says "Fun, huh?"
-jia.says "Yeah!"
+  greg.says "Fun, huh?"
+  jia.says "Yeah!"
 
-puts "= Greg's Transcript ="
-puts greg.transcript + "\n"
+  puts "= Greg's Transcript ="
+  puts greg.transcript + "\n"
 
-puts "= Jia's Transcript ="
-puts jia.transcript
+  puts "= Jia's Transcript ="
+  puts jia.transcript
 </pre>
 
 Ultimately, what the <tt>Observable</tt> module buys us is the ability to track subscribers implicitly rather than explicitly.  While it'd be pretty easy to roll your own code here, you can see in the following definition that <tt>Observable</tt> provides a few shortcuts for us:
  
 <pre name="code" class="ruby">
-require "observer"
+  require "observer"
 
-class Room 
-  include Observable
+  class Room 
+    include Observable
 
-  def receive(message, sender)
-    changed
-    notify_observers(message, sender)
-  end
-
-end
-
-class Person
-  def initialize(name, room)
-    @name, @room = name, room
-    @transcript  = ""
-    @room.add_observer(self)
-  end
-
-  attr_reader :transcript, :name
-
-  def update(message, sender)
-    if sender == self
-      message = "Me: #{message}\n"
-    else
-      message = "#{sender.name}: #{message}\n"
+    def receive(message, sender)
+      changed
+      notify_observers(message, sender)
     end
-    
-    @transcript << message
+
   end
 
-  def says(message)
-    @room.receive(message, self)
+  class Person
+    def initialize(name, room)
+      @name, @room = name, room
+      @transcript  = ""
+      @room.add_observer(self)
+    end
+
+    attr_reader :transcript, :name
+
+    def update(message, sender)
+      if sender == self
+        message = "Me: #{message}\n"
+      else
+        message = "#{sender.name}: #{message}\n"
+      end
+    
+      @transcript << message
+    end
+
+    def says(message)
+      @room.receive(message, self)
+    end
   end
-end
 </pre>
 
 This is all the code you need to reproduce the desired output, so if you're
@@ -115,56 +114,56 @@ Many of Ruby's standard libraries have tests distributed with the source, some d
 As it turns out, RubySpec has "several tests": for <tt>Observable</tt>.  They are split up by each individual function.  As an example, here are the specs for <tt>notify_observers</tt>:
  
 <pre name="code" class="ruby">
-describe "Observer#notify_observers" do
+  describe "Observer#notify_observers" do
  
-  before(:each) do
-    @observable = ObservableSpecs.new
-    @observer = ObserverCallbackSpecs.new
-    @observable.add_observer(@observer)
+    before(:each) do
+      @observable = ObservableSpecs.new
+      @observer = ObserverCallbackSpecs.new
+      @observable.add_observer(@observer)
+    end
+ 
+    it "must call changed before notifying observers" do
+      @observer.value.should == nil
+      @observable.notify_observers("test")
+      @observer.value.should == nil
+    end
+ 
+    it "verifies observer responds to update" do
+      lambda {
+        @observable.add_observer(@observable)
+      }.should raise_error(NoMethodError)
+    end
+ 
+    it "receives the callback" do
+      @observer.value.should == nil
+      @observable.changed
+      @observable.notify_observers("test")
+      @observer.value.should == "test"
+    end
+ 
   end
- 
-  it "must call changed before notifying observers" do
-    @observer.value.should == nil
-    @observable.notify_observers("test")
-    @observer.value.should == nil
-  end
- 
-  it "verifies observer responds to update" do
-    lambda {
-      @observable.add_observer(@observable)
-    }.should raise_error(NoMethodError)
-  end
- 
-  it "receives the callback" do
-    @observer.value.should == nil
-    @observable.changed
-    @observable.notify_observers("test")
-    @observer.value.should == "test"
-  end
- 
-end
 </pre>
 
 This code uses some helper objects, which are defined as follows:
 
 <pre name="code" class="ruby">
-require 'observer'
+  require 'observer'
  
-class ObserverCallbackSpecs
-  attr_reader :value
+  class ObserverCallbackSpecs
+    attr_reader :value
  
-  def initialize
-    @value = nil
+    def initialize
+      @value = nil
+    end
+ 
+    def update(value)
+      @value = value
+    end
   end
  
-  def update(value)
-    @value = value
+  class ObservableSpecs
+    include Observable
   end
-end
- 
-class ObservableSpecs
-  include Observable
-end
 </pre>
 
 You can see how the structure of these mirror our earlier example.  When you combined them with the specs, you learn quite a bit about this method.
@@ -172,32 +171,32 @@ You can see how the structure of these mirror our earlier example.  When you com
 First of all, <tt>notify_observers</tt> doesn't do anything if you don't first call the <tt>changed</tt> method:
 
 <pre name="code" class="ruby">
-it "must call changed before notifying observers" do
-  @observer.value.should == nil
-  @observable.notify_observers("test")
-  @observer.value.should == nil
-end
+  it "must call changed before notifying observers" do
+    @observer.value.should == nil
+    @observable.notify_observers("test")
+    @observer.value.should == nil
+  end
 </pre>
 
 Also, we see that any of the observers used need to implement the <tt>update</tt> callback, matching the signature of <tt>notify_observers</tt>:
 
 <pre name="code" class="ruby">
-it "verifies observer responds to update" do
-  lambda {
-    @observable.add_observer(@observable)
-  }.should raise_error(NoMethodError)
-end
+  it "verifies observer responds to update" do
+    lambda {
+      @observable.add_observer(@observable)
+    }.should raise_error(NoMethodError)
+  end
 </pre>
 
 Of course, when the callback exists and the observable object has been marked as changed, we see a successful result:
 
 <pre name="code" class="ruby">
- it "receives the callback" do
-   @observer.value.should == nil
-   @observable.changed
-   @observable.notify_observers("test")
-   @observer.value.should == "test"
- end
+  it "receives the callback" do
+    @observer.value.should == nil
+    @observable.changed
+    @observable.notify_observers("test")
+    @observer.value.should == "test"
+  end
 </pre>
 
 While these specs aren't necessarily giving us every last detail, they provide a general outline of what to expect when we look directly at the source.  This will help us avoid getting overwhelmed when working through the actual implementation. I'll leave it to you to check out the rest of the  "Observable specs":http://github.com/rubyspec/rubyspec/tree/1250e42264782c860259046ff93719a3e6a9f03e/library/observer if you'd like.  Doing so may help you understand the code in the following section.
@@ -207,14 +206,14 @@ h4. Dig into the source with kindness and curiosity
 The main purpose of reading over the tests first is that they give you a bit of insight into what behaviors the implementation code needs to satisfy.  Assuming you didn't skip the last section, it should be pretty clear what's going on in the following method definition:
 
 <pre name="code" class="ruby">
-def notify_observers(*arg)
-  if defined? @observer_state and @observer_state
-    if defined? @observer_peers
-      @observer_peers.each { |k, v| k.send v, *arg }
+  def notify_observers(*arg)
+    if defined? @observer_state and @observer_state
+      if defined? @observer_peers
+        @observer_peers.each { |k, v| k.send v, *arg }
+      end
+      @observer_state = false
     end
-    @observer_state = false
   end
-end
 </pre>
 
 Of course, the 'why' is as important as the 'how' when you're exploring someone else's code. Without looking any farther, one thing that tripped me up was this line:
@@ -226,44 +225,44 @@ Of course, the 'why' is as important as the 'how' when you're exploring someone 
 It was immediately clear to me what it did, but not necessarily why.  Upon further investigation, I remembered one of my bad habits.  The following code will issue a warning as written:
 
 <pre name="code" class="ruby">
-module A
-  def foo
-    @foo
+  module A
+    def foo
+      @foo
+    end
   end
-end
 
-class B
-  include A
-end
+  class B
+    include A
+  end
 
-B.new.foo
+  B.new.foo
 </pre>
 
 However, we can avoid this warning using the exact same approach used in <tt>Observable</tt>, simply by checking whether the instance variable is defined before accessing it:
 
 <pre name="code" class="ruby">
-module A
-  def foo
-    @foo if defined?(@foo)
+  module A
+    def foo
+      @foo if defined?(@foo)
+    end
   end
-end
 </pre>
 
 Yes, this is more verbose, and seems a bit redundant.  But writing code this way does have a real benefit.   If you follow this convention of checking whether an instance variable is defined whenever you aren't sure it will be, this warning can be used to easily catch typos.  The following example, when run with warnings enabled, will illustrate how:
 
 <pre name="code" class="ruby">
-class A
-  def foo
-    @foo = 10
-    bar
+  class A
+    def foo
+      @foo = 10
+      bar
+    end
+
+    def bar
+      @bar = @fooo
+    end
   end
 
-  def bar
-    @bar = @fooo
-  end
-end
-
-A.new.foo
+  A.new.foo
 </pre>
 
 At this point, I already found a helpful reminder by walking through this code.  While the rest of the source was an interesting read, this was my takeaway.  Please go ahead and read the "full source":http://pastie.org/488486 and let me know in the comments if you found anything of interest.
@@ -271,15 +270,15 @@ At this point, I already found a helpful reminder by walking through this code. 
 In fact, I have a question for our readers.  Can you find any reason why the following code is written as it is?
 
 <pre name="code" class="ruby">
-# Query the changed state of this object.
-#
-def changed?
-  if defined? @observer_state and @observer_state
-    true
-  else
-    false
+  # Query the changed state of this object.
+  #
+  def changed?
+    if defined? @observer_state and @observer_state
+      true
+    else
+      false
+    end
   end
-end
 </pre>
 
 This looks a bit like a wart to me, and if anything, seems like a long way to go in order to avoid <tt>!!obj</tt>.   But maybe someone else sees it in a different light?  Actually, that reminds me...
