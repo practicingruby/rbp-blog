@@ -222,7 +222,7 @@ Of course, the 'why' is as important as the 'how' when you're exploring someone 
   if defined? @observer_state and @observer_state
 </pre>
 
-It was immediately clear to me what it did, but not necessarily why.  Upon further investigation, I remembered one of my bad habits.  The following code will issue a warning as written:
+It was immediately clear to me what it did, but not why it was needed.  Upon further investigation, I remembered one of my bad habits.  The following code will issue a warning as written:
 
 <pre name="code" class="ruby">
   module A
