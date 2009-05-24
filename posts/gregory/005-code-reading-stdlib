@@ -3,7 +3,7 @@
 =description
 The more code we read, the more we learn about our craft.  No self-respecting Rubyist should go without reading at least bits and pieces of Ruby's standard library, so I'd like to get you started on that journey today.
 =entry
-<i>Note: This post is inspired by JEG2's excellent code reading talk at MWRC 2009, called "LittleBIGRuby":http://mwrc2009.confreaks.com/13-mar-2009-10-30-littlebigruby-james-edward-grey-ii.html  Go watch it if you have time, then come back and read this.</i>
+<b>Note: This post is inspired by JEG2's excellent code reading talk at MWRC 2009, called "LittleBIGRuby":http://mwrc2009.confreaks.com/13-mar-2009-10-30-littlebigruby-james-edward-grey-ii.html  Go watch it if you have time, then come back and read this.</b>
 
 We all need to hunt bugs and we all need to integrate our code with other systems. Some of us need to make use of undocumented libraries, and others need to examine code code to perform security audits.  Why is it then, that so many developers suck at reading code?
 
