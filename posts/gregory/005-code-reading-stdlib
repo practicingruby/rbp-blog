@@ -1,0 +1,310 @@
+=title Reading Ruby's Standard Library for Fun and Profit 
+=timestamp 2009.04.24 18:25 UTC
+=description
+The more code we read, the more we learn about our craft.  No self-respecting Rubyist should go without reading at least bits and pieces of Ruby's standard library, so I'd like to get you started on that journey today.
+=entry
+<i>Note: This post is inspired by JEG2's excellent code reading talk at MWRC 2009, called "LittleBIGRuby":http://mwrc2009.confreaks.com/13-mar-2009-10-30-littlebigruby-james-edward-grey-ii.html  Go watch it if you have time, then come back and read this.</i>
+
+We all need to hunt bugs and we all need to integrate our code with other systems. Some of us need to make use of undocumented libraries, and others need to examine code code to perform security audits.  Why is it then, that so many developers suck at reading code?
+
+Almost a decade ago, Joel Spolsky would have told you it's harder to "read code than it is to write it":http://www.joelonsoftware.com/articles/fog0000000069.html , and that was probably true at one point.  But times have changed, and in a language like Ruby, this definitely does not have to be the case.  As an avid code reader, I'll let you in on a secret: All you need to do is practice!
+
+Beginners and even intermediate developers may need a lot of hand holding at first, that's only to be expected.  However, if you want to progress to higher levels of understanding, you must turn to the source.  The merits of higher level idioms and design strategies won't be very clear until you need to understand someone else's code.  Once you start digging around in someone else's code base, you'll learn a lot about your own strengths and weaknesses.
+
+But where should you start?  It's tempting to suggest that you should just follow your favorite projects on Github and keep an eye on the patches as they fly.  However, this can be a bit overwhelming at first, and it may be hard to keep up with the velocity and transient nature of active open source projects.  For this reason, I suggest picking a slower moving target that is still useful to you.  Ruby's Standard Library fits this description perfectly.
+
+h3. How I Read Code
+
+I'm going to walk through the process I generally follow when I'm reading code for the purpose of understanding its implementation.  I sometimes change things up when I have a particular goal in mind, but most of what I'm about to cover is generally applicable to digging into any new code base.  Keep in mind though, our goal here is mainly just to explore a bit and maybe learn a thing or to along the way.
+
+I've chosen the Observable library here because it is small, self-contained, and easy to understand.  There are many libraries like this in the stdlib, so if you feel motivated after reading this post, you might want to go searching for a few other low hanging fruit to test your skills on.  
+
+I've done what I can to boil the process down to a few repeatable steps, so
+you're welcome to follow along at home if you'd like.
+
+h4. Start with a simple example.
+
+I don't like diving into code without at least a little bit of context.  So this means that before I go source diving, I'll typically use the API documentation (if it exists), to code up a simple example.   If I can't find documentation, I'll search the web for examples.   It's relatively rare to come up completely empty, and a bit of a warning sign if you do.  But since Observable is well "documented":http://www.ruby-doc.org/stdlib/libdoc/observer/rdoc/index.html , it's easy enough to come up with something.  
+
+We're dealing with the Observer design pattern (also known as Pub-Sub), and the first idea that came to mind here for me was a simple chat model.  Users could subscribe to a room and the room would publish the messages that were processed to them.  I wanted the transcripts to be personalized, so that they looked something like this:
+
+<pre>
+= Greg's Transcript =
+Me: Hi
+Jia: Hello
+Me: Fun, huh?
+Jia: Yeah!
+
+= Jia's Transcript =
+Gregory: Hi
+Me: Hello
+Gregory: Fun, huh?
+Me: Yeah!
+</pre>
+
+Thinking from the outside in, we can imagine the Ruby code used to generate this output:
+
+<pre name="code" class="ruby">
+room = Room.new
+
+greg   = Person.new("Gregory", room)
+jia    = Person.new("Jia", room)
+
+greg.says "Hi"
+jia.says "Hello"
+
+greg.says "Fun, huh?"
+jia.says "Yeah!"
+
+puts "= Greg's Transcript ="
+puts greg.transcript + "\n"
+
+puts "= Jia's Transcript ="
+puts jia.transcript
+</pre>
+
+Ultimately, what the <tt>Observable</tt> module buys us is the ability to track subscribers implicitly rather than explicitly.  While it'd be pretty easy to roll your own code here, you can see in the following definition that <tt>Observable</tt> provides a few shortcuts for us:
+ 
+<pre name="code" class="ruby">
+require "observer"
+
+class Room 
+  include Observable
+
+  def receive(message, sender)
+    changed
+    notify_observers(message, sender)
+  end
+
+end
+
+class Person
+  def initialize(name, room)
+    @name, @room = name, room
+    @transcript  = ""
+    @room.add_observer(self)
+  end
+
+  attr_reader :transcript, :name
+
+  def update(message, sender)
+    if sender == self
+      message = "Me: #{message}\n"
+    else
+      message = "#{sender.name}: #{message}\n"
+    end
+    
+    @transcript << message
+  end
+
+  def says(message)
+    @room.receive(message, self)
+  end
+end
+</pre>
+
+This is all the code you need to reproduce the desired output, so if you're
+interested in tinkering with it a bit, go ahead and do that now.  The real purpose of doing this however was not to implement something useful.   Instead, it was to identify some entry points into <tt>Observable</tt> that can be our first areas of focus.  
+
+If you look over the code carefully, you find that <tt>changed</tt>, <tt>notify_observers</tt>, and <tt>add_observer</tt> are the keys to what makes our code tick (And incidentally, the only parts that we didn't implement ourselves.)  Let's dig a little deeper with those targets in mind.
+
+h4. Hunt for tests, if they exist.
+
+Many of Ruby's standard libraries have tests distributed with the source, some do not.  Unfortunately in the case of <tt>Observable</tt>, I couldn't find any tests for it in the Ruby source distribution.  However, that didn't mean that it was time to give up.  In cases where MRI/YARV do not have tests, you can try to turn to the great "RubySpec project":http://github.com/rubyspec/rubyspec, which is attempting to codify the behavior of Ruby with executable RSpec-like tests.
+
+As it turns out, RubySpec has "several tests": for <tt>Observable</tt>.  They are split up by each individual function.  As an example, here are the specs for <tt>notify_observers</tt>:
+ 
+<pre name="code" class="ruby">
+describe "Observer#notify_observers" do
+ 
+  before(:each) do
+    @observable = ObservableSpecs.new
+    @observer = ObserverCallbackSpecs.new
+    @observable.add_observer(@observer)
+  end
+ 
+  it "must call changed before notifying observers" do
+    @observer.value.should == nil
+    @observable.notify_observers("test")
+    @observer.value.should == nil
+  end
+ 
+  it "verifies observer responds to update" do
+    lambda {
+      @observable.add_observer(@observable)
+    }.should raise_error(NoMethodError)
+  end
+ 
+  it "receives the callback" do
+    @observer.value.should == nil
+    @observable.changed
+    @observable.notify_observers("test")
+    @observer.value.should == "test"
+  end
+ 
+end
+</pre>
+
+This code uses some helper objects, which are defined as follows:
+
+<pre name="code" class="ruby">
+require 'observer'
+ 
+class ObserverCallbackSpecs
+  attr_reader :value
+ 
+  def initialize
+    @value = nil
+  end
+ 
+  def update(value)
+    @value = value
+  end
+end
+ 
+class ObservableSpecs
+  include Observable
+end
+</pre>
+
+You can see how the structure of these mirror our earlier example.  When you combined them with the specs, you learn quite a bit about this method.
+
+First of all, <tt>notify_observers</tt> doesn't do anything if you don't first call the <tt>changed</tt> method:
+
+<pre name="code" class="ruby">
+it "must call changed before notifying observers" do
+  @observer.value.should == nil
+  @observable.notify_observers("test")
+  @observer.value.should == nil
+end
+</pre>
+
+Also, we see that any of the observers used need to implement the <tt>update</tt> callback, matching the signature of <tt>notify_observers</tt>:
+
+<pre name="code" class="ruby">
+it "verifies observer responds to update" do
+  lambda {
+    @observable.add_observer(@observable)
+  }.should raise_error(NoMethodError)
+end
+</pre>
+
+Of course, when the callback exists and the observable object has been marked as changed, we see a successful result:
+
+<pre name="code" class="ruby">
+ it "receives the callback" do
+   @observer.value.should == nil
+   @observable.changed
+   @observable.notify_observers("test")
+   @observer.value.should == "test"
+ end
+</pre>
+
+While these specs aren't necessarily giving us every last detail, they provide a general outline of what to expect when we look directly at the source.  This will help us avoid getting overwhelmed when working through the actual implementation. I'll leave it to you to check out the rest of the  "Observable specs":http://github.com/rubyspec/rubyspec/tree/1250e42264782c860259046ff93719a3e6a9f03e/library/observer if you'd like.  Doing so may help you understand the code in the following section.
+
+h4. Dig into the source with kindness and curiosity
+
+The main purpose of reading over the tests first is that they give you a bit of insight into what behaviors the implementation code needs to satisfy.  Assuming you didn't skip the last section, it should be pretty clear what's going on in the following method definition:
+
+<pre name="code" class="ruby">
+def notify_observers(*arg)
+  if defined? @observer_state and @observer_state
+    if defined? @observer_peers
+      @observer_peers.each { |k, v| k.send v, *arg }
+    end
+    @observer_state = false
+  end
+end
+</pre>
+
+Of course, the 'why' is as important as the 'how' when you're exploring someone else's code. Without looking any farther, one thing that tripped me up was this line:
+
+<pre name="code" class="ruby">
+  if defined? @observer_state and @observer_state
+</pre>
+
+It was immediately clear to me what it did, but not necessarily why.  Upon further investigation, I remembered one of my bad habits.  The following code will issue a warning as written:
+
+<pre name="code" class="ruby">
+module A
+  def foo
+    @foo
+  end
+end
+
+class B
+  include A
+end
+
+B.new.foo
+</pre>
+
+However, we can avoid this warning using the exact same approach used in <tt>Observable</tt>, simply by checking whether the instance variable is defined before accessing it:
+
+<pre name="code" class="ruby">
+module A
+  def foo
+    @foo if defined?(@foo)
+  end
+end
+</pre>
+
+Yes, this is more verbose, and seems a bit redundant.  But writing code this way does have a real benefit.   If you follow this convention of checking whether an instance variable is defined whenever you aren't sure it will be, this warning can be used to easily catch typos.  The following example, when run with warnings enabled, will illustrate how:
+
+<pre name="code" class="ruby">
+class A
+  def foo
+    @foo = 10
+    bar
+  end
+
+  def bar
+    @bar = @fooo
+  end
+end
+
+A.new.foo
+</pre>
+
+At this point, I already found a helpful reminder by walking through this code.  While the rest of the source was an interesting read, this was my takeaway.  Please go ahead and read the "full source":http://pastie.org/488486 and let me know in the comments if you found anything of interest.
+
+In fact, I have a question for our readers.  Can you find any reason why the following code is written as it is?
+
+<pre name="code" class="ruby">
+# Query the changed state of this object.
+#
+def changed?
+  if defined? @observer_state and @observer_state
+    true
+  else
+    false
+  end
+end
+</pre>
+
+This looks a bit like a wart to me, and if anything, seems like a long way to go in order to avoid <tt>!!obj</tt>.   But maybe someone else sees it in a different light?  Actually, that reminds me...
+
+h3. Caveats about the Standard Library
+
+While Ruby's stdlib is a great place to learn new things, not everything in it is downright beautiful.   Some things are older than others, some reflecting the rust that comes when code is not updated to reflect the latest techniques.
+
+Furthermore, standard library code tends to be less clever than the sort of stuff we might write for our scripts and gems, by design.  You'll find that in many places, explicit and simple code is favored over tricky stuff.  I imagine this is for maintainability purposes.
+
+Like anything else, you'll need to do a bit of hunting to find the right code to learn from.   This practice in and of itself will prove to be useful, so don't be afraid if you run across some cruft now and again.
+
+Of course, another good thing about reading code is that it often inspires us to write code.  While looking through the standard library, consider putting together documentation patches, adding tests, and fixing things you don't like.  I'm sure the folks on "ruby-core":http://www.ruby-lang.org/en/community/mailing-lists/ would be happy to look at your contributions, and it's another great way to learn.
+
+h3. Key Things To Remember
+
+Code reading is just as important as code writing.  The standard library has about 100 places for you to look for inspiration, and its more likely than not that you'll find something of interest if you pick one at random.  If you repeat this process, you'll get a better understanding of how Ruby itself works, and be able to carry this experience into your own work.  
+
+Start by playing with some examples, then look for tests, either in the source or in the RubySpec project.  Once you feel like you understand how to use a feature, investigate how it works, and then ask yourself why it is written the way it is.  Don't expect to understand the whole thing all at once, and don't worry if it takes some time to adjust to someone else's style.
+
+If you do this often enough, you'll gain a valuable skill that'll pay off like crazy, especially if you work on open source software.  You'll notice both patterns and anti-patterns, and this will influence the code you write.  In the end, your fellow code readers will thank you :)
+
+
+ 
+
+
+
+
