@@ -63,7 +63,7 @@ Thinking from the outside in, we can imagine the Ruby code used to generate this
 </pre>
 
 Ultimately, what the <tt>Observable</tt> module buys us is the ability to track subscribers implicitly rather than explicitly.  While it'd be pretty easy to roll your own code here, you can see in the following definition that <tt>Observable</tt> provides a few shortcuts for us:
- 
+
 <pre name="code" class="ruby">
   require "observer"
 
@@ -112,7 +112,7 @@ h4. Hunt for tests, if they exist.
 Many of Ruby's standard libraries have tests distributed with the source, some do not.  Unfortunately in the case of <tt>Observable</tt>, I couldn't find any tests for it in the Ruby source distribution.  However, that didn't mean that it was time to give up.  In cases where MRI/YARV do not have tests, you can try to turn to the great "RubySpec project":http://github.com/rubyspec/rubyspec, which is attempting to codify the behavior of Ruby with executable RSpec-like tests.
 
 As it turns out, RubySpec has "several tests": for <tt>Observable</tt>.  They are split up by each individual function.  As an example, here are the specs for <tt>notify_observers</tt>:
- 
+
 <pre name="code" class="ruby">
   describe "Observer#notify_observers" do
  
