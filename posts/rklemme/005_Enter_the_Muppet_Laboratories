@@ -1,0 +1,21 @@
+=title Enter the Muppet Laboratories
+=timestamp 2009.05.29 19:54 +0200
+=description Often we present finished code which includes all the decisions that have been made during its construction.  I will try show the process that led to the final code like we are looking at a test tube.
+=entry
+I have decided I will start an experiement.  I haven't done this before and I have no idea whether it will work as indended but I am sure we can pull this off together.  Here's the deal: I will try to let you participate in my thought process which hopefully will turn up some useful if not best practices.  I don't claim to be Don Knuth but hopefully you'll find it interesting and worthwhile nevertheless.  The tricky part will be to actually catch all the reasonings and record them in a format suitable for blogging.
+
+In this article I will give a brief overview of how I intend to proceed.  Of course a thing like this needs some form of project.  We will come to that in a minute.  The whole series of articles will roughly look like this:
+
+# Initial presentation (this article)
+# Description of the project goal
+# Summary of collected requirements
+# Several postings about actual code and decisions
+# Presentation of the final result
+
+After I present the goal you are invited to help distill requirements via the blog's "comment system":http://disqus.com/.  I will be the customer for the moment and I am sure with your active support we will get a list together with requirements that the project can meet.
+
+The whole thing is loosely related to my job but I think you can extract at least parts of it for your own purposes.  Of course we'll be doing everything nicely modularized so reuse won't be an issue.  :-) I any case the main benefit for us all should be the thought process and insight into decision making during software development.
+
+The project will be about analysis of large log files which contain high numbers of small business transactions.  In parallel with coming up with a more detailed description I will try to come up with a generator which we can use to create files for testing purposes.  This should help you get a better idea of what I am talking about.
+
+"Tune in next week when you'll hear Dr. Bob say...":http://muppet.wikia.com/wiki/Veterinarian%27s_Hospital
