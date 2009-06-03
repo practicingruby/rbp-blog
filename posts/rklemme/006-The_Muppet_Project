@@ -1,0 +1,21 @@
+=title The Laboratory Project
+=timestamp 2009.06.03 23:56 +0200
+=description Today we will start the announced project.  You will find a description of the problem I will attempt to solve in the course of the project.  Please read on.
+=entry
+The company I am with creates billing systems for telecom companies.  More precisely we call them "convergent billing systems" because billing is not limited to phone calls or SMS.  You can also bill multimedia content, internet traffic and whatnot.  Basically everything that runs through your telephone or IT infrastructure.  In our office we even have a solution where the billing system is used to charge money via our corporate id cards at the local vending machine.
+
+These billing systems have a tremendous amount of interesting features.  Listing them all would need an article of its own.  For the sake of our project it is important to remember that these systems are quite complex and have a high throughput.  We have a central component implemented as a "JEE":http://java.sun.com/javaee/ application which front ends to customer care and other systems that may be present at a customer site.  (The term "customer" is really ambiguous: there are our customers, which are telco companies and their customers, i.e. everybody using their phone lines.  I will talk about _our_ customers only.)
+
+Now, this central application writes out logfiles using usual mechanisms (you can look at "log4j":http://logging.apache.org/log4j/) in case you do not know Java logging and are interested in more details.  As you can imagine these log files grow from large to huge because they will contain several lines of per business interaction (basically this is a remote call from a client system).  Sometimes these interactions fail and our support staff need to look at these log files to find out what's wrong.  When it's a tricky issue we people from the development department need to do this as well.  Simplyfying this task is the goal of this toy project.
+
+Some things you need to know about these log files:
+
+* all log entries belonging to the same interaction share a common identifier,
+* they are huge,
+* multiple interactions are interspersed,
+* some log entries span multiple consecutive lines,
+* log files are rotated, i.e. there are some incomplete interactions at the beginning and end.
+
+I have set up a "git repository":http://github.com/rklemme/muppet-laboratories/tree/master where I created a "generator script":http://github.com/rklemme/muppet-laboratories/blob/ef7a28d935ada03ff141ffee6f3b19e8dfc71875/bin/test-gen.rb which you can use to generate sample logs and get a rough idea how they look like.  Of course, there is no real data but the basic properties from above are present.  Try to run the script with @test-gen.rb -h@ to see supported parameters.  If you don't the script will throw a lot of text at you.  I included "START" and "END" messages per interaction only to simplify testing - in practice we cannot rely on the presence of lines which unambiguously identify the first and last line of an interaction.
+
+What I like to have at the end of the project is a Ruby application which efficiently separates individual interactions thus they can easily be analyzed individually.  In order to get there, we will start collecting requirements.  Let's assume for the moment that I am your customer and you try to get a list of requirements.  I would like to invite you to query me via the comment system.  I am sure, together we will come up with a better list than if I would write it down alone.  In the next article of the series I will then present the summary of our efforts.
