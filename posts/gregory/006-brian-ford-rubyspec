@@ -7,6 +7,8 @@ Though I still need to collect the details, I'm about to start on another major 
 
 But readers might wonder what RubySpec has to do with them, if they are not language implementers.  Here's what Brain Ford had to say.
 
+<hr>
+
 <i><h4>In an ideal world, what would the RubySpec project do for the Ruby community?</h4>
 
 1. Provide a reasonably precise definition of the Ruby programming language so that there can be a certain degree of uniformity among the implementations. The goal is for the Ruby user to not have to think about which implementation her code runs on until she needs to, rather than writing code that works on one implementation and porting it if necessary. All software has a life cycle and the needs of the software are not always constant. A Ruby programmer should be able to develop using MRI on their laptop and deploy on Rubinius or JRuby without missing a beat, for example. Note that I use "Ruby user" and "Ruby programmer" with a distinction. A Ruby user might be anyone who relies on or provides software written in Ruby, not just someone who writes software in Ruby. So I envision a uniform definition of Ruby benefiting every strata of the Ruby community.
@@ -40,5 +42,7 @@ Ultimately, we need a uniform methodology for auditing the completeness and accu
 I would inject another small answer here:
 
 In my experience with RubySpec, the areas least covered are unfortunately often the areas least understood and therefore those most in need of coverage. For example, OpenSSL specs are practically nonexistent, and yet it's such a crucial bit of functionality for any app doing SSL (as a client or a server) or working with any PKI or certificate stuff. But it's also very hard to test...most people have zero knowledge of crypto, and so finding people that can write those specs is about as easy as finding people that can write OpenSSL wrappers for new implementations. So there's definitely specific areas of RubySpec that need someone with domain knowledge to dive in.</i>
+
+<hr>
 
 As you can see, RubySpec is a vibrant, exciting project with a lot of challenges it needs to face.  My plans are to do my part by building up the Unity app to make this awesome body of work more accessible to the Ruby community at large.   But definitely don't wait on it before getting involved, check out RubySpec today and see if there is a way you can pitch in, especially if you think you can help with some of the projects mentioned here.
