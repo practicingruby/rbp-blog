@@ -1,7 +1,7 @@
 =title RubySpec as a Community Resource (Interview w. Brian Ford)
 =timestamp 2009.06.04 7:52 UTC
 =description
-I caught up with Brian Ford to ask a few questions about RubySpec, the effort to describe Ruby through BDD. With any luck, after reading his responses, you'll be as excited about this awesome effort as I am.
+I caught up with Brian Ford to ask a few questions about RubySpec, the effort to describe Ruby through BDD style specs. With any luck, after reading his responses, you'll be as excited about this awesome effort as I am.
 =entry
 Though I still need to collect the details, I'm about to start on another major open source project, called "Unity":http://github.com/madriska/unity .  It will be a community driven effort to provide a nice web resource that builds on top of the RubySpec project with reporting and search capabilities.
 
