@@ -7,8 +7,7 @@ Though I still need to collect the details, I'm about to start on another major 
 
 But readers might wonder what RubySpec has to do with them, if they are not language implementers.  Here's what Brain Ford had to say.
 
-<i>
-h4. In an ideal world, what would the RubySpec project do for the Ruby community?
+<i><h4>In an ideal world, what would the RubySpec project do for the Ruby community?</h4>
 
 1. Provide a reasonably precise definition of the Ruby programming language so that there can be a certain degree of uniformity among the implementations. The goal is for the Ruby user to not have to think about which implementation her code runs on until she needs to, rather than writing code that works on one implementation and porting it if necessary. All software has a life cycle and the needs of the software are not always constant. A Ruby programmer should be able to develop using MRI on their laptop and deploy on Rubinius or JRuby without missing a beat, for example. Note that I use "Ruby user" and "Ruby programmer" with a distinction. A Ruby user might be anyone who relies on or provides software written in Ruby, not just someone who writes software in Ruby. So I envision a uniform definition of Ruby benefiting every strata of the Ruby community.
 
@@ -20,15 +19,15 @@ h4. In an ideal world, what would the RubySpec project do for the Ruby community
 
 5. A learning tool that provides Ruby programmers with concrete examples of code that demonstrates every single Ruby language feature. The Pickaxe book may have better prose, but when it comes to comprehensiveness, I want RubySpec to be number one. And while we have a lot of work to do to make the spec description strings better, you can already learn a lot about Ruby by reading the specdoc output.
 
-h4. With everything changing so fast, I imagine keeping the specs up to date is a constant struggle. How do implementers keep up with what's going on?
+<h4> With everything changing so fast, I imagine keeping the specs up to date is a constant struggle. How do implementers keep up with what's going on?</h4>
 
 Some things are changing fast but when you look at how many distinct behaviors RubySpec covers, a lot isn't changing. It's hard keeping up with the 1.9 changes. So far in Rubinius, we haven't targeted 1.9 specifically, but we have a contributor, Marc-Andre Lafortune, who has added a ton of 1.8.7 and 1.9 features to the core libraries. As with anything, you do it one thing at a time. Having RubySpec available to tell you if you are doing it right is a big help.
 
-h4. I would really love to make RubySpec a household name in the general Ruby community. The project I'm breaking ground on now (called Unity), will hopefully help do this. What sort of information do you think is most valuable to pull out from RubySpec, and who do you see benefiting from it?
+<h4> I would really love to make RubySpec a household name in the general Ruby community. The project I'm breaking ground on now (called Unity), will hopefully help do this. What sort of information do you think is most valuable to pull out from RubySpec, and who do you see benefiting from it? </h4>
 
 Again, the primary goal of RubySpec is to provide a definition of the Ruby programming language along with a way to test that an implementation conforms to the definition. So primary pieces of information are which specs pass and which fail on a given implementation. Evan and I have discussed adding a scoring mechanism to MSpec that provides a single percentage number as a measure of an implementation's conformance to the standard set by RubySpec. This is something that can give users better information about an implementation's completeness when it goes bandying about benchmarking numbers. I'll be implementing this in MSpec shortly.
 
-h4. RubySpec spans a *ton* of functionality. It's amazing to see how much work has already been done. However, there must be some dark spots still left. What areas of Ruby are still not adequately specified?
+<h4> RubySpec spans a *ton* of functionality. It's amazing to see how much work has already been done. However, there must be some dark spots still left. What areas of Ruby are still not adequately specified? </h4>
 
 That is the 10 million dollar question. We can infer something about completeness based on implementations like JRuby that run applications the same as MRI and pass the vast majority of the RubySpec cases. When implementations discover bugs in their own code and enhance the RubySpec coverage, we get a nice closed feedback loop.
 
@@ -36,7 +35,7 @@ A lot of the standard library still needs to be covered. There are also some lit
 
 Ultimately, we need a uniform methodology for auditing the completeness and accuracy of the specs. This is still a work in progress.
 
-h4. Charles Oliver Nutter (of JRuby) chimes in with some additional feedback on this question:
+<h4> Charles Oliver Nutter (of JRuby) chimes in with some additional feedback on this question: </h4>
 
 I would inject another small answer here:
 
