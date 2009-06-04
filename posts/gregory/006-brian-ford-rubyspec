@@ -1,0 +1,45 @@
+=title Reading Ruby's Standard Library for Fun and Profit 
+=timestamp 2009.06.04 7:52 UTC
+=description
+I caught up with Brian Ford to ask a few questions about RubySpec, the effort to describe Ruby through BDD. With any luck, after reading his responses, you'll be as excited about this awesome effort as I am.
+=entry
+Though I still need to collect the details, I'm about to start on another major open source project, called "Unity":http://github.com/madriska/unity .  It will be a community driven effort to provide a nice web resource that builds on top of the RubySpec project with reporting and search capabilities.
+
+But readers might wonder what RubySpec has to do with them, if they are not language implementers.  Here's what Brain Ford had to say.
+
+<i>
+h4. In an ideal world, what would the RubySpec project do for the Ruby community?
+
+1. Provide a reasonably precise definition of the Ruby programming language so that there can be a certain degree of uniformity among the implementations. The goal is for the Ruby user to not have to think about which implementation her code runs on until she needs to, rather than writing code that works on one implementation and porting it if necessary. All software has a life cycle and the needs of the software are not always constant. A Ruby programmer should be able to develop using MRI on their laptop and deploy on Rubinius or JRuby without missing a beat, for example. Note that I use "Ruby user" and "Ruby programmer" with a distinction. A Ruby user might be anyone who relies on or provides software written in Ruby, not just someone who writes software in Ruby. So I envision a uniform definition of Ruby benefiting every strata of the Ruby community.
+
+2. Provide quality assurance and regression notification for MRI and all implementations. People put a huge amount of trust in an implementation when they decide to invest large amounts of money in developing a software product. We'd like them to get some assurance for the trust they put in. Programmers are human and make mistakes. Automating the detection of mistakes is a no-brainer.
+
+3. Improving the quality of Ruby as a language by discovering dusty corners and inconsistencies. Recently, a number of inconsistencies in bang methods (e.g. String#lstrip!) were discovered by one of the RubySpec contributors. Matz quickly fixed up the issues. (You can read the gory details here: http://redmine.ruby-lang.org/issues/show/1550). Ruby as a programming language certainly exists in Matz's brain. But Ruby as an implementation (MRI) exists in many developers' brains. RubySpec is an attempt to expose all that knowledge and those assumptions in an objective manner.
+
+4. Experimentation with implementations and the Ruby language itself. I have recently implemented nearly a dozen variations of Hash for Rubinius to determine which algorithms perform best. In each case, I start by writing code that will pass the RubySpec Hash specs. The specs have been generalized to use a helper method rather than referencing the Hash class constant directly. This has been a huge benefit, especially in Rubinius where the core library Hash class is written entirely in Ruby. I can inherit from Hash and override any methods to write a completely new implementation that does not interfere with the existing Hash class. The RubySpecs also provide a huge safety net and testing ground for trying out new language features and seeing how they interact with existing features.
+
+5. A learning tool that provides Ruby programmers with concrete examples of code that demonstrates every single Ruby language feature. The Pickaxe book may have better prose, but when it comes to comprehensiveness, I want RubySpec to be number one. And while we have a lot of work to do to make the spec description strings better, you can already learn a lot about Ruby by reading the specdoc output.
+
+h4. With everything changing so fast, I imagine keeping the specs up to date is a constant struggle. How do implementers keep up with what's going on?
+
+Some things are changing fast but when you look at how many distinct behaviors RubySpec covers, a lot isn't changing. It's hard keeping up with the 1.9 changes. So far in Rubinius, we haven't targeted 1.9 specifically, but we have a contributor, Marc-Andre Lafortune, who has added a ton of 1.8.7 and 1.9 features to the core libraries. As with anything, you do it one thing at a time. Having RubySpec available to tell you if you are doing it right is a big help.
+
+h4. I would really love to make RubySpec a household name in the general Ruby community. The project I'm breaking ground on now (called Unity), will hopefully help do this. What sort of information do you think is most valuable to pull out from RubySpec, and who do you see benefiting from it?
+
+Again, the primary goal of RubySpec is to provide a definition of the Ruby programming language along with a way to test that an implementation conforms to the definition. So primary pieces of information are which specs pass and which fail on a given implementation. Evan and I have discussed adding a scoring mechanism to MSpec that provides a single percentage number as a measure of an implementation's conformance to the standard set by RubySpec. This is something that can give users better information about an implementation's completeness when it goes bandying about benchmarking numbers. I'll be implementing this in MSpec shortly.
+
+h4. RubySpec spans a *ton* of functionality. It's amazing to see how much work has already been done. However, there must be some dark spots still left. What areas of Ruby are still not adequately specified?
+
+That is the 10 million dollar question. We can infer something about completeness based on implementations like JRuby that run applications the same as MRI and pass the vast majority of the RubySpec cases. When implementations discover bugs in their own code and enhance the RubySpec coverage, we get a nice closed feedback loop.
+
+A lot of the standard library still needs to be covered. There are also some little used methods in the core library that lack specs. The procedural-style methods in Kernel come to mind (e.g. using methods without receivers like #gets, #puts, #sub, etc. that operate on $_). We have a utility that creates the spec files for methods and leaves marker specs that we tag as incomplete. In Rubinius, for example, you can run 'bin/mspec tag --list incomplete' and get a printout of specs that need to be reviewed for completeness.
+
+Ultimately, we need a uniform methodology for auditing the completeness and accuracy of the specs. This is still a work in progress.
+
+h4. Charles Oliver Nutter (of JRuby) chimes in with some additional feedback on this question:
+
+I would inject another small answer here:
+
+In my experience with RubySpec, the areas least covered are unfortunately often the areas least understood and therefore those most in need of coverage. For example, OpenSSL specs are practically nonexistent, and yet it's such a crucial bit of functionality for any app doing SSL (as a client or a server) or working with any PKI or certificate stuff. But it's also very hard to test...most people have zero knowledge of crypto, and so finding people that can write those specs is about as easy as finding people that can write OpenSSL wrappers for new implementations. So there's definitely specific areas of RubySpec that need someone with domain knowledge to dive in.</i>
+
+As you can see, RubySpec is a vibrant, exciting project with a lot of challenges it needs to face.  My plans are to do my part by building up the Unity app to make this awesome body of work more accessible to the Ruby community at large.   But definitely don't wait on it before getting involved, check out RubySpec today and see if there is a way you can pitch in, especially if you think you can help with some of the projects mentioned here.
