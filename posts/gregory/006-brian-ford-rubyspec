@@ -5,8 +5,7 @@ I caught up with Brian Ford to ask a few questions about RubySpec, the effort to
 =entry
 Though I still need to collect the details, I'm about to start on another major open source project, called "Unity":http://github.com/madriska/unity .  It will be a "community driven effort":http://pledgie.com/campaigns/4640 to provide a nice web resource that builds on top of the "RubySpec":http://rubyspec.org/ project with reporting and search capabilities.
 
-But readers might wonder what RubySpec has to do with them, if they are not
-language implementers.  Here's what "Brian Ford":http://blog.brightredglow.com/ had to say.
+But readers might wonder what RubySpec has to do with them, if they are not language implementers.  Here's what "Brian Ford":http://blog.brightredglow.com/ had to say.
 
 <hr>
 
