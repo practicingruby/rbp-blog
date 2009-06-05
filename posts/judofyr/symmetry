@@ -1,0 +1,65 @@
+=title Name that method: Symmetry
+
+=timestamp 2009.06.05 19:39 GMT
+
+=description
+
+Naming your methods properly is an important task when it comes to writing readable and reusable code. Today, let's explore one useful concept: Symmetry. 
+
+=entry
+
+<pre name="code" class="ruby">
+class Users < Application
+  provides :xml, :json
+
+  def index
+    @users = User.all
+    display @users
+  end
+end
+</pre>
+
+Take a look at the snippet above. It's from Merb, and the @provides/display@ feature is something that will be implemented in Rails 3 after it was decided to merge the two projects. Don't think too much about what it does, the point is to see how it will look in Rails 3:
+
+<pre name="code" class="ruby">
+class UsersController < ApplicationController
+  respond_to :html, :xml, :json
+
+  def index
+    @users = Post.find(:all)
+    respond_with(@posts)
+  end
+end  
+</pre>
+
+A subtle difference. Let's have a look at another example, this time from Camping:
+
+<pre name="code" class="ruby">
+module Blog::Controllers
+  # Define routes using R()
+  class Index < R '/'
+  end
+  
+  class Posts < R '/posts'
+  end
+end   
+  
+module Blog::Views
+  def index
+    # Generate URLs using R()
+    a :href => R(Posts) { 'Show me the posts!' }
+  end
+end   
+</pre>
+
+Notice how you use the class method @R@ to define routes in the controllers, and the instance method @R@ to build URLs to those routes again.
+
+h3. What's the deal?
+
+I'm not a very good designer, but I _have_ managed to get a hold of some of the principles. One of them is called the principle of _proximity_, and says that *related items should be grouped together*. We programmers already do this all the time: We group our code into classes and modules and separate them into different files and folders. However, this same principle can be applied when it comes to method names: *related methods should have related names*.
+
+"Provide" and "display" are neither synonyms nor antonyms, nor do they share a common prefix/suffix. They are however closely related and obviously symmetric. *That symmetry should be reflected in their names.*
+
+When you quickly glance over some code, your brain starts creating connections between different pieces and how they interact with each other. A well named method makes it far easier to understand the flow, while a poorly named one means you might have to start looking a completely different place while still be able to quickly jump back and continue interpreting the rest. By naming related methods alike, you make the connections more obvious and easier to spot.
+
+It may not seem like a big deal, but it certainly makes your code look cleaner and easier to understand.
