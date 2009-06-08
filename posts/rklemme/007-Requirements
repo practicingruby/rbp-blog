@@ -1,0 +1,51 @@
+=title Requirements Summary
+=timestamp 2009.06.08 23:56 +0200
+=description Now it's time to collect all the requirements from the discussion threads and put them into some groups.
+=entry
+I will now take on the role of project secretary and put all requirements into a form suitable for easier reference.  There will be the following groups:
+
+- must (M) := requirement must be fulfilled
+- should (S) := requirement should be fulfilled but is not a show stopper
+- nice to have (N) := this one is purely optional
+- future (F) := this might be a good idea for a later release but should not influence the current version
+
+I will later reference requirements via letter and number, e.g. "S4" refers to "filter by text" requirement (and not a fast car from a German manufacturer).
+
+Until now there was not much reasoning about software although there were some ideas (and even prototypes) mentioned in the discussion thread of the "last article":006-The_Muppet_Project.html.  With the next article I will start to flesh out the architecture (or even some alternatives) along with the reasoning that led to different decisions.
+
+h3. Must have
+
+|_. number|_. description|
+| 1|Provide efficient access to all entries of selected interactions|
+| 2|Retain ordering of input lines per interaction|
+| 3|Parsing needs to be able to identify multi line entries|
+| 4|Parsing of lines needs to be easily adjustable to different line formats|
+| 5|Analysis must not rely on any particular text to identify first and last lines of an interaction|
+| 6|Filter interactions by time range (between a and b, before a, after a)|
+
+h3. Should have
+
+|_. number|_. description|
+| 1|Input file names should be provided via command line arguments|
+| 2|Analysis should deal gracefully with partial interactions (at the beginning and end of a logfile)|
+| 3|Idenfity pauses in interactions with a configurable length and report them|
+| 4|Filter interactions by some text contained in messages, ideally via regexp matching|
+| 5|Make interactions available in their original formatting|
+
+h3. Nice to have
+
+|_. number|_. description|
+| 1|Identification of the proper chronological order of files|
+| 2|Read from stdin|
+| 3|HTML output|
+| 4|Do not use more than 20% on top of a @cat >/dev/null@|
+| 5|Statistics about the analysis such as time range, files read, lines read, interactions found etc.|
+
+h3. Future
+
+|_. number|_. description|
+| 1|Analysis data stored in a relational database for later analysis with SQL queries|
+| 2|Correlate data from different components with different log file naming schemes and formats|
+
+Please let me know if I missed something or there are other mistakes (such as contradictory requirements).
+
