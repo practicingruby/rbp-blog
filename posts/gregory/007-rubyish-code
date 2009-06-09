@@ -147,7 +147,7 @@ p t.stops.delete_at(2)     #=> 1
 p t.stops.clear            #=> nil
 </pre>
 
-These side-effect bearing functions are returning their C based values, not what Ruby would expect.  Luckily, each of these are easy to remedy. 
+These side-effect bearing functions are returning their C based values, which are different than what you'd expect from a Ruby <tt>Array</tt>.  Luckily, each of these are easy to remedy. 
 
 In the case of the append operator (<<), we should return the  <tt>StopList</tt> itself, to permit chaining:
 
