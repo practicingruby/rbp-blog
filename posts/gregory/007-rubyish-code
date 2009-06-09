@@ -3,10 +3,7 @@
 =description
 Often times, when a newbie tries to make their code more "Rubyish", it means using some cute meta-programming hack that experienced hackers would never use due to its obscurity or fragility.  However, the Ruby Way isn't just an urban myth, nor is it some dark secret held tightly by its masters.  In this article, we'll look at a simple but powerful API design technique that will make your code more "Rubyish" without invoking any deep voodoo.
 =entry
-I've been doing some FFI work recently, which means that I've needed to 
-wrap underlying C libraries so that I can call them from Ruby.  While I won't
-get into how the low level wrappers work, I can show you what the raw API
-calls look like for just a few functions:
+I've been doing some FFI work recently, which means that I've needed to  wrap underlying C libraries so that I can call them from Ruby.  While I won'tget into how the low level wrappers work, I can show you what the raw API calls look like for just a few functions:
 
 <pre name="code" class="ruby">
   trip = API.PCMSNewTrip(server_id)
