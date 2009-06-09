@@ -32,8 +32,7 @@ class Trip
 end
 </pre>
 
-The <tt>Trip#call</tt> helper removes some of the duplication for us, but it'll be easier to see how it works in just a moment.  For now, it's worth
-pondering on what a <tt>StopList</tt> should be.
+The <tt>Trip#call</tt> helper removes some of the duplication for us, but it'll be easier to see how it works in just a moment.  For now, it's worth pondering what a <tt>StopList</tt> should be.
 
 If you look at the functions listed for dealing with stops, you'll notice they map nicely to one of Ruby's structures.  We're dealing with an ordered list of objects that can added to and removed from.  It can also be queried for its length, and deleted entirely.  These features sure sound a lot like Ruby's <tt>Array</tt> object, don't they?
 
@@ -102,8 +101,7 @@ Without paying too much attention to the implementation details, let's take a lo
   p t.stops.length #=> 0
 </pre>
 
-If this sort of interaction looks familiar to you, it's because you've likely
-already done things like this thousands of times.  But to make it blindingly obvious, let's replace Trip#stops with an Array.
+If this sort of interaction looks familiar to you, it's because you've likely already done things like this thousands of times.  But to make it blindingly obvious, let's replace Trip#stops with an Array.
 
 <pre name="code" class="ruby">
 stops = []
@@ -170,8 +168,7 @@ To play nice with <tt>Array</tt>, our <tt>delete_at</tt> method should return th
   end
 </pre>
 
-Finally, since <tt>clear</tt> may also be chained, it should return the
-original object as well.
+Finally, since <tt>clear</tt> may also be chained, it should return the original object as well.
 
 <pre name="code" class="ruby">
 def clear
