@@ -95,7 +95,7 @@ Without paying too much attention to the implementation details, let's take a lo
   p t.stops[1] #=> "02205 Boston, MA, Suffolk"
   
   p t.stops.map { |e| e.upcase } #=> [ "06511 NEW HAVEN, CT, NEW HAVEN",
-                                       "02205 BOSTON, MA, SUFFOLK" ]
+                                 #     "02205 BOSTON, MA, SUFFOLK" ]
   
   t.stops.clear
   p t.stops.length #=> 0
