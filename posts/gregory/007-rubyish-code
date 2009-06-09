@@ -14,7 +14,7 @@ I've been doing some FFI work recently, which means that I've needed to  wrap un
   API.PCMSClearStop(trip)
 </pre>
 
-As far as direct wrappers on top of C libraries go, I feel like this looks pretty good.  In fact, it's relatively simple to mirror this to a more normalized Ruby layout.  We can start by noticing that these calls are basically object oriented, focusing on the <tt>Trip</tt> object.  While a trip has other responsibilities, among them are managing a list of stops.  Starting with those two ideas, we can flesh out a basic <tt>Trip</tt> object:
+All things considered, This looks pretty good for a direct wrapper on top of a C library.  In fact, it's relatively simple to mirror this to a more normalized Ruby layout.  We can start by noticing that these calls are basically object oriented, focusing on the <tt>Trip</tt> object.  While a trip has other responsibilities, among them are managing a list of stops.  Starting with those two ideas, we can flesh out a basic <tt>Trip</tt> object:
 
 <pre name="code" class="ruby">
 class Trip
