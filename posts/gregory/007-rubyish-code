@@ -34,7 +34,7 @@ end
 
 The <tt>Trip#call</tt> helper removes some of the duplication for us, but it'll be easier to see how it works in just a moment.  For now, it's worth pondering what a <tt>StopList</tt> should be.
 
-If you look at the functions listed for dealing with stops, you'll notice they map nicely to one of Ruby's structures.  We're dealing with an ordered list of objects that can added to and removed from.  It can also be queried for its length, and deleted entirely.  These features sure sound a lot like Ruby's <tt>Array</tt> object, don't they?
+If you look at the functions listed for dealing with stops, you'll notice they map nicely to one of Ruby's structures.  We're dealing with an ordered list of objects that can be added to and removed from.  It can also be queried for its length, and deleted entirely.  These features sure sound a lot like Ruby's <tt>Array</tt> object, don't they?
 
 With this in mind, let's do a quick experiment in interface design:
 
