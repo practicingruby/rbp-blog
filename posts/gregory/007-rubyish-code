@@ -1,0 +1,222 @@
+=title Quack Attack: Making Your Code More Rubyish
+=timestamp 2009.06.09 13:00 UTC
+=description
+Often times, when a newbie tries to make their code more "Rubyish", it means using some cute meta-programming hack that experienced hackers would never use due to its obscurity or fragility.  However, the Ruby Way isn't just an urban myth, nor is it some dark secret held tightly by its masters.  In this article, we'll look at a simple but powerful API design technique that will make your code more "Rubyish" without invoking any deep voodoo.
+=entry
+I've been doing some FFI work recently, which means that I've needed to 
+wrap underlying C libraries so that I can call them from Ruby.  While I won't
+get into how the low level wrappers work, I can show you what the raw API
+calls look like for just a few functions:
+
+<pre name="code" class="ruby">
+  trip = API.PCMSNewTrip(server_id)
+  API.PCMSNumStops(trip)
+  API.PCMSAddStop(trip, string)
+  API.PCMSGetStop(trip, index, string_ptr, buffer_size)
+  API.PCMSDeleteStop(trip, index)
+  API.PCMSClearStop(trip)
+</pre>
+
+As far as direct wrappers on top of C libraries go, I feel like this looks pretty good.  In fact, it's relatively simple to mirror this to a more normalized Ruby layout.  We can start by noticing that these calls are basically object oriented, focusing on the <tt>Trip</tt> object.  While a trip has other responsibilities, among them are managing a list of stops.  Starting with those two ideas, we can flesh out a basic <tt>Trip</tt> object:
+
+<pre name="code" class="ruby">
+class Trip
+  def initialize(server_id)
+    @server_id = server_id
+    @pointer = API.PCMSNewTrip(@server_id)
+    @stops = StopList.new(self)
+  end
+  
+  attr_reader :stops
+  
+  def call(*args)
+    API.send("PCMS#{args.first}",  @pointer, *args[1..-1])
+  end
+end
+</pre>
+
+The <tt>Trip#call</tt> helper removes some of the duplication for us, but it'll be easier to see how it works in just a moment.  For now, it's worth
+pondering on what a <tt>StopList</tt> should be.
+
+If you look at the functions listed for dealing with stops, you'll notice they map nicely to one of Ruby's structures.  We're dealing with an ordered list of objects that can added to and removed from.  It can also be queried for its length, and deleted entirely.  These features sure sound a lot like Ruby's <tt>Array</tt> object, don't they?
+
+With this in mind, let's do a quick experiment in interface design:
+
+<pre name="code" class="ruby">
+class StopList
+
+  include Enumerable
+
+  def initialize(trip)
+    @trip = trip
+  end
+
+  def length
+    @trip.call :NumStops
+  end
+
+  def <<(loc)
+    @trip.call :AddStop, loc
+  end
+
+  def [](index)
+    ptr = FFI::MemoryPointer.new(:char, 100)
+    @trip.call :GetStop, index, ptr, 101
+    ptr.read_string
+  end
+
+  def delete_at(index)
+    @trip.call :DeleteStop, index
+  end
+
+  def each
+    length.times do |i|
+      yield self[i]
+    end
+  end
+
+  def clear
+    @trip.call :ClearStops
+  end
+
+end
+</pre>
+
+Without paying too much attention to the implementation details, let's take a look at what behaviors this new object supports:
+
+<pre name="code" class="ruby">
+  t = Trip.new(server_id)
+  
+  t.stops << "New Haven, CT"
+  t.stops << "Naugatuck, CT"
+  t.stops << "Boston, MA"
+  
+  p t.stops.length #=> 3
+  
+  p t.stops[2] #=> "02205 Boston, MA, Suffolk"
+  
+  t.stops.delete_at(1)
+  p t.stops[1] #=> "02205 Boston, MA, Suffolk"
+  
+  p t.stops.map { |e| e.upcase } #=> [ "06511 NEW HAVEN, CT, NEW HAVEN",
+                                       "02205 BOSTON, MA, SUFFOLK" ]
+  
+  t.stops.clear
+  p t.stops.length #=> 0
+</pre>
+
+If this sort of interaction looks familiar to you, it's because you've likely
+already done things like this thousands of times.  But to make it blindingly obvious, let's replace Trip#stops with an Array.
+
+<pre name="code" class="ruby">
+stops = []
+
+stops << "New Haven, CT"
+stops << "Naugatuck, CT"
+stops << "Boston, MA"
+
+p stops.length #=> 3
+
+p stops[2] #=> "Boston, MA"
+
+stops.delete_at(1)
+p stops[1] #=> "Boston, MA"
+
+p stops.map { |e| e.upcase } #=> ["NEW HAVEN, CT", "BOSTON, MA"]
+
+stops.clear
+p stops.length #=> 0
+</pre>
+
+You'll notice that aside from lacking the location name normalization that our real code does implicitly, the key points we've highlighted have exactly the same behavior, using exactly the same interface.  One benefit is immediately obvious after seeing this; the API for <tt>StopList</tt> doesn't require you to learn anything new.
+
+A more subtle gain that comes with this approach is that so long as it is restricted to the subset which <tt>StopList</tt> supports, code which expects an <tt>Array</tt>-like thing does not need to change, either.
+
+For example, the following code will work just fine with either an <tt>Array</tt> or a <tt>StopList</tt>:
+
+<pre name="code" class="ruby">
+def humanized(list)
+  list.each_with_index do |e,i|
+    puts "#{e} (#{i+1} / #{list.length})"
+  end
+end
+</pre>
+
+This makes things easier to test, and easier to be re-used for different purposes.  Both are solid reasons for using this technique.
+
+Of course, I've been glossing over a semi-major issue in the original code here, which I am sure has frustrated our more pedantic readers.  The current <tt>StopList</tt> code, while quite useful, does not quack perfectly with Array.  We needn't look far for signs of divergence.
+
+<pre name="code" class="ruby">
+p t.stops << "Chicago, IL" #=> 1
+p t.stops.delete_at(2)     #=> 1
+p t.stops.clear            #=> nil
+</pre>
+
+These side-effect bearing functions are returning their C based values, not what Ruby would expect.  Luckily, each of these are easy to remedy. 
+
+In the case of the append operator (<<), we should return the  <tt>StopList</tt> itself, to permit chaining:
+
+<pre name="code" class="ruby">
+def <<(loc)
+  @trip.call :AddStop, loc
+  return self
+end
+</pre>
+
+To play nice with <tt>Array</tt>, our <tt>delete_at</tt> method should return the deleted object:
+
+<pre name="code" class="ruby">
+  def delete_at(index)
+    obj = self[index]
+    @trip.call :DeleteStop, index
+    return obj
+  end
+</pre>
+
+Finally, since <tt>clear</tt> may also be chained, it should return the
+original object as well.
+
+<pre name="code" class="ruby">
+def clear
+  @trip.call :ClearStops
+  return self
+end
+</pre>
+
+With these fixes in place, we can re-visit our previous example:
+
+<pre name="code" class="ruby">
+p t.stops << "Chicago, IL" #=> #<Trip::StopList:0x0fcac ...>
+p t.stops.delete_at(2)     #=> "60607 Chicago, IL, Cook"
+p t.stops.clear            #=> #<Trip::StopList:0x0fcac ...>
+</pre>
+
+There are probably some other minor details to catch, but now that our <tt>Array</tt>-ish <tt>StopList</tt> is "Good Enough For Government Work", we have a nice stopping point.  Let's wrap things up with a little summary of things to remember.
+
+<h3>Guidelines For Making Your Code More "Rubyish"</h3>
+
+This is just one technique among many for improving your code, but I'd argue its a fairly important one. If you have a structure that mimics a subset of a core Ruby object's capabilities, you can gain a lot by standardizing on a compatible interface.  While sometimes the similarities end at the <tt>Enumerable</tt> and <tt>Comparable</tt> mixins, it's reasonable to stretch things farther when it makes sense to do so.  If you go that route (as we did here), there are just a few things to keep in mind:
+
+* You don't need to implement every last feature of a core Ruby object in order to use this technique.  So many functions rely on just a handful of available methods, that it makes sense to use this technique even when your problem domain is very small.
+
+* For the features you do implement, take care to maintain the same interface both on input and output.  It's fine to not support certain use cases, or to add extensions for new ones, but you should not diverge in the behaviors you do implement unless you have a good reason to.
+
+* Pay close attention to the return values of side-effect inducing functions, especially the ones mentioned in this article.  Many Ruby methods are designed to be chainable, and breaking that feature can create a mess. 
+
+* While this technique opens the door for using primitive objects for testing higher level functions, do not forget to adequately test the functionality of the actual objects you are implementing.  Basically, make sure your code really quacks like a duck before substituting it with a duck somewhere else.
+
+<i>To our readers:  Where have you seen good uses of this technique in action?  Have you tried it yourself and run into any problems?  Please give your answers to these questions, as well as any other discussion points in the comments.</i>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
