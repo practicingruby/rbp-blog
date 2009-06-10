@@ -1,0 +1,65 @@
+=title And your Mom, too. 
+=timestamp 2009.06.10 23:59 +0200
+=description Part of being a good Ruby hacker is being part of a community. Let's look at some best practices for posting to mailing lists
+=entry
+Mailing lists (and bulletin boards and forums and so on) are important parts of becoming a better developers. Even the best programmers need help, and a mailing list such as ruby-talk (or the Usenet version, comp.lang.ruby) is the traditional place to go.
+Mailing lists are also a good place to get better at your craft; watch the list, and try to answer questions. Think of it as pop quizzes at Ruby U.
+
+Mailing lists are also good place to toss out ideas, conjecture about the future of Ruby, and have general Ruby-related discussions.
+There are, however, right and wring ways to go about this.  The canonical source for what is termed "Netiquette" is Internet Engineering Task Force "RFC 1855":http://tools.ietf.org/rfc/rfc1855.txt.
+You should read it.  It's somewhat lengthy, and some aspects dated.  Here, I'd like to focus on a few key items as they relate to Ruby and ruby-talk.
+
+
+h2.  RFC 1855 in a Nutshell
+
+For the <em>tl;dr</em> crowd: Don't be a complete jerk.
+
+I can't suggest not being any kind of jerk at all in anyway, because it's impossible.  The Web is a big place.  
+No matter what you say or do, there is every chance that someone, somewhere, will take offence, or think you stupid, or in some way take you the wrong way.
+
+There's not much you can do about that, but you can be mindful of some general decency.  For Rubyists, the key is MINASWAN: Matz is nice, and so we are nice.
+
+This doesn't mean not being critical, or not pointing out mistakes, or not offering bold opinions.  It means directing your comments to ideas, not personalities.
+it means understanding that being wrong doesn't make a person bad or stupid, it just wrong.  And being wrong on one thing does make make  a person wrong on everything.  
+
+Discussions on ruby-talk can get heated, and they temptation is string to let loose with snark and bile.  Typically it ends up counter-productive, but it's understandable.
+
+Besides, threads would likely be much less fun if everything was sanitized.  But the line needs to be drawn at personal attacks and comments.
+
+Ideas can be foolish; people are not fools simply for expressing a foolish idea.  Code can be bad; people are not bad for writing such code.
+
+
+h2.  It's About Code and Ideas
+
+
+
+h2. A Random Set of Guidelines
+
+
+
+h3. Do Your Homework
+
+Ruby is a great language, fairly intuitive to many people, but sometimes you get stuck trying to figure something out. It may seem easy to dash off a note
+to ruby-talk asking "How do I do foo?", but first do some due diligence.  Use Google.  Use ruby-doc.org (Handy tip: Ruby-doc.org uses 
+a custom Google search focused on Ruby sites.  There's a special search URL as well: http://www.ruby-doc.org/q/your+search+terms+here.)
+
+Search the ruby-talk archives: 
+
+* http://groups.google.com/group/ruby-talk-google
+* http://www.nabble.com/ruby-talk-f13890.html
+* http://blade.nagaokaut.ac.jp/ruby/ruby-talk/index.shtml.
+
+When you do post, explain what steps you've  taken  to solve the matter on your own.  This serves two purposes. First, it shows people you are diligent, making more people more likely to want to help you. It also avoids wasting time with people suggesting things you've already done or know about.
+
+Whenever possible, show your code.  If you have more than a dozen lines or so, use  a
+
+
+h3.  Watch for Perma-threads
+
+There are some topics that come at regular intervals. Adding static typing to Ruby.  Best GUI  toolkit.  Best IDE.  Adding significant indentation.
+
+Before posting, see if you are not simply repeating what has been said.  Check the archives.  If you really feel you have something new to add, post,
+but please show that you are familiar with prior discussion.
+
+Conversely, if you see a post that looks to be a perma-thread, don't assume it has been discussed to death (though that is possible). Certain topics,
+such as GUI tools or IDEs, see new additions and advancements over time.  It doesn't help to direct people to a thread from last year as the final word on evolving 
