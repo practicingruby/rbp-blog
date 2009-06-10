@@ -1,47 +1,66 @@
-=title And your Mom, too. 
+=title "And your Mom, too."  Ruby-talk best practices.
 =timestamp 2009.06.10 23:59 +0200
-=description Part of being a good Ruby hacker is being part of a community. Let's look at some best practices for posting to mailing lists
+=description Part of being a good Ruby hacker is being part of a community. Let's look at some best practices for posting to mailing lists, ruby-talk in particular
 =entry
-Mailing lists (and bulletin boards and forums and so on) are important parts of becoming a better developers. Even the best programmers need help, and a mailing list such as ruby-talk (or the Usenet version, comp.lang.ruby) is the traditional place to go.
+Mailing lists (and bulletin boards and forums and so on) are important parts of becoming a better developers. Even the best programmers need help, and a mailing list such as "ruby-talk":http://www.ruby-lang.org/en/community/mailing-lists  (or the Usenet version, comp.lang.ruby) is the traditional place to go.
+
 Mailing lists are also a good place to get better at your craft; watch the list, and try to answer questions. Think of it as pop quizzes at Ruby U.
 
 Mailing lists are also good place to toss out ideas, conjecture about the future of Ruby, and have general Ruby-related discussions.
+
 There are, however, right and wring ways to go about this.  The canonical source for what is termed "Netiquette" is Internet Engineering Task Force "RFC 1855":http://tools.ietf.org/rfc/rfc1855.txt.
-You should read it.  It's somewhat lengthy, and some aspects dated.  Here, I'd like to focus on a few key items as they relate to Ruby and ruby-talk.
+
+You should read it.  However, it's somewhat lengthy, and some aspects dated.  Here, I'd like to focus on a few key items as they relate to Ruby and ruby-talk.
 
 
 h2.  RFC 1855 in a Nutshell
 
-For the <em>tl;dr</em> crowd: Don't be a complete jerk.
+For the "tl;dr":http://www.urbandictionary.com/define.php?term=tl;dr crowd: Don't be a complete jerk.
 
-I can't suggest not being any kind of jerk at all in anyway, because it's impossible.  The Web is a big place.  
-No matter what you say or do, there is every chance that someone, somewhere, will take offence, or think you stupid, or in some way take you the wrong way.
+I can't suggest not being any kind of jerk at all in anyway, because it's impossible.  The Web is a big place.  No matter what you say or do, there is every chance that someone, somewhere, will take offence, or think you stupid, or in some way take you the wrong way.
 
 There's not much you can do about that, but you can be mindful of some general decency.  For Rubyists, the key is MINASWAN: Matz is nice, and so we are nice.
 
-This doesn't mean not being critical, or not pointing out mistakes, or not offering bold opinions.  It means directing your comments to ideas, not personalities.
-it means understanding that being wrong doesn't make a person bad or stupid, it just wrong.  And being wrong on one thing does make make  a person wrong on everything.  
+This doesn't mean not being critical, or not pointing out mistakes, or not offering bold opinions.  It means directing your comments to ideas, not personalities.  It means understanding that being wrong doesn't make a person bad or stupid, just wrong.  And being wrong on one thing does make make  a person wrong on everything.  
 
-Discussions on ruby-talk can get heated, and they temptation is string to let loose with snark and bile.  Typically it ends up counter-productive, but it's understandable.
+It also means not jumping down someone's throat because their sense of humor doesn't jibe with yours.
 
-Besides, threads would likely be much less fun if everything was sanitized.  But the line needs to be drawn at personal attacks and comments.
+Discussions on ruby-talk can get heated, and the temptation can be strong to let loose with snark and bile.  Typically it ends up counter-productive, but it's understandable.
+
+Threads would likely be much less fun if everything was sanitized.  However, the line needs to be drawn at personal attacks and comments.
 
 Ideas can be foolish; people are not fools simply for expressing a foolish idea.  Code can be bad; people are not bad for writing such code.
 
 
 h2.  It's About Code and Ideas
 
+Few people post to ruby-talk to make personal attacks (barring trolls, who should never ever be fed), but it happens. Before letting loose that little bit of one-upmanship, consider what you are really trying to accomplish.  If the goal is hurt someone: Please remember MINASWAN. If you cannot, then please go elsewhere.
+i
+If the goal is to see Ruby improve, or to express an idea, or to get help with some code, or to offer help, then stop and think.
+
+That brief moment of satisfaction will fade, and you will have failed in your larger intent. 
+
+Ruby-talk has a tradition of being very welcoming to newcomers, with many people willing to help answer even the goofiest of questions.  I've asked a fair number of those goofy questions, and the help I received encouraged me both to stick with Ruby and to try to return the favor. Please support that.
 
 
 h2. A Random Set of Guidelines
 
+Assorted do's and don'ts.  If you can think of more, please add them in the comments.
 
 
-h3. Do Your Homework
+h3. Don't top-post
 
-Ruby is a great language, fairly intuitive to many people, but sometimes you get stuck trying to figure something out. It may seem easy to dash off a note
-to ruby-talk asking "How do I do foo?", but first do some due diligence.  Use Google.  Use ruby-doc.org (Handy tip: Ruby-doc.org uses 
-a custom Google search focused on Ruby sites.  There's a special search URL as well: http://www.ruby-doc.org/q/your+search+terms+here.)
+See "here":http://www.caliburn.nl/topposting.html.
+
+Before retorting with how this or that mail reader or client makes top-posting the default, consider this: the idea is to make things easy for the readers, not for you, the poster.
+
+If the goal is have people read, and understand, what you are posting, then place you reply in context, and trim away irrelevant text.
+
+If you are unpersuaded by arguments against top-posting (and many are), know that many people will simply not bother with what you post.
+
+h3. Do your homework
+
+Ruby is a great language, fairly intuitive to many people, but sometimes you get stuck trying to figure something out. It may seem easy to dash off a note to ruby-talk asking, "How do I do foo?", but first apply some due diligence.  Use Google.  Use ruby-doc.org (Handy tip: Ruby-doc.org uses a custom Google search focused on Ruby sites.  There's a special search URL as well: http://www.ruby-doc.org/q/your+search+terms+here.)
 
 Search the ruby-talk archives: 
 
@@ -49,17 +68,80 @@ Search the ruby-talk archives:
 * http://www.nabble.com/ruby-talk-f13890.html
 * http://blade.nagaokaut.ac.jp/ruby/ruby-talk/index.shtml.
 
-When you do post, explain what steps you've  taken  to solve the matter on your own.  This serves two purposes. First, it shows people you are diligent, making more people more likely to want to help you. It also avoids wasting time with people suggesting things you've already done or know about.
+When you do post, explain what steps you've taken to solve the matter on your own.  This serves two purposes. First, it shows people you are diligent, making more people more likely to want to help you. It also avoids wasting time with people suggesting things you've already done or know about.
 
-Whenever possible, show your code.  If you have more than a dozen lines or so, use  a
+Whenever possible, show your code.  If you have more than a dozen lines or so, use a pastie site, such as "Gist":http://gist.github.com/.
 
 
-h3.  Watch for Perma-threads
+h3. Be specific
 
-There are some topics that come at regular intervals. Adding static typing to Ruby.  Best GUI  toolkit.  Best IDE.  Adding significant indentation.
+If you have a problem, give details about your environment.  What operating system? What version of Ruby? 
 
-Before posting, see if you are not simply repeating what has been said.  Check the archives.  If you really feel you have something new to add, post,
-but please show that you are familiar with prior discussion.
+Know, too, that there are specialized mailing lists for many Ruby tools and applications. For example, if you have a problem with Rails or Ramaze, please ask on the Rails or Ramaze mailing lists. You are more likely to get a faster, more accurate response on the proper list.
 
-Conversely, if you see a post that looks to be a perma-thread, don't assume it has been discussed to death (though that is possible). Certain topics,
-such as GUI tools or IDEs, see new additions and advancements over time.  It doesn't help to direct people to a thread from last year as the final word on evolving 
+Ask concrete questions.  Explain what you are trying to do, what results you get, and how those results differ from what you want or expected.
+
+
+h3. Don't threadjack.
+
+That is, do not reply to a post with starting a new topic.   If a thread starts to drift off-topic, please consider starting a new thread with a more appropriate topic.
+
+
+h3. Repetition is not an argument
+
+Don't expect anyone to change their opinion because you've repeated your same points over and over. Accept that sometimes people will never, ever, agree with you. I know, it's weird, but true.
+
+ 
+h3.  Watch for perma-threads
+
+There are some topics that come up at regular intervals. Adding static typing to Ruby.  Best GUI  toolkit.  Best IDE.  Adding significant indentation.
+
+Before posting, see if you are not simply repeating what has been said.  Check the archives.  If you really feel you have something new to add, post, but please show that you are familiar with prior discussion.
+
+Conversely, if you see a post that looks to be a perma-thread, don't assume it has been discussed to death (although that is possible). Certain topics, such as GUI tools or IDEs, see new additions and advancements over time.  It doesn't help to direct people to a thread from last year as the final word on evolving technology.
+
+
+h3. Walk the walk
+
+People often ask for one or another change to the Ruby language or standard library. This is good, this is how languages evolve.  
+
+Well-considered change requests should be posted to the ruby-core mailing list.
+
+Before proposing any change, see if someone hasn't already implemented it as a library.  There are a few libraries, such as "Facets":http://facets.rubyforge.org, that provide many extensions.
+
+If there is no existing code, see if you can first implement it yourself.  
+
+For example, you may think it be would super cool awesome if the Array class could tell you what elements were of a certain size:
+
+<pre name="code" class="ruby">
+  a = %w{ foo bar bar thisoneisdiffernt }
+  short_words = a.length_is 3
+</pre>
+
+Before arguing in the abstract just how magical this would make life, code it yourself:
+
+<pre name="code" class="ruby">
+  class Array
+    def length_is length
+      self.select{ |i| i.size == length }
+    end
+  end
+</pre>
+
+Make it a gem, or a gist pastie, or otherwise available for others to try.  Then explain why it needs to be added to the language rather than used as a gem.
+
+If, for whatever reason, you cannot implement it (even a weak version), explain why. 
+
+The bottom line is this: Many, many suggestions have been made, many with the presumption that someone else is expected to do the heavy lifting, swayed only by rhetoric. That's unfair, and unproductive..
+
+When first attempting to code it yourself, certain results are likely:
+
+# You discover that there is no need to build it into the language, since it is trivial to add (e.g. using a gem)
+# You discover that it is not so easy to add as-needed, but you now have the code for it, so adding it to the language would be that much easier
+# You discover that, now that you have a working version, you don't use it as you expected anyway
+# You find out that some things are hard to do
+
+Best of all, the effort should make you a better Ruby programmer.
+
+
+
