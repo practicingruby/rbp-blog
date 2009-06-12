@@ -22,6 +22,7 @@ h3. Must have
 | 4|Parsing of lines needs to be easily adjustable to different line formats|
 | 5|Analysis must not rely on any particular text to identify first and last lines of an interaction|
 | 6|Filter interactions by time range (between a and b, before a, after a)|
+| 7|If timestamps are parsed formats without year must be properly parsed|
 
 h3. Should have
 
