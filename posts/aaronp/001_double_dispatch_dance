@@ -16,8 +16,8 @@ The way the double dispatch pattern works is by adding a method to each object t
 
 <pre name="code" class="ruby">
   ##
-  # The visitable module makes a class "visitable". It follows the double dispatch
-  # pattern and simply calls "visit" on the argument with itself.
+  # The visitable module makes a class "visitable". It follows the double 
+  # dispatch pattern and simply calls "visit" on the argument with itself.
   module Visitable
     def accept visitor
       visitor.visit self
@@ -25,8 +25,8 @@ The way the double dispatch pattern works is by adding a method to each object t
   end
 
   ##
-  # For this example, we want to make *all* objects visitable, so we'll mix the
-  # Visitable module in to Object.
+  # For this example, we want to make *all* objects visitable, so we'll mix 
+  # the Visitable module in to Object.
   class Object
     include Visitable
   end
