@@ -29,3 +29,4 @@ authors:
   aaronp:
     name: "Aaron Patterson"
     email: aaron.patterson@gmail.com
+    guest: true

@@ -38,10 +38,12 @@
         <div id="about">
           <div align="center">
           <% Korma::Blog.authors.to_a[0..3].each do |_,a| %>
+            <% next if a.guest %>
             <a href="<%= a.index_uri %>" title="<%= a.name %>"><img src="<%= a.gravatar(40) %>" alt="<%= a.name %>"></a>
           <% end %>
           <br/>
           <% Korma::Blog.authors.to_a[4..-1].each do |_,a| %>
+            <% next if a.guest %>
             <a href="<%= a.index_uri %>" title="<%= a.name %>"><img src="<%= a.gravatar(40) %>" alt="<%= a.name %>"></a>
           <% end %>
           <p>About: <a href="/about">blog</a> |
