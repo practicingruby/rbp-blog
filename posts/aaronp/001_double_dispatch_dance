@@ -1,10 +1,9 @@
 =title The Double Dispatch Dance
+=timestamp 2009.06.19 20:30 UTC
 =description
 Let's take a quick tour of how to convert anything to anything using the
 Double Dispatch and Visitor patterns.
-=timestamp 2009.06.19 20:30 UTC
 =entry 
-
 <i>EDITORIAL NOTE: This is the first of hopefully many guest posts to the RBP blog.  If you are interested in writing an article for us, contact any of the RBP bloggers for details on how to submit content.</i>
 
 "Sandi Metz":http://sandimetz.com/ recently blogged "about ruby case statements being similar to calling is_a?":http://sandimetz.com/2009/06/ruby-case-statements-and-kindof.html on a particular object, and how we should be using duck typing rather than inspecting the type of the class. Her solution was to add methods to some core classes so that they all "quacked" the same way.
@@ -161,5 +160,5 @@ h3. Follow up notes
 
 When I'm implementing this pattern in "the real world" I've never done it for core classes. I typically use this for converting my own objects in to some other object. Since I'm performing these actions on my own objects, there is no monkey pathing involved (yay!).
 
-Also, its worth keeping in mind that babbies can form in many ways, and this is only one of them.   Tune in next week to watch Greg tackle the same problem using Decorators, to see the pros and cons from yet another angle.
+Also, its worth keeping in mind that babbies can form in many ways, and this is only one of them.  Tune in next week to watch Greg tackle the same problem using Decorators, to see the pros and cons from yet another angle.
 
