@@ -34,7 +34,7 @@ The way the double dispatch pattern works is by adding a method to each object t
 
 Excellent, but what does this buy me? It gives me an entry point and common interface for dispatching a method based on the object I am visiting. I just implement an object that responds to "visit" and that methods knows how to dispatch.
 
-== Our Dispatching Visitor
+h3. Our Dispatching Visitor
 
 I've implemented a class that responds to "visit", and based on the type of the object, dispatches to a particular method. If a string is passed in to the "visit" method, it will try to dispatch the object to "visit_String". If "visit_String" is not defined, it will try look at the string's ancestor list trying to find a place to dispatch. If it can't dispatch, an exception is raised. My Visitor base class also has a helper method "visitor_for" to help define handlers.
 
