@@ -1,0 +1,32 @@
+<div style="width: 100px;  float: left;">
+!<%= @author.gravatar %>!
+</div>
+
+<div style="margin-left: 100px;">
+
+h2. Aaron Patterson
+
+Mild mannered Ruby programmer by day, internetexpert by night. When Aaron Patterson is not perusing pictures of cute kittens, he is making rails scale to at least 82pt font for his employer, AT&amp;T interactive.
+
+His open source contributions include, but are not limited to:
+
+* Nokogiri
+* Mechanize
+* Enterprise! the gem.
+
+You can find him in Seattle, Tuesday nights, hacking with the other members of Seattle.rb.
+
+h3. Upcoming Events
+
+* Talk @ RubyKaigi 2009 on "XML or something"
+* Everyday, free hugs if you're in Seattle
+
+h3. Contact
+
+Aaron can be found on Twitter as "@tenderlove":http://twitter.com/tenderlove, his codes can be found on the "github":http://github.com/tenderlove and you can read his really really really awesome blog "tenderlovemaking.com"http://tenderlovemaking.com
+
+
+<div align="right">
+"All posts by Aaron":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
+</div>
+</div>
