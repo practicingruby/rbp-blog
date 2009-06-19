@@ -1,0 +1,85 @@
+=title First Design Considerations
+=timestamp 2009.06.12 22:36 +0200
+=description Today we will go into medias res.  I will start by outlining application design and collect some useful facts derived from requirements.  You'll even see small snippets of Ruby code!
+=entry
+Now the interesting part begins!  In an early phase like this I like to look at the problem I want to solve from different angles to get a feeling for implementation options.  The output will look like an unsorted collection of notes - and that's what it is!  I don't claim that this is the best approach around but this helps me to get a better grip of the problem.
+
+_Side note_: I believe that despite all the methodologies around the way you approach a new problem is highly influenced by your personal way of thinking and working.  There is no one size fits all approach and "chaos" at the beginning is nothing to be afraid of.  In fact it may well be that "chaos" gives birth to the best ideas.
+
+h3. Obtaining Information about individual Records
+
+Requirement M3 makes it necessary that in some place we have a plug where we can insert something that does log file format specific things.  Basically for parsing a single line a block would be sufficient.  If the format parses ok, the interaction identifier is returned, if not, we have a continuation line.  However, it seems this solution is too simplistic: for time filtering (M6) and time gap detection (S3) we certainly also need the timestamp of the record.  M7, which I had forgotten initially, also makes it necessary that the year is somehow synthesized - or inserted into the line parser from surrounding code.  So, we will likely end up with something that would be an interface in other programming languages, i.e. we need a parser class which speaks a certain protocol / has a certain API.
+
+Here's an alternative approach: we create a record class and write our parser in a way that it spits out instances of this record class all the time:
+
+<pre name="code" class="ruby">
+Record = Struct.new :time_stamp, :interaction_id, :message
+
+parser = ...
+
+parser.each do |rec|
+  interaction = find_interaction(rec.interaction_id)
+  time_gap = rec.time_stamp - interaction.last_time_stamp
+  ...
+end
+</pre>
+
+From an object oriented point of view there's much which speaks in favour of this:
+
+* A record is an entity in our description of the problem domain and as such it is naturally to have it represented in the application,
+* We can add record specific functionality to this class (e.g. get all potential keywords used for searching / filtering),
+* We do not have to care about multiline detection, this is completely encapsulated in the parser,
+* We can enforce class invariants (e.g. all fields must be non nil and @time_stamp@ must be a @Time@ instance).
+
+However, there's a price to pay in object allocations and collections.  Remember, we are talking about files with tons of records; if all these records are short lived (i.e. not used for storing them somewhere) we're generating a lot of overhead which the garbage collector has to get rid of again.  So I rather lean towards the "parser interface" approach mentioned above:
+
+<pre name="code" class="ruby">
+parser = ...
+
+parser.line = line
+
+if parser.continuation_line?
+  last_record << "\n" << line
+else
+  ...
+  last_record = line
+  diff = parser.time_stamp - last_time
+  ...
+end
+</pre>
+
+Now, it's debatable whether this falls into the category of "premature optimisation":http://en.wikipedia.org/wiki/Premature_optimization#When_to_optimize, but since we know that we are going to crunch a lot of data we should probably avoid this kind of overhead.
+
+h3. Filtering
+
+From the requirements it is clear that we would like to have quite flexible filtering (M6, S3, S4).  We have two options:
+# We apply the filtering during processing.
+# Processing gathers meta data about the data and we can efficiently query later with whatever filters we like.
+
+Hybrid approaches are also possible, e.g. time filtering during processing but searching for keywords later.  From the user's point of view option 2 is certainly more desirable because it gives greater flexibility.  On the other hand this must be balanced with processing overhead and disk space.  As usual, if we want great flexibility for queries after analysis we need more disk space for meta data (indexes).  In another hybrid approach the types of desired filters are provided as input into the processor so that only indexes for criteria are created which are actually queried later.  The "flexible query" approach certainly reminds me of relational database.
+
+When we do online filtering (option 1 above) we need to keep some aspects in mind.  For example, if we want to filter by text found in an interaction log message (the part after the interaction id in the sample generator output), that text might not appear in the first record of a particular interaction yet we would want to see all preceeding records as well (M1).  Similar for time range filtering: an interaction might have started before the range start but end after it.  It should be clear that if we choose this approach we need a way to keep some history of past records during processing.  Since we can't store everything we've seen so far we need to decide what we need to keep and what we can discard.
+
+I need to ponder this a bit more but at the moment I would rather choose the online filtering approach for these reasons:
+
+* Less disk space used on output,
+* Potentially less write IO during processing, which would help performance since we are almost certainly IO bound,
+* Easier distribution to other staff - if we need meta data to get at information efficiently this also means that someone needs to have the software to extract the information he wants (plus the index data and the original data set which is large).
+
+h3. Statistics
+
+Collecting statistics like no. of records and no. of lines per file isn't too expensive so we probably create a statistics class which records just that.
+
+h2. Application Structure
+
+If you do not know "CRC Cards":http://en.wikipedia.org/wiki/Class-Responsibility-Collaboration_card yet this is a good opportunity to look into this simple concept.  It does not have the power of an UML collaboration diagram but it helps identify classes and how they might play together.
+
+We can roughly identify some pieces already:
+
+- Parser := parse individual lines of the input, identify relevant information (timestamp, interaction id).
+- FileStatistics := collect various data points about a processed file (lines, time taken...).
+- OptionProcessor := process command line options.
+- Coordinator := This is the "MCP":http://en.wikipedia.org/wiki/Master_Control_Program_(Tron)#Master_Control_Program which binds everything together and coordinates the processing.
+- ProcessingStorage := this is the foggiest entity so far; it will be responsible for storing information about processed interactions.  Since I haven't decided on the strategy yet, I'll leave it at this for now.  We'll have to make this more concrete later.  One thing is for sure: this will likely the most complex class - or rather set of classes.
+
+So much for initial design considerations.  I'll stop here, to give us a break and allow for some discussion, which probably will turn up new aspects and new ideas.
