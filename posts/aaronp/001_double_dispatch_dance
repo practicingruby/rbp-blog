@@ -1,0 +1,165 @@
+=title The Double Dispatch Dance
+=description
+Let's take a quick tour of how to convert anything to anything using the
+Double Dispatch and Visitor patterns.
+=timestamp 2009.06.19 20:30 UTC
+=entry 
+
+<i>EDITORIAL NOTE: This is the first of hopefully many guest posts to the RBP blog.  If you are interested in writing an article for us, contact any of the RBP bloggers for details on how to submit content.</i>
+
+"Sandi Metz":http://sandimetz.com/ recently blogged "about ruby case statements being similar to calling is_a?":http://sandimetz.com/2009/06/ruby-case-statements-and-kindof.html on a particular object, and how we should be using duck typing rather than inspecting the type of the class. Her solution was to add methods to some core classes so that they all "quacked" the same way.
+
+I completely agree with Sandi's sentiments, but at the same time, I don't like reopening core classes, so I wanted to see if I could accomplish the same task, but minimize my impact on any core classes. The way I chose to accomplish this task is with the "double dispatch":http://en.wikipedia.org/wiki/Double_dispatch and "visitor pattern":http://en.wikipedia.org/wiki/Visitor_pattern .
+
+h3. Double Dispatch
+
+The way the double dispatch pattern works is by adding a method to each object that should know how to double dispatch. That method takes one argument, and calls a method on the argument passing itself in. In my solution, I called the method "accept", and I want all objects to do double dispatch, so I've added that method to Object:
+
+<pre name="code" class="ruby">
+  ##
+  # The visitable module makes a class "visitable". It follows the double dispatch
+  # pattern and simply calls "visit" on the argument with itself.
+  module Visitable
+    def accept visitor
+      visitor.visit self
+    end
+  end
+
+  ##
+  # For this example, we want to make *all* objects visitable, so we'll mix the
+  # Visitable module in to Object.
+  class Object
+    include Visitable
+  end
+</pre>
+
+Excellent, but what does this buy me? It gives me an entry point and common interface for dispatching a method based on the object I am visiting. I just implement an object that responds to "visit" and that methods knows how to dispatch.
+
+== Our Dispatching Visitor
+
+I've implemented a class that responds to "visit", and based on the type of the object, dispatches to a particular method. If a string is passed in to the "visit" method, it will try to dispatch the object to "visit_String". If "visit_String" is not defined, it will try look at the string's ancestor list trying to find a place to dispatch. If it can't dispatch, an exception is raised. My Visitor base class also has a helper method "visitor_for" to help define handlers.
+
+<pre name="code" class="ruby">
+##
+# The Visitor class is our base class for all visitors.  It implements the
+# "visit" method which Object#accept will call.
+class Visitor
+  ###
+  # Dynamically create a visitor method for each class in +klasses+
+  def self.visitor_for *klasses, &block
+    klasses.each do |klass|
+      define_method(:"visit_#{klass.name}", block)
+    end
+  end
+
+  ##
+  # This method will examine the class and ancestors of +thing+. For each
+  # class in the "ancestors" list, it will check to see if the visitor knows
+  # how to handle that particular class. If it can't find a handler for the
+  # +thing+ it will raise an exception.
+  def visit thing
+    thing.class.ancestors.each do |ancestor|
+      method_name = :"visit_#{ancestor.name}"
+      next unless respond_to? method_name
+      return send method_name, thing
+    end
+
+    raise "Can't handle #{thing.class}"
+  end
+end
+</pre>
+
+My base Visitor class is not really of much use at this point. All it knows how to do is accept an object and try to send a method based on the type. Let's take a look at a visitor that will convert any object to an array.
+
+h3. Array Conversion Visitor
+
+One of the tasks is to convert any object in to an array. I can write a Visitor class that has one responsibility; turning any object in to an Array. The rules for this conversion are easy. If the object is an array, return the array, if it's something else, return that thing inside an array:
+
+<pre name="code" class="ruby">
+  require 'visitor'
+ 
+  ##
+  # This Visitor knows how to turn any object in to an Array
+  class AsArray < Visitor
+    visitor_for Array do |array|
+      array
+    end
+ 
+    visitor_for Object do |o|
+      [o]
+    end
+  end
+</pre>
+
+That was pretty easy. If the target of the "accept" method is an array, the visit_Array method will be called an the target object will be returned. If it's something else, visit_Object will be called and a new object will be created.
+
+I can use this style pattern for converting any object to pretty much any other.
+
+h3. Cleaning up our API
+
+So far my API is kind of strange. I have to call "accept" on the target object and pass in new visitor of some sort. To clean this API up a bit, I've written a proxy object that takes any object for it's constructor, then provides nice method names to abstract the visitor classes:
+
+<pre name="code" class="ruby">
+  require 'visitable'
+  require 'visitor'
+  require 'as_form_object'
+  require 'as_array'
+  require 'as_fields_for_form_object'
+ 
+ 
+  ###
+  # This class sets up a proxy to +thing+. The purpose of this class is to let
+  # us convert an object to something else without knowing what visitor is
+  # required to do that conversion:
+  #
+  # p form_for([1, :two, [3]]).as_form_object
+  #
+  class ConversionProxy < Struct.new(:thing)
+    def as_form_object
+      thing.accept AsFormObject.new
+    end
+ 
+    def as_array
+      thing.accept AsArray.new
+    end
+ 
+    def as_fields_for_form_object args
+      thing.accept AsFieldsForFormObject.new(args)
+    end
+  end
+ 
+  def form_for thing
+    ConversionProxy.new(thing)
+  end
+ 
+  p form_for(:two).as_form_object
+ 
+  p form_for(:two).as_array
+  p form_for([:two]).as_array
+ 
+  p form_for(:two).as_fields_for_form_object [:foo]
+  p form_for(['hello world']).as_fields_for_form_object [:foo]
+</pre>
+
+h3. Pros for this solution
+
+With one monkey patch to Object, I now have the ability to convert *any* object in to any other object without needing to add new methods to core classes.
+
+Each visitor has one specific responsibility. My visitor classes are just normal classes, so if I find any repetition between them, I can refactor and inherit, or refactor and mix in.
+
+h3. Cons for this solution
+
+I still had to monkey patch Object and add a method. The method I added was very generic and simple, but I still had to add it.
+
+Visitation rules may need to change. My current behavior of looking up the ancestor tree *may* not be desired. Fortunately if I need to change that, my visitor subclass can just override visit.
+
+Double dispatch might be confusing. The code is very simple, but it took me a while to understand and harness it's power (I have the pooowwwweeerrr!).
+
+Is this any better than case/when statements? I'm not sure. It still works based on object type, but it does nicely encapusulate the conversion logic.
+
+h3. Follow up notes
+
+When I'm implementing this pattern in "the real world" I've never done it for core classes. I typically use this for converting my own objects in to some other object. Since I'm performing these actions on my own objects, there is no monkey pathing involved (yay!).
+
+Also, its worth keeping in mind that babbies can form in many ways, and this is only one of them.   Tune in next week to watch Greg tackle the same problem using Decorators, to see the pros and cons from yet another angle.
+
