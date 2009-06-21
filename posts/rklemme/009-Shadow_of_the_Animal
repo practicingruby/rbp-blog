@@ -1,0 +1,61 @@
+=title Shadow of the Animal
+=timestamp 2009.06.21 21:36 +0200
+=description Today I will go into more detail with regard to the application structure and the thought process that led to it.
+=entry
+Let's recapitulate where we have been for readers who are new to the blog and for the convenience of others.  I "started this":005_Enter_the_Muppet_Laboratories.html a while ago as an experiment trying to give some insights into my way of reasoning.  I choose processing of large log files as subject which should help me analyze problems on production systems.  I do believe that this might also help others as log file analysis is a fairly common task.  The key point here is to be able to efficiently sift through many large logfiles and give access to the relevant information (see also the "list of requirements":007-Requirements.html and the "initial description":006-The_Muppet_Project.html of the scope).
+
+I picked "Animal" as name of the logfile analyzer because that must sift through tons of log data in a similar way as the "like named character":http://muppet.wikia.com/wiki/Animal of a "TV show":http://muppet.wikia.com/wiki/The_Muppet_Show treated his instrument - ferociously.
+
+In today's article I will present some major design decisions.  Some core components of the architecture have been mentioned in the "previous article":008-First_Design_Considerations.html already so I won't repeat them here.
+
+h3. Design Decisions
+
+As I want to give insights into my way of reasoning about software and design in particular I will list some of the major design decisions along with my rationale.
+
+h4. No class for individual log entries
+
+The reasoning has been presented in a "previous article":008-First_Design_Considerations.html: I want to avoid the overhead of allocating short lived objects.  You can play around with a "toy Java project":http://github.com/rklemme/muppet-laboratories/tree/master (Eclipse as well as ant) to see the effect I was talking about.  I had up to 9% time difference between the straight version and the version which puts data in a special record class.
+
+h4. No meta data
+
+I had pondered the option to use a two step approach with an initial analysis step which will generate meta data which then is used by another program to efficiently extract relevant information.  The advantage clearly would have been that we can apply a lot of different filtering and selection criteria without having to go through the initial analysis phase.  I have decided against for these reasons:
+
+- Easier propagation of relevant data := Others do not need the extraction program and the original log files to look at interactions,
+- Simpler software structure := Only one program is needed, no writing and reading of meta data needed,
+- More robust := A change in the location of the original logs does not affect analysis.
+
+h4. Efficient Processing
+
+This is the part I personally find most interesting: how do we manage to stream process log data while still limiting memory usage?  We cannot simply aggregate all interactions in a huge Hash and dump the interesting bits at the end becausethis will burn too much memory (which costs speed through paging) or even make the whole process fail completely.  That would be especially bad since in a case of lacking memory we would loose all the work that has been done up to the point.
+
+My idea for solving this involves two components:
+
+# A hash based storage with LRU semantics,
+# An interaction processor.
+
+Basically the LRU storage is responsible for keeping only a limited number of interaction processors in memory while the interaction processor is responsible for dealing as efficiently as possible with a single interaction.  This means, the interaction processor will have to efficiently decide whether an interaction is included in the output and write out log lines as soon as possible (!) to a file in a given location.
+
+h4. Output Storage
+
+Every interaction will be stored in its own file.  To avoid potential issues with file systems becoming inefficient with thousands of files we will use an output directory tree with these levels:
+
+# date, formatted YYYY-MM-DD (example '2006-06-21'),
+# hour and minute, two digit 24 hour clock and minute (example '19-11').
+
+Interaction file names will include the timestamp of the first record.  The naming will be like this: "SS.SSS-<interaction id>" where "SS" are the seconds of the timestamp and "SSS" are milliseconds".  A valid name might then look like this @2009-06-21/19-11/00.003-sdmyrsmmlbxodfd@.
+
+The advantage is that we will not face any filesystem issues because there will be only a few thousand entries per minute.  Plus, because of the hierarchical naming of directories and files we can easily use textual sorting of names and get chronological output.  If we discover that there are too many entries per minute we can still extend the schema pretty easily to include a directory level for seconds.
+
+h3. Structure
+
+The structure of the application will look like this: there is an option parsing method which outputs options which contain a combination of all processing options.  These options will be hand off to the Coordinator which is the main driver of the processing.  The Coordinator also needs a Parser instance which is capable of parsing log lines and providing interaction_id as well as a time_stamp of the last parsed entry.  The coordinator will create InteractionProcessors as needed and hold them in a structure keyed by interaction_id.  Each InteractionProcessor will handle a single interaction only.  It knows the coordinator through which it gains access to options and a filter evaluator which determines whether an interaction is included; this filter works on the InteractionProcessor.
+
+h3. Thought Process
+
+Now you might wonder how I arrived at these decisions.  Well, I wanted the resulting bit of software to get the job done simply and efficiently.  Generating a whole lot of meta data which helps in finding interactions efficiently would have created additional complexity as I have pointed out.  So it was logical to rather choose a grepish approach, i.e. read the input once and spit out everything that we are interested in.
+
+Since volume of input data is large we cannot expect to hold all the input in memory at some point in time.  So we would rather have to pick a streaming approach.  This means, we can only hold as many entities in memory at a time.  Luckily, log entries of a single interaction have high locality, i.e. whenever the first occurs follow up lines are not too far away and the interaction end is usually near as well.
+
+Now, I considered two approaches for aging out interactions from the processor's storage: timestamp based and access based.  I picked access based because in reality there are some interactions which take a bit longer than the usual interaction which would make picking a high latency necessary.  This in turn would keep short interactions longer in memory than necessary.  Also, with this approach you cannot put a hard numeric limit on the number of interactions in memory which could lead to failures for some logs while other logs are processed ok.  With a LRU based storage we can set a size limit and avoid this problem.  Of course, long interactions which also have many log entries could still cause memory issues but since these are comparatively rare the likelyhood of issues is small.
+
+I will now wander off hacking together a rough application which does not yet do much but should give you an idea of how all the pieces are supposed to work together.
