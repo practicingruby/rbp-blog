@@ -2,7 +2,12 @@
 =timestamp 2009.06.23 00:36 +0200
 =description I hacked together a first draft illustrating the intended architecture.
 =entry
-You can find the first "sample-animal":http://github.com/rklemme/muppet-laboratories/blob/16dc8851554bf29cee37a0dd75a7869c99b10c7d/bin/sample-animal.rb over there at "github":http://github.com/rklemme/muppet-laboratories/tree/master.
+You can find the first "sample-animal":http://github.com/rklemme/muppet-laboratories/blob/16dc8851554bf29cee37a0dd75a7869c99b10c7d/bin/sample-animal.rb over there at "github":http://github.com/rklemme/muppet-laboratories/tree/master.  Deficits of this version:
+
+* No command line parsing,
+* No filtering,
+* Works only for moderately sized files,
+* No particular optimizations yet (well, apart from freezing of id Strings).
 
 One remark about method @main@: this is the result of asking myself "What is the minimal interface I can provide for users of the Animal and who basically only need to define the parser class?"  At first I found it a bit odd, but in terms of lines of code this is likely one of the leanest solutions.
 
