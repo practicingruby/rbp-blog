@@ -26,7 +26,7 @@ I had pondered the option to use a two step approach with an initial analysis st
 
 h4. Efficient Processing
 
-This is the part I personally find most interesting: how do we manage to stream process log data while still limiting memory usage?  We cannot simply aggregate all interactions in a huge Hash and dump the interesting bits at the end becausethis will burn too much memory (which costs speed through paging) or even make the whole process fail completely.  That would be especially bad since in a case of lacking memory we would loose all the work that has been done up to the point.
+This is the part I personally find most interesting: how do we manage to stream process log data while still limiting memory usage?  We cannot simply aggregate all interactions in a huge Hash and dump the interesting bits at the end because this will burn too much memory (which costs speed through paging) or even make the whole process fail completely.  That would be especially bad since in a case of lacking memory we would loose all the work that has been done up to the point.
 
 My idea for solving this involves two components:
 
