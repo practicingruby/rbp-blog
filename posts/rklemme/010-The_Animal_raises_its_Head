@@ -2,7 +2,7 @@
 =timestamp 2009.06.23 00:36 +0200
 =description I hacked together a first draft illustrating the intended architecture.
 =entry
-You can find the first "sample-animal":http://github.com/rklemme/muppet-laboratories/blob/16dc8851554bf29cee37a0dd75a7869c99b10c7d/bin/sample-animal.rb over there at "github":http://github.com/rklemme/muppet-laboratories/tree/master.  Deficits of this version:
+You can find the first "sample-animal.rb":http://github.com/rklemme/muppet-laboratories/blob/16dc8851554bf29cee37a0dd75a7869c99b10c7d/bin/sample-animal.rb over there at "github":http://github.com/rklemme/muppet-laboratories/tree/master.  Deficits of this version:
 
 * No command line parsing,
 * No filtering,
@@ -12,3 +12,104 @@ You can find the first "sample-animal":http://github.com/rklemme/muppet-laborato
 One remark about method @main@: this is the result of asking myself "What is the minimal interface I can provide for users of the Animal and who basically only need to define the parser class?"  At first I found it a bit odd, but in terms of lines of code this is likely one of the leanest solutions.
 
 I'll have to call it a day now, but I invite you to have a look and comment.  Do you consider method @main@ a good idea?  I'll chime in with some more explanations later.
+
++[Update:_]+ If you are looking for the entry point of the implementation for the sample log you need to look into file @sample-animal.rb@:
+
+<pre name="code" class="ruby">
+#!/usr/local/bin/ruby19 -w
+
+# Implementation of the parser for the sample
+# generator script test-gen.rb.
+$: << File.join(File.dirname(File.dirname($0)), "lib")
+
+require 'time'
+require 'animal'
+
+# main defines the custom parser class!
+Animal.main do
+
+  TIME_FORMAT = '%Y-%m-%d %H:%M:%S.%N'.freeze
+
+  attr_accessor :year
+  attr_reader :interaction_id, :time_stamp
+
+  def parse(line)
+    if %r{
+       ^
+       ( \d{4}-\d{2}-\d{2} \s \d{2}:\d{2}:\d{2}(?:\.\d+)? )
+       \s+
+       (\S+) # interaction_id
+       \s+
+       }x =~ line
+      @time_stamp = Time.strptime $1, TIME_FORMAT
+      @interaction_id = $2
+    else
+      @time_stamp = nil
+      @interaction_id = nil
+    end
+  end
+
+  def initial_line?
+    time_stamp
+  end
+end
+
+# EOF
+</pre>
+
+The intersting thing is: this is complete already!  As long as the file format does not change we won't have to touch this file any more.  Basically we only provide information about the log file format through the parser whose class is defined with the code block passed to main.  The rest - command line argument parsing, creating of all necessary objects etc. is done in @main@ which is not much longer either:
+
+<pre name="code" class="ruby">
+require 'ostruct'
+
+# Namespace for all the Animal related classes
+# Animal is the project on Ruby Best Practices
+# blog which demonstrates the thought process
+# of writing an application
+module Animal
+
+  # Parse the given command line and return an option instance.
+  # Options are removed from the argument so what is left in
+  # there must be file names.
+  def self.parse_command_line(argv = ::ARGV) 
+    o = OpenStruct.new(:output_dir => ".")
+    # parse
+    o
+  end
+
+  # This metho allows to write extremely short applications
+  # because it accepts a block which is used to define the
+  # parser class.  Alternatively users can provide a parser
+  # instance.  The default command line is added implicitly
+  # and will be option parsed and the whole processing will
+  # start automatically.
+  def self.main(parser = nil, argv = ::ARGV, &class_body)
+    $stderr.puts 'WARNING: ignoring class body' if parser && class_body
+    parser ||= Class.new(&class_body).new
+    options = parse_command_line(argv)
+    coord = Coordinator.new
+    coord.parser = parser
+    coord.options = options
+    coord.process_files argv
+  end
+
+  # autoload init
+  %w{
+    Coordinator
+    ProcessingStorage
+    FileStatistics
+    InteractionProcessor
+  }.each do |cl|
+    autoload cl, "animal/#{cl.gsub(/([a-z])([A-Z])/, '\\1_\\2').downcase}"
+  end
+
+end
+</pre>
+
+There is really not much magic in @main@ apart from (ab)using the method block as class body.  (Btw, this is something you can do with @Struct@ as well.  I'll write about that in a future post.)  I can't think of a leaner interface to get the job done but maybe someone out there has another idea.
+
+I had thought of defining a single regular expression with capturing group indexes for timestamp and key.  But then we might also need a way to specify timestamp conversion.  And then there are also file formats which have timestamps separated in time and date and even binary formats...  This looks like an area we should revisit after v1.0 - maybe there is some room for improvement.  For now we'll stick with the line oriented formats which should cover a pretty wide range - including the requirements.
+
+I am also not convinced that the @autoload@ part is really that great.  Initially it looked like a good idea but now I am not sure any more: writing out class and file names is probably better readable and as easy as the automated class name to file name conversion hack.
+
+Now, what do you guys say?
