@@ -5,11 +5,11 @@ In response to Aaron Patterson's "Double Dispatch Dance", we'll take a look at a
 =entry
 As promised, we're back with more design discussion and hopefully some interesting ideas.  Let's start with a quick recap of what has happened so far.
 
-First, "Sandi Metz":http://sandimetz.com/ postedon her blog about "type specific coupling":http://sandimetz.com/2009/06/ruby-case-statements-and-kindof.html that a <tt>case</tt> statement can introduce.  Her proposed solution encouraged us to pass the responsibilities down to the individual objects, which is certainly desirable.
+First, "Sandi Metz":http://sandimetz.com/ posted on her blog about "type specific coupling":http://sandimetz.com/2009/06/ruby-case-statements-and-kindof.html that a <tt>case</tt> statement can introduce.  Her proposed solution encouraged us to pass the responsibilities down to the individual objects, which is certainly desirable.
 
 "Aaron Patterson":http://blog.rubybestpractices.com/about/aaronp.html got in the mix, pointing out the issues that can happen when you are too aggressive about adding methods to core Ruby.  When Sandi suggested that "Double Dispatch":http://en.wikipedia.org/wiki/Double_dispatch might be a way around this problem, Aaron responded with an "implementation using the visitor pattern":http://blog.rubybestpractices.com/posts/aaronp/001_double_dispatch_dance.html to accomplish this sort of thing.
 
-I had not seen Aaron's initial work before setting out to solve the problem on my own, and ended up taking an entirely different path to get there.  I'm not much of a patterns guy, but after I had a working implementation, it seems like the approach I took mostly represents a combination of "Delegation":http://en.wikipedia.org/wiki/Delegation_pattern and "Decoration:"http://en.wikipedia.org/wiki/Decorator_pattern techniques.
+I had not seen Aaron's initial work before setting out to solve the problem on my own, and ended up taking an entirely different path to get there.  I'm not much of a patterns guy, but after I had a working implementation, it seems like the approach I took mostly represents a combination of "Delegation":http://en.wikipedia.org/wiki/Delegation_pattern and "Decoration":http://en.wikipedia.org/wiki/Decorator_pattern techniques.
 
 h3. A quick demo
 
@@ -48,7 +48,7 @@ I think this code will be easier to understand if I show how it is used right up
   p form_for([1,2,3]).as_array #=> [1,2,3]
 </pre>
 
-In the code above, I've implemented Sandi's <tt>as_array<tt> helper.  I left the actual <tt>form_for</tt> implementation very incomplete, causing it just to return the decorated object.  This is for example purposes only, so you could see that we can indeed call <tt>as_array</tt> successfully.  
+In the code above, I've implemented Sandi's <tt>as_array</tt> helper.  I left the actual <tt>form_for</tt> implementation very incomplete, causing it just to return the decorated object.  This is for example purposes only, so you could see that we can indeed call <tt>as_array</tt> successfully.  
 
 Before we check out how this all works, here are two extra hints about what this approach is affording us.
 
