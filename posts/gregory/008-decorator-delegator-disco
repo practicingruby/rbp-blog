@@ -69,8 +69,7 @@ As you can see, if core extensions are like a meat cleaver, this approach is mor
 
 h3. The <tt>Decorate</tt> module
 
-Though fairly densely packed, the whole implementation of <tt>Decorate</tt> is 
-pretty tiny.
+Though fairly densely packed, the whole implementation of <tt>Decorate</tt> is pretty tiny.
 
 <pre name="code" class="ruby">
 require 'delegate'
@@ -102,8 +101,7 @@ module Decoration
 end
 </pre>
 
-Here, we are taking advantage of <tt>SimpleDelegator</tt>, a class provided from Ruby's <i>delegate</i> standard library.  Here's a quick glimpse of how it
-works:
+Here, we are taking advantage of <tt>SimpleDelegator</tt>, a class provided from Ruby's <i>delegate</i> standard library.  Here's a quick glimpse of how it works:
 
 <pre>
 >> require "delegate"
@@ -130,8 +128,7 @@ works:
 => Array
 </pre>
 
-Essentially, <tt>SimpleDelegator</tt> provides an easy way to wrap an object within a proxy.  This gives us a convenient place to hang per-object behavior
-without mutating the original object.
+Essentially, <tt>SimpleDelegator</tt> provides an easy way to wrap an object within a proxy.  This gives us a convenient place to hang per-object behavior without mutating the original object.
 
 <pre>
   >> def b.kitties
@@ -200,7 +197,7 @@ Of course, this lacks the necessary sugar shock, so I show it only to make the i
 
 We want to be able to preserve the ability to use <tt>super</tt> in our decorated method calls, and we definitely wanted to pick up extensions to objects higher in the inheritance chain without any duplication.  So this meant we needed to do something a little more complicated than key the target object's type directly to a decorator module.
 
-Rather than just picking the most recent ancestor, this code walks the chain in reverse order so that the modules can neatly stack on top of one another.  In short, this means that the decorator for <tt>Object</tt> gets applied before the one for <tt>Array<tt> so that you can emulate an inheritance relationship in your extensions.
+Rather than just picking the most recent ancestor, this code walks the chain in reverse order so that the modules can neatly stack on top of one another.  In short, this means that the decorator for <tt>Object</tt> gets applied before the one for <tt>Array</tt> so that you can emulate an inheritance relationship in your extensions.
 
 This pretty much sums up the whole implementation, so let's just take a look at one more example before evaluating the pros and cons of this approach.  
 
