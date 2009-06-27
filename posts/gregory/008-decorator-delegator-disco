@@ -203,7 +203,7 @@ This pretty much sums up the whole implementation, so let's just take a look at 
 
 h3. An alternative to core extensions
 
-Here is a bit of code that completely covers the "core extensions": that Sandi needed for her "Rails patch":http://github.com/skmetz/rails/commit/cffbc4399288be2fb7e15f67680089dbb36a7152, without the core extensions:
+Here is a bit of code that completely covers the "core extensions":http://github.com/skmetz/rails/blob/cffbc4399288be2fb7e15f67680089dbb36a7152/actionpack/lib/action_view/helpers/form_helper_core_extensions.rb that Sandi needed for her "Rails patch":http://github.com/skmetz/rails/commit/cffbc4399288be2fb7e15f67680089dbb36a7152, without the core extensions:
 
 <pre name="code" class="ruby">   
   class Extensions
@@ -279,7 +279,7 @@ A major drawback here is that we're still relying on types.  Whether its a class
 
 There is also the performance overhead factor.  I have not benchmarked yet, but I suspect that the cost of both building up a <tt>SimpleDelegator</tt> and doing proxy calls is non-negligible.  While this may not be an issue in many cases, for code that needs to run in tight loop or be scaled heavily, this approach may be too heavy for its benefits to outweigh its costs.  But of course, this is a huge YMMV situation, and without hard numbers it's tough to say to what extent this would be a huge issue.
 
-Perhaps the most fatal flaw with the current setup is that respond_to? gets delegated to the target object, so with the current implementation, unless you define a respond_to?() yourself, it will not pick up any of your new methods.  I imagine that this is something that can be fixed, I just have not looked into it yet.
+Perhaps the most fatal flaw with the current setup is that <tt>respond_to?</tt> gets delegated to the target object, so with the current implementation, unless you define <tt>respond_to?</tt> yourself, it will not pick up any of your new methods.  I imagine that this is something that can be fixed, I just have not looked into it yet.
 
 Finally, there is the legitimacy problem.  As Sandi said in the comments on Aaron's article, sometimes "a case statement is just a case statement".  If we go around filling all our code with high-architecture bazookas when all that was needed was a pen-knife, there are bound to be consequences.  Is this overkill or awesome?  I don't really know, and I imagine it depends on the situation.
 
