@@ -259,7 +259,7 @@ Here is a bit of code that completely covers the "core extensions": that Sandi n
   end
 </pre>
 
-You would use the same approach I suggested before to wire this up, something like <tt>decorated = Extensions.decorate(my_obj)</tt>
+You would use the same approach I suggested before to wire this up, something like <tt>Extensions.decorate(my_obj)</tt>
 
 h3. Pros for this solution
 
