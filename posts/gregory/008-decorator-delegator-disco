@@ -1,0 +1,304 @@
+=title The Decorator Delegator Disco
+=timestamp 2009.06.27 16:00 UTC
+=description
+In response to Aaron Patterson's "Double Dispatch Dance", we'll take a look at another way to get funky with design patterns.  Go read his post first if you haven't already.
+=entry
+As promised, we're back with more design discussion and hopefully some interesting ideas.  Let's start with a quick recap of what has happened so far.
+
+First, "Sandi Metz":http://sandimetz.com/ postedon her blog about "type specific coupling":http://sandimetz.com/2009/06/ruby-case-statements-and-kindof.html that a <tt>case</tt> statement can introduce.  Her proposed solution encouraged us to pass the responsibilities down to the individual objects, which is certainly desirable.
+
+"Aaron Patterson":http://blog.rubybestpractices.com/about/aaronp.html got in the mix, pointing out the issues that can happen when you are too aggressive about adding methods to core Ruby.  When Sandi suggested that "Double Dispatch":http://en.wikipedia.org/wiki/Double_dispatch might be a way around this problem, Aaron responded with an "implementation using the visitor pattern":http://blog.rubybestpractices.com/posts/aaronp/001_double_dispatch_dance.html to accomplish this sort of thing.
+
+I had not seen Aaron's initial work before setting out to solve the problem on my own, and ended up taking an entirely different path to get there.  I'm not much of a patterns guy, but after I had a working implementation, it seems like the approach I took mostly represents a combination of "Delegation":http://en.wikipedia.org/wiki/Delegation_pattern and "Decoration:"http://en.wikipedia.org/wiki/Decorator_pattern techniques.
+
+h3. A quick demo
+
+I think this code will be easier to understand if I show how it is used right up front.  So here's a tiny slice to get started with:
+
+<pre name="code" class="ruby">
+  module ActionView
+    module Helpers 
+       class Extensions
+          extend Decoration
+        
+          decorator_for(Array) do
+            def as_array
+              self
+            end
+          end
+        
+          decorator_for(Object) do
+            def as_array
+              [self]
+            end
+          end
+       end
+     
+       # totally incomplete, just returns decorated object
+       def form_for(record_or_name_or_array, *args, &block)
+         Extensions.decorate(record_or_name_or_array)
+       end
+    end
+  end
+
+  include ActionView::Helpers
+
+  p form_for(:foo).as_array #=> [:foo]
+  p form_for(Object.new).as_array #=> [#<Object:0x3f47ec>]
+  p form_for([1,2,3]).as_array #=> [1,2,3]
+</pre>
+
+In the code above, I've implemented Sandi's <tt>as_array<tt> helper.  I left the actual <tt>form_for</tt> implementation very incomplete, causing it just to return the decorated object.  This is for example purposes only, so you could see that we can indeed call <tt>as_array</tt> successfully.  
+
+Before we check out how this all works, here are two extra hints about what this approach is affording us.
+
+<pre name="code" class="ruby">
+  my_obj = [1,2,3]
+  decorated = form_for(my_obj)
+  
+  p decorated.as_array #=> [1,2,3]
+  
+  # Raises NoMethodError
+  [1,2,3].as_array
+  
+  # Also raises NoMethodError
+  p my_obj.as_array 
+</pre>
+
+As you can see, if core extensions are like a meat cleaver, this approach is more like using a scalpel, no changes bleed out into unexpected places.  Now that we see how it is used, let's take a look under the hood of <tt>Decorate</tt> to see how it is built.
+
+h3. The <tt>Decorate</tt> module
+
+Though fairly densely packed, the whole implementation of <tt>Decorate</tt> is 
+pretty tiny.
+
+<pre name="code" class="ruby">
+require 'delegate'
+
+# with minor tweaks from tjstankus
+module Decoration
+  def decorator_for(*types, &block)
+    types.each do |type|
+      decorators[type] = Module.new(&block)
+    end
+  end
+ 
+  def decorators
+    @decorators ||= {}
+  end
+ 
+  def decorate(target)
+    obj = SimpleDelegator.new(target)
+    
+    # walk in reverse order so most specific patches get applied LAST
+    target.class.ancestors.reverse.each do |a|
+      if decorators[a]
+        obj.extend(decorators[a])
+      end
+    end
+    
+    return obj
+  end
+end
+</pre>
+
+Here, we are taking advantage of <tt>SimpleDelegator</tt>, a class provided from Ruby's <i>delegate</i> standard library.  Here's a quick glimpse of how it
+works:
+
+<pre>
+>> require "delegate"
+=> true
+
+>> a = [1,2,3]
+=> [1, 2, 3]
+
+>> b = SimpleDelegator.new(a)
+=> [1, 2, 3]
+>> b << 4
+=> [1, 2, 3, 4]
+>> b.delete_at(1)
+=> 2
+
+>> b
+=> [1, 3, 4]
+>> a
+=> [1, 3, 4]
+
+>> b.class
+=> SimpleDelegator
+>> a.class
+=> Array
+</pre>
+
+Essentially, <tt>SimpleDelegator</tt> provides an easy way to wrap an object within a proxy.  This gives us a convenient place to hang per-object behavior
+without mutating the original object.
+
+<pre>
+  >> def b.kitties
+  >>   "MEEEOW"
+  >> end
+  >> b.kitties
+  => "MEEEOW"
+  >> a.kitties
+  NoMethodError: undefined method `kitties' for [1, 3, 4]:Array
+  	from (irb):15
+</pre>
+
+You probably see where this is going now, so let's get back to <tt>Decorate</tt> module.  If we look at <tt>decorator_for</tt>, we can get a good sense of how all this magic comes together:
+
+<pre name="code" class="ruby">
+def decorator_for(*types, &block)
+  types.each do |type|
+    decorators[type] = Module.new(&block)
+  end
+end
+
+def decorators
+  @decorators ||= {}
+end
+</pre>
+
+Here, we see that <tt>decorator_for</tt> basically takes a type or list of types, and a block.  The block is then used to define the body of an anonymous module that gets stashed away in a hash for later use.  So going back to our example code, we see that the following definitions are actually module definitions.  They could have even been written this way:
+
+<pre name="code" class="ruby">
+class Extensions
+   extend Decoration
+ 
+   module ArrayDecorator
+     def as_array
+       self
+     end
+   end
+ 
+  module ObjectDecorator
+     def as_array
+       [self]
+     end
+  end
+  
+  decorators[Array]  = ArrayDecorator
+  decorators[Object] = ObjectDecorator
+end
+</pre>
+
+Of course, this lacks the necessary sugar shock, so I show it only to make the implementation clearer.  But now that we have a way to stack up modules with per-object behavior in them, and a place to hang that per-object behavior off of, we only need a mechanism to apply it.  This is of course, the <tt>decorate</tt> method:
+
+<pre name="code" class="ruby">
+  def decorate(target)
+    obj = SimpleDelegator.new(target)
+  
+    # walk in reverse order so most specific patches get applied LAST
+    target.class.ancestors.reverse.each do |a|
+      if decorators[a]
+        obj.extend(decorators[a])
+      end
+    end
+  
+    return obj
+  end
+</pre>
+
+We want to be able to preserve the ability to use <tt>super</tt> in our decorated method calls, and we definitely wanted to pick up extensions to objects higher in the inheritance chain without any duplication.  So this meant we needed to do something a little more complicated than key the target object's type directly to a decorator module.
+
+Rather than just picking the most recent ancestor, this code walks the chain in reverse order so that the modules can neatly stack on top of one another.  In short, this means that the decorator for <tt>Object</tt> gets applied before the one for <tt>Array<tt> so that you can emulate an inheritance relationship in your extensions.
+
+This pretty much sums up the whole implementation, so let's just take a look at one more example before evaluating the pros and cons of this approach.  
+
+h3. An alternative to core extensions
+
+Here is a bit of code that completely covers the "core extensions": that Sandi needed for her "Rails patch":http://github.com/skmetz/rails/commit/cffbc4399288be2fb7e15f67680089dbb36a7152, without the core extensions:
+
+<pre name="code" class="ruby">   
+  class Extensions
+
+     extend Decoration
+     
+     decorator_for Symbol, String do
+       def form_object_name
+         self
+       end
+
+       def as_fields_for_form_object(args)
+         args.first
+       end
+
+       def acts_like_model?
+         false
+       end
+     end
+
+     decorator_for Array do
+       def as_form_object
+         last
+       end
+
+       def as_array
+         self
+       end
+     end
+
+     decorator_for Object do
+       def as_form_object
+         self
+       end
+
+       def as_fields_for_form_object(args)
+         as_form_object
+       end
+
+       def form_object_name
+         ActionController::RecordIdentifier.singular_class_name(self)
+       end
+
+       def as_array
+         [self]
+       end
+
+       def acts_like_model?
+         true
+       end
+     end
+     
+  end
+</pre>
+
+You would use the same approach I suggested before to wire this up, something like <tt>decorated = Extensions.decorate(my_obj)</tt>
+
+h3. Pros for this solution
+
+There are definitely things about this technique that I like.  The obvious benefit is that it prevents core hackery, and even goes a step beyond something like <tt>my_object.extend(SomethingSpecial)</tt>, since it only extends behavior into a throwaway proxy object.
+
+Another clear benefit is that defining extensions is about as easy as it is to do raw core extensions.  Because the blocks are used as module definitions, you can do pretty much anything you'd ordinarily do when defining methods.  This lowers the amount of 'special stuff' you need to remember.
+
+Perhaps the most interesting thing however, is that this approach can be used to apply customized behavior to several types of objects at once, and can also be used to apply behaviors based on what mixins are included in an object.  This means there is nothing stopping you from doing something like <tt>decorator_for(Enumerable)</tt> or <tt>decorator_for(Comparable)</tt>, which provides you a little extra flexibility beyond the traditional inheritance hierarchy.
+
+Another interesting aspect of this is that decorators can be implemented at a per-module (or per-class) level, which means that different libraries can have different extensions without interfering with each other.  
+
+Of course, it's not all roses.  But these benefits seem to be pretty sweet.
+
+h3. Cons for this solution
+
+A major drawback here is that we're still relying on types.  Whether its a class or module, we still expect an object to be a certain thing, which sort of goes against traditional duck typing in which we'd rather make assumptions based on what an object can do rather than what it is.  So it might be nicer to apply these decorators based on what the target object responds to, not what ancestors it has.
+
+There is also the performance overhead factor.  I have not benchmarked yet, but I suspect that the cost of both building up a <tt>SimpleDelegator</tt> and doing proxy calls is non-negligible.  While this may not be an issue in many cases, for code that needs to run in tight loop or be scaled heavily, this approach may be too heavy for its benefits to outweigh its costs.  But of course, this is a huge YMMV situation, and without hard numbers it's tough to say to what extent this would be a huge issue.
+
+Perhaps the most fatal flaw with the current setup is that respond_to? gets delegated to the target object, so with the current implementation, unless you define a respond_to?() yourself, it will not pick up any of your new methods.  I imagine that this is something that can be fixed, I just have not looked into it yet.
+
+Finally, there is the legitimacy problem.  As Sandi said in the comments on Aaron's article, sometimes "a case statement is just a case statement".  If we go around filling all our code with high-architecture bazookas when all that was needed was a pen-knife, there are bound to be consequences.  Is this overkill or awesome?  I don't really know, and I imagine it depends on the situation.
+
+h3. Conclusions
+
+When Aaron and I compared our solutions to Sandi's problem, we basically concluded that both of our approaches might be useful for different things.  Aaron's shines when dealing with providing type-specific implementations of a particular behavior, which is mostly just the visitor pattern shining through.  My approach is probably better for situations in which you need to collect several behaviors in one place.
+
+Ultimately, this may be a matter of preference, depending on whether you want to abstract things based on the method level or the object level.  Of course, sometimes neither is necessary, and that may be an important fact to remember.
+
+I am very much interested in what readers have to say.  Please check out "Sandi's article":http://sandimetz.com/2009/06/ruby-case-statements-and-kindof.html , then "Aaron's":http://blog.rubybestpractices.com/posts/aaronp/001_double_dispatch_dance.html , then let me know here which approaches you might take along with their context.  If you have your own ideas that are totally different than ours, I want to know about that too.
+
+We need more conversations like these in our community, so let's start here and see where it takes us.
+
+
+
+
+
+
+
