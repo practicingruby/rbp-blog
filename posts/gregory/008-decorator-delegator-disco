@@ -178,7 +178,7 @@ class Extensions
 end
 </pre>
 
-Of course, this lacks the necessary sugar shock, so I show it only to make the implementation clearer.  But now that we have a way to stack up modules with per-object behavior in them, and a place to hang that per-object behavior off of, we only need a mechanism to apply it.  This is of course, the <tt>decorate</tt> method:
+Of course, this lacks the necessary sugar shock, so I show it only to make the implementation clearer.  But now that we have a way to stack up modules with per-object behavior in them, and a place to hang that per-object behavior off of, we only need a mechanism to apply it. For this functionality, we turn to the <tt>decorate</tt> method:
 
 <pre name="code" class="ruby">
   def decorate(target)
@@ -271,7 +271,7 @@ Perhaps the most interesting thing however, is that this approach can be used to
 
 Another interesting aspect of this is that decorators can be implemented at a per-module (or per-class) level, which means that different libraries can have different extensions without interfering with each other.  
 
-Of course, it's not all roses.  But these benefits seem to be pretty sweet.
+Keep in mind, it's not all roses.  Let's take a look at some of the pitfalls.
 
 h3. Cons for this solution
 
