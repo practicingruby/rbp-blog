@@ -1,4 +1,4 @@
-=title Animal Interaction
+=title Animal Interaction Processing
 =timestamp 2009.06.30 18:30 +0200
 =description The InteractionProcessor is one of the core components of our Animal.  We will look at how it is built - and why it's done that way.
 =entry
