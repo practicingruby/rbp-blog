@@ -1,0 +1,372 @@
+=title Code Blocks: Ruby's Swiss Army Knife
+=timestamp 2009.07.07 04:00 UTC
+=description
+A complete section excerpted from the "Designing Beautiful APIs" chapter of my O'Reilly book, Ruby Best Practices.
+=entry
+<i>The following blog post is a direct excerpt from the "Ruby Best Practices":http://oreilly.com/catalog/9780596523008/ book.  If you've been enjoying this blog, you'd probably love the book, so I've decided to release some content here to give you a feel for what the content is like.  Enjoy!</i>
+
+In Ruby, code blocks are everywhere. If you’ve ever used <tt>Enumerable</tt>, you’ve worked with blocks. But what are they? Are they simply iterators, working to abstract away our need for the for loop? They certainly do a good job of that:
+
+<pre>
+  >> ["Blocks","are","really","neat"].map { |e| e.upcase } 
+  => ["BLOCKS", "ARE", "REALLY", "NEAT"]
+</pre>
+
+But other blocks don’t really iterate over things—they just do helpful things for us. For example, they allow us to write something like:
+
+<pre name="code" class="ruby">
+  File.open("foo.txt","w") { |f| f << "This is sexy" } 
+</pre>
+
+instead of forcing us to write this: 
+
+<pre name="code" class="ruby">
+  file = File.open("foo.txt","w") 
+  file << "This is tedious" 
+  file.close 
+</pre>
+
+So blocks are useful for iteration, and also useful for injecting some code between pre- processing and postprocessing operations in methods. But is that all they’re good for? Sticking with Ruby built-ins, we find that isn’t the case. Blocks can also shift our scope temporarily, giving us easier access to places we want to be:
+
+<pre name="code" class="ruby">
+ "This is a string".instance_eval do 
+    "O hai, can has reverse? #{reverse}. kthxbye" 
+  end 
+  #=> "O hai, can has reverse? gnirts a si sihT. kthxbye" 
+</pre> 
+ 
+But blocks aren’t necessarily limited to code that gets run right away and then disappears. They can also form templates for what to do down the line, springing to action when ready:
+
+<pre>
+  >> foo = Hash.new { |h,k| h[k] = [] } 
+  => {} 
+  >> foo[:bar] 
+  => [] 
+  >> foo[:bar] << 1 << 2 << 3 
+  => [1, 2, 3] 
+  >> foo[:baz] 
+  => [] 
+</pre>
+
+So even if we label all methods that accept a block as iterators, we know the story runs deeper than that. With this in mind, we can leverage some basic techniques to utilize any of the approaches shown here, as well as some more advanced tricks. By doing things in a way that is consistent with Ruby itself, we can make life easier for our users. Rather than piling on new concepts, we can allow them to reuse their previous knowledge. Let’s take a look at a few examples of how to do that now. 
+
+h3. Working with Enumerable
+
+The most common use of blocks in Ruby might be the most trivial. The following class implements a basic sorted list, and then mixes in the <tt>Enumerable</tt> module. The block magic happens in <tt>each()</tt>:
+
+<pre name="code" class="ruby">
+  class SortedList 
+    include Enumerable 
+  
+    def initialize 
+      @data = [] 
+    end 
+  
+    def <<(element) 
+      (@data << element).sort! 
+    end 
+  
+    def each 
+      @data.each { |e| yield(e) } 
+    end 
+  end
+</pre>
+
+Our <tt>each()</tt> method simply walks over each element in our <tt>@data</tt> array and passes it through the block provided to the method by calling yield. The resulting iterator works exactly the same as <tt>Array#each</tt> and <tt>Hash#each</tt> and all the Ruby built-ins, and indeed simply wraps <tt>Array#each</tt> in this case:
+
+<pre>
+  >> a = SortedList.new 
+  => #<SortedList:0x5f0e74 @data=[]> 
+  >> a << 4 
+  => [4] 
+  >> a << 5 
+  => [4, 5] 
+  >> a << 1 
+  => [1, 4, 5] 
+  >> a << 7 
+  => [1, 4, 5, 7] 
+  >> a << 3 
+  => [1, 3, 4, 5, 7] 
+  >> x = 0 
+  => 0 
+  >> a.each { |e| x += e } 
+  => [1, 3, 4, 5, 7] 
+  >> x 
+  => 20
+</pre>
+
+This shouldn’t be surprising. What is really the interesting bit is that by including the module <tt>Enumerable</tt>, we gain access to most of the other features we’re used to working with when processing Ruby’s built-in collections. Here are just a few examples:
+
+<pre>
+  >> a.map { |e| "Element #{e}" } 
+  => ["Element 1", "Element 3", "Element 4", "Element 5", "Element 7"] 
+  >> a.inject(0) { |s,e| s + e } 
+  => 20 
+  >> a.to_a 
+  => [1, 3, 4, 5, 7] 
+  >> a.select { |e| e > 3 } 
+  => [4, 5, 7] 
+</pre>
+
+In a lot of cases, the features provided by <tt>Enumerable</tt> will be more than enough for traversing your data. However, it’s often useful to add additional features that build on top of the the <tt>Enumerable</tt> methods. We can show this by adding a simple reporting method to <tt>SortedList</tt>:
+
+<pre name="code" class="ruby">
+  class SortedList 
+    def report(head) 
+      header = "#{head}\n#{'-'*head.length}" 
+      body = map{|e| yield(e)}.join("\n") + "\n" 
+      footer = "This report was generated at #{Time.now}\n" 
+      [header, body, footer].join("\n") 
+    end 
+  end
+</pre>
+
+which, when run, produces output like this: 
+
+<pre>
+>> puts a.report("So many fish") { |e| "#{e} fish" } 
+  So many fish 
+  ------------ 
+  1 fish 
+  3 fish 
+  4 fish 
+  5 fish 
+  7 fish 
+  This report was generated at 2008-07-22 22:47:20 -0400 
+</pre>
+
+Building custom iterators is really that simple. This provides a great deal of flexibility, given that the code block can execute arbitrary expressions and do manipulations of its own as it walks across the elements. But as mentioned before, blocks can be used for more than just iteration.
+
+h3. Using Blocks to Abstract Pre- and Postprocessing
+
+We looked at the block form of File.open() as an example of how blocks can provide an elegant way to avoid repeating tedious setup and teardown steps. However, files are surely not the only resources that need to be properly managed. Network I/O via sockets is another place where this technique can come in handy. 
+
+On the client side, we’d like to be able to create a method that allows us to send a message to a server, return its response, then cleanly close the connection. The first thing that comes to mind is something simple like this:
+
+<pre name="code" class="ruby">
+  require "socket" 
+
+  class Client 
+
+    def initialize(ip="127.0.0.1",port=3333) 
+      @ip, @port = ip, port 
+    end 
+
+    def send_message(msg) 
+      socket = TCPSocket.new(@ip,@port) 
+      socket.puts(msg) 
+      response = socket.gets 
+    ensure 
+      socket.close 
+    end 
+  
+  end
+</pre>
+
+This is reasonably straightforward, but what happens when we want to add another method that waits to receive a message back from the server?
+
+<pre name="code" class="ruby">
+  require "socket" 
+  
+  class Client 
+    
+    def initialize(ip="127.0.0.1",port=3333) 
+      @ip, @port = ip, port 
+    end 
+    
+    def send_message(msg) 
+      socket = TCPSocket.new(@ip,@port) 
+      socket.puts(msg) 
+      response = socket.gets 
+    ensure 
+      socket.close 
+    end 
+    
+    def receive_message 
+      socket = TCPSocket.new(@ip,@port) 
+      response = socket.gets 
+    ensure 
+      socket.close 
+    end 
+  end
+</pre>
+
+This is starting to look messy, as we have repeated most of the code between <tt>send_message</tt> and <tt>receive_message</tt>. Ordinarily, we’d break off the shared code into a private method that the two could share, but the trouble here is that the difference between these two methods is in the middle, not in a single extractable chunk. This is where blocks come to the rescue:
+
+<pre name="code" class="ruby">
+  require "socket" 
+
+  class Client 
+    def initialize(ip="127.0.0.1",port=3333) 
+      @ip, @port = ip, port 
+    end 
+  
+    def send_message(msg) 
+      connection do |socket| 
+        socket.puts(msg) 
+        socket.gets 
+      end 
+    end 
+
+    def receive_message 
+      connection { |socket| socket.gets } 
+    end
+     
+    private 
+    
+    def connection 
+      socket = TCPSocket.new(@ip,@port) 
+      yield(socket) 
+    ensure 
+      socket.close 
+    end 
+  
+  end
+</pre>
+
+As you can see, the resulting code is a lot cleaner. As long as we use our <tt>connection()</tt> method with a block, we won’t need to worry about opening and closing the <tt>TCPSocket</tt>; it’ll handle that for us. This means we’ve captured that logic in one place, and can reuse it however we’d like.
+
+To make things a bit more interesting, let’s take a look at a simple server with which this code can interact, which gives us a chance to look at yet another way that blocks can be useful in interface design.
+
+h3. Blocks as Dynamic Callbacks
+
+There is a lot of power in being able to pass around code blocks just like they were any other object. This allows for the capability of creating and storing dynamic callbacks, which can later be looked up and executed as needed.
+
+In order to play with our Client code from the previous example, we’re going to create a trivial <tt>TCPServer</tt> that attempts to match incoming messages against patterns to determine how it should respond. Rather than hardcoding behaviors into the server itself or relying on inheritance to handle responses, we will instead allow responses to be defined through ordinary method calls accompanied by a block. Our goal is to get an interface that looks like this:
+
+<pre name="code" class="ruby">
+  server = Server.new 
+
+  server.handle(/hello/i) { "Hello from server at #{Time.now}" } 
+  server.handle(/goodbye/i) { "Goodbye from server at #{Time.now}" } 
+  server.handle(/name is (\w+)/) { |m| "Nice to meet you #{m[1]}!" } 
+
+  server.run
+</pre>
+
+The first two examples are fairly simple, matching a single word and then responding with a generic message and timestamp. The third example is a bit more interesting, repeating the client’s name back in the response message. This will be accomplished by querying a simple <tt>MatchData</tt> object, which is yielded to the block.
+
+Though making this work might seem like black magic to the uninitiated, a look at its implementation reveals that it is actually a fairly pedestrian task:
+
+<pre name="code" class="ruby">
+  class Server 
+    
+    def initialize(port=3333) 
+      @server   = TCPServer.new('127.0.0.1',port) 
+      @handlers = {} 
+    end 
+    
+    def handle(pattern, &block) 
+      @handlers[pattern] = block 
+    end 
+    
+    def run 
+      while session = @server.accept 
+        msg = session.gets 
+        match = nil 
+        @handlers.each do |pattern,block| 
+          if match = msg.match(pattern) 
+            break session.puts(block.call(match)) 
+          end 
+        end 
+        unless match 
+          session.puts "Server received unknown message: #{msg}" 
+        end 
+      end 
+    end
+     
+  end
+</pre>
+
+The <tt>handle()</tt> method slurps up the provided block using the <tt>&block</tt> syntax, and stores it in a hash keyed by the given pattern. When <tt>Server#run</tt> is called, an endless loop is started that waits for and handles client connections. Each time a message is received, the hash of handlers is iterated over. If a pattern is found that matches the message, the associated block is called, providing the match data object so that the callback can respond accordingly.
+
+If you’d like to try this out, use the following code to spin up a server:
+
+<pre name="code" class="ruby">
+  server = Server.new 
+  server.handle(/hello/i) { "Hello from server at #{Time.now}" } 
+  server.handle(/goodbye/i) { "Goodbye from server at #{Time.now}" } 
+  server.handle(/name is (\w+)/) { |m| "Nice to meet you #{m[1]}!" } 
+  server.run
+</pre>
+
+Once you have that running and listening for connections, execute the following client code:
+
+<pre name="code" class="ruby">
+  client = Client.new 
+  
+  ["Hello", "My name is Greg", "Goodbye"].each do |msg| 
+    response = client.send_message(msg) 
+    puts response 
+  end 
+</pre>
+
+You will get back something like this: 
+
+<pre>
+  Hello from server at Wed Jul 23 16:15:37 -0400 2008 
+  Nice to meet you Greg! 
+  Goodbye from server at Wed Jul 23 16:15:37 -0400 2008 
+</pre>
+
+It would be easy to extend both the client and server to do more interesting things that build on this very simple foundation. Feel free to take a few minutes to play around with that, and then we’ll look at one more block trick that’s fairly common in Ruby.
+
+h3. Blocks for Interface Simplification
+
+Does it feel like the word “server” is written too many times in this code? 
+
+<pre name="code" class="ruby">
+  server = Server.new 
+  server.handle(/hello/i) { "Hello from server at #{Time.now}" } 
+  server.handle(/goodbye/i) { "Goodbye from server at #{Time.now}" } 
+  server.handle(/name is (\w+)/) { |m| "Nice to meet you #{m[1]}!" } 
+  server.run 
+</pre>
+
+
+When you see code like this, it might be a sign that you could do better. Although there are merits to this somewhat standard approach, we can cheat a little bit with blocks (of course) and make things prettier. It would be nice to be able to write this instead:
+
+<pre name="code" class="ruby">
+  Server.run do 
+    handle(/hello/i) { "Hello from server at #{Time.now}" } 
+    handle(/goodbye/i) { "Goodbye from server at #{Time.now}" } 
+    handle(/name is (\w+)/) { |m| "Nice to meet you #{m[1]}!" } 
+  end 
+</pre>
+
+As you may recall from an earlier example, it is possible to execute a block within the scope of an instantiated object in Ruby. Using this knowledge, we can implement this handy shortcut interface as a simple class method:
+
+<pre name="code" class="ruby">
+  class Server 
+    # other methods same as before 
+    def self.run(port=3333,&block) 
+      server = Server.new(port) 
+      server.instance_eval(&block) 
+      server.run 
+    end 
+  end
+</pre>
+
+This is all you need to get the new interface running, and rounds off our quick exploration of the different ways that you can use blocks to improve your API design while simplifying your method implementations.  Let's recap with a few tips before we wrap up here.
+
+h3. Things to Remember
+
+Keep the following things in mind when using blocks as part of your interface: 
+
+* If you create a collection class that you need to traverse, build on top of Enumerable rather than reinventing the wheel.
+
+* If you have shared code that differs only in the middle, create a helper method that yields a block in between the pre/postprocessing code to avoid duplication of effort.
+
+* If you use the &block syntax, you can capture the code block provided to a method inside a variable. You can then store this and use it later, which is very useful for creating dynamic callbacks.
+
+* Using a combination of &block and instance_eval, you can execute blocks within the context of arbitrary objects, which opens up a lot of doors for highly customized interfaces.
+
+* The return value of yield (and block.call) is the same as the return value of the provided block.
+
+h3. Did you enjoy this post?
+
+If you enjoyed reading this, definitely consider picking up a copy of "Ruby Best Practices":http://oreilly.com/catalog/9780596523008/ .  If you need more convincing, there is a whole "sample chapter":http://cdn.oreilly.com/books/9780596523008/Mastering_the_Dynamic_Toolkit.xml.pdf for you to check out in addition to this excerpt.  If you've already picked up the book and are enjoying it, tell your friends, and consider leaving a review on the "Amazon product page":http://www.amazon.com/gp/product/0596523009 .  If you don't have enough time for that, go help me win the "popularity contest":http://rubytrends.com/votes/134 over at RubyTrends, as there are several books that I admire that still need to be overcome :)
+
+As always, I welcome your thoughts and feedback.  Let me know what you think of the techniques shown here, or share your own personal favorite code block trick.
+
+
