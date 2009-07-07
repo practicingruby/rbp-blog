@@ -35,7 +35,7 @@ So blocks are useful for iteration, and also useful for injecting some code betw
   #=> "O hai, can has reverse? gnirts a si sihT. kthxbye" 
 </pre> 
  
-But blocks aren’t necessarily limited to code that gets run right away and then disappears. They can also form templates for what to do down the line, springing to action when ready:
+But blocks aren’t necessarily limited to code that gets run right away and then disappears. They can also form templates for what to do down the line, springing to action when called for:
 
 <pre>
   >> foo = Hash.new { |h,k| h[k] = [] } 
