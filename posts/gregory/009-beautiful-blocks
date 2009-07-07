@@ -12,7 +12,7 @@ In Ruby, code blocks are everywhere. If you’ve ever used <tt>Enumerable</tt>, 
   => ["BLOCKS", "ARE", "REALLY", "NEAT"]
 </pre>
 
-But other blocks don’t really iterate over things—they just do helpful things for us. For example, they allow us to write something like:
+But other blocks don’t really iterate over collections—they just do helpful things for us. For example, they allow us to write something like:
 
 <pre name="code" class="ruby">
   File.open("foo.txt","w") { |f| f << "This is sexy" } 
