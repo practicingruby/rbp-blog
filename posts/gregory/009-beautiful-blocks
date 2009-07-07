@@ -26,7 +26,7 @@ instead of forcing us to write this:
   file.close 
 </pre>
 
-So blocks are useful for iteration, and also useful for injecting some code between pre- processing and postprocessing operations in methods. But is that all they’re good for? Sticking with Ruby built-ins, we find that isn’t the case. Blocks can also shift our scope temporarily, giving us easier access to places we want to be:
+So blocks are useful for iteration, and also useful for injecting some code between pre-processing and post-processing operations in methods. But is that all they’re good for? Sticking with Ruby built-ins, we find that isn’t the case. Blocks can also shift our scope temporarily, giving us easier access to places we want to be:
 
 <pre name="code" class="ruby">
  "This is a string".instance_eval do 
@@ -232,7 +232,7 @@ h3. Blocks as Dynamic Callbacks
 
 There is a lot of power in being able to pass around code blocks just like they were any other object. This allows for the capability of creating and storing dynamic callbacks, which can later be looked up and executed as needed.
 
-In order to play with our Client code from the previous example, we’re going to create a trivial <tt>TCPServer</tt> that attempts to match incoming messages against patterns to determine how it should respond. Rather than hardcoding behaviors into the server itself or relying on inheritance to handle responses, we will instead allow responses to be defined through ordinary method calls accompanied by a block. Our goal is to get an interface that looks like this:
+In order to play with our <tt>Client</tt> code from the previous example, we’re going to create a trivial <tt>TCPServer</tt> that attempts to match incoming messages against patterns to determine how it should respond. Rather than hardcoding behaviors into the server itself or relying on inheritance to handle responses, we will instead allow responses to be defined through ordinary method calls accompanied by a block. Our goal is to get an interface that looks like this:
 
 <pre name="code" class="ruby">
   server = Server.new 
@@ -365,7 +365,7 @@ Keep the following things in mind when using blocks as part of your interface:
 
 h3. Did you enjoy this post?
 
-If you had fun reading this, definitely consider picking up a copy of "Ruby Best Practices":http://oreilly.com/catalog/9780596523008/ .  If you need more convincing, there is a whole "sample chapter":http://cdn.oreilly.com/books/9780596523008/Mastering_the_Dynamic_Toolkit.xml.pdf for you to check out in addition to this excerpt.  If you've already picked up the book and are enjoying it, tell your friends, and consider leaving a review on the "Amazon product page":http://www.amazon.com/gp/product/0596523009 .  If you don't have enough time for that, go help me win the "popularity contest":http://rubytrends.com/votes/134 over at RubyTrends, as there are several books that I admire that still need to be overcome :)
+If you had fun reading this, definitely consider picking up a copy of "Ruby Best Practices":http://oreilly.com/catalog/9780596523008/ .  If you need more convincing, there is a whole "sample chapter":http://cdn.oreilly.com/books/9780596523008/Mastering_the_Dynamic_Toolkit.xml.pdf for you to check out in addition to this excerpt.  If you've already picked up the book and are enjoying it, tell your friends, and consider leaving a review on the "Amazon product page":http://www.amazon.com/gp/product/0596523009 .  If you don't have enough time for that, go help me win the "popularity contest":http://rubytrends.com/styles/book/trends/134 over at RubyTrends, as there are several books that I admire that still need to be overcome :)
 
 As always, I welcome your thoughts and feedback.  Let me know what you think of the techniques shown here, or share your own personal favorite code block trick.
 
