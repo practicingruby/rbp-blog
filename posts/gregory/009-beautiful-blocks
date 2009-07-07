@@ -5,6 +5,8 @@ A complete section excerpted from the "Designing Beautiful APIs" chapter of my O
 =entry
 <b>The following blog post is a direct excerpt from the "Ruby Best Practices":http://oreilly.com/catalog/9780596523008/ book.  If you've been enjoying this blog, you'd probably love the book, so I've decided to release some content here to give you a sense of what to expect.  Enjoy!</b>
 
+<i>UPDATE: For those coming from other languages, Ruby's "code blocks":http://en.wikipedia.org/wiki/Ruby_%28programming_language%29#Blocks_and_iterators are inherently "closures":http://en.wikipedia.org/wiki/Closure_%28computer_science%29 , and provide syntactic sugar for methods that accept <tt>Proc</tt> object's (Ruby's anonymous functions).  While not strictly necessary for understanding this article, a solid grasp on what closures are and how they work will take you far.</i>
+
 In Ruby, code blocks are everywhere. If you’ve ever used <tt>Enumerable</tt>, you’ve worked with blocks. But what are they? Are they simply iterators, working to abstract away our need for the for loop? They certainly do a good job of that:
 
 <pre>
