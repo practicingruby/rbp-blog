@@ -3,7 +3,7 @@
 =description
 A complete section excerpted from the "Designing Beautiful APIs" chapter of my O'Reilly book, Ruby Best Practices.
 =entry
-<b>The following blog post is a direct excerpt from the "Ruby Best Practices":http://oreilly.com/catalog/9780596523008/ book.  If you've been enjoying this blog, you'd probably love the book, so I've decided to release some content here to give you a feel for what the content is like.  Enjoy!</b>
+<b>The following blog post is a direct excerpt from the "Ruby Best Practices":http://oreilly.com/catalog/9780596523008/ book.  If you've been enjoying this blog, you'd probably love the book, so I've decided to release some content here to give you a sense of what to expect.  Enjoy!</b>
 
 In Ruby, code blocks are everywhere. If you’ve ever used <tt>Enumerable</tt>, you’ve worked with blocks. But what are they? Are they simply iterators, working to abstract away our need for the for loop? They certainly do a good job of that:
 
