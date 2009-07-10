@@ -1,5 +1,5 @@
 =title LRU Integration
-=timestamp 2009.07.10 22:30 +0200
+=timestamp 2009.07.10 23:07 +0200
 =description I could not find a LRU class which fits nicely with our requirements so I wrote it myself.  This is just a short article showing the integration of it.
 =entry
 This will be just a short article since I am a bit tight on time right now.
