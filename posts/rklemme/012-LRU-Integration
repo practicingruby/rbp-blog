@@ -1,0 +1,105 @@
+=title LRU Integration
+=timestamp 2009.07.10 22:30 +0200
+=description I could not find a LRU class which fits nicely with our requirements so I wrote it myself.  This is just a short article showing the integration of it.
+=entry
+This will be just a short article since I am a bit tight on time right now.
+
+For those of you who might not have heard the term "LRU" means "least recently used".  It refers to a "replacement strategy":http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used used in caches.  For every cache with an upper limit on the number of elements cached it must be decided which element to remove from the cache once the cache gets full and another element should be put in the cache.  The decision can have dramatic impacts on the efficiency of the cache (its hit ratio).
+
+LRU is easy to implement and works pretty well in many cases so I picked that one.  "LRU" means, remove the element which has not been used for the longest time.  This is typically implemented using a doubly linked list because with that elements can be moved to the head very quickly (O(1)).  The algorithm works by moving every accessed element to the front of the list and deleting the last one when space is needed.
+
+I created a class with a @Hash@ like interface and an additional feature, a @release_proc@ which gets called with the removed entry's key and value.  That way we can automate the cleanup process easily.
+
+Internally the class has a Hash for fast access which has list nodes as values.  These are the main methods for LRU mechanism during read access.
+
+<pre name="code" class="ruby">
+  def fetch(key, &b)
+    n = @h[key]
+
+    if n
+      # hit -> move to front
+      front(n).value
+    else
+      (b || FETCH)[key]
+    end
+  end
+
+  # move node to front
+  def front(node)
+    node.insert_after(@head)
+  end
+</pre>
+
+Individual entries are of class @Node@:
+
+<pre name="code" class="ruby">
+  # A single node in the doubly linked LRU list of nodes
+  Node = Struct.new :key, :value, :pred, :succ do
+    def unlink
+      pred.succ = succ if pred
+      succ.pred = pred if succ
+      self.succ = self.pred = nil
+      self
+    end
+
+    def insert_after(node)
+      raise 'Cannot insert after self' if equal? node
+      return self if node.succ.equal? self
+
+      unlink
+
+      self.succ = node.succ
+      self.pred = node
+
+      node.succ.pred = self if node.succ
+      node.succ = self
+
+      self
+    end
+  end
+</pre>
+
+And here's the code for the removal of old entries:
+
+<pre name="code" class="ruby">
+  def store(key, value)
+    # same optimization as in Hash
+    key = key.dup.freeze if String === key && !key.frozen?
+
+    n = @h[key]
+
+    unless n
+      if size == max_size
+        # reuse node to optimize memory usage
+        n = delete_oldest
+        n.key = key
+        n.value = value
+      else
+        n = Node.new key, value
+      end
+
+      @h[key] = n
+    end
+
+    front(n).value = value
+  end
+
+  # remove the node and invoke the cleanup proc
+  # if set
+  def remove_node(node)
+    n = @h.delete(node.key)
+    n.unlink
+    release_proc and release_proc[n.key, n.value]
+    n
+  end
+
+  # remove the oldest node returning the node
+  def delete_oldest
+    n = @tail.pred
+    raise "Cannot delete from empty hash" if @head.equal? n
+    remove_node n
+  end
+</pre>
+
+You can see the whole story in the "git repo":http://github.com/rklemme/muppet-laboratories/tree/master where the @LRUHash@ is also integrated into the main animal code.  Class @InteractionProcessor@ has changed a bit as well as @Coordinator@.  Some places are still a bit inelegant but that will have to wait until I have a bit more time.
+
