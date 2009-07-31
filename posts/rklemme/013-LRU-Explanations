@@ -1,0 +1,61 @@
+=title LRU Integration explained
+=timestamp 2009.07.31 18:33 +0200
+=description Today I'll add a bit more explanation to the last article and provide the reasoning behind the implementation.
+=entry
+Today I will present my reasoning which lead me to the implementation of the @LRUHash@ as well as how I integrated it into the main code.  We will look at how @LRUHash@ works and how it is integrated into the project.  Then I will answer some questions that were actually asked -- or only thought.
+
+h3. How @LRUHash@ works
+
+The interface should resemble a @Hash@ as much as possible so that @LRUHash@ can be easily substituted for a @Hash@ instance without alteration of the code that uses it.  As long as the instance remains below the maximum size it behaves much the same as a regular @Hash@.  Only when the size limit defined via @max_size@ is reached any subsequent store operations will remove the oldest entry.
+
+Internally a @LRUHash@ maintains a linked list of @LRUHash::Node@ instances and a @Hash@.  Nodes contain key and value of a hash entry as well as links to their predecessor and successor.  The @Hash@ is used for fast access of individual nodes while the linked list is used to maintain information about access order: every node which is accessed is moved to the head of the list so the least recently used element is always at the tail.
+
+There are two nodes referenced as @head@ and @tail@ which are never changed.  This makes it easier to move nodes around in the list because extraction and insertion are always operations on inner nodes and do not need to account for the first and last element on the list which is tedious because then you would also have to change the first and last pointer.
+
+Additionally to the @default_proc@ which works exactly the same way as in @Hash@ there is a @release_proc@ which is invoked whenever an item is removed from the @LRUHash@ -- either via explicit delete operations like @delete@, @delete_if@ and @clear@ or via the automated expiry which kicks in as soon as the @LRUHash@ reaches its maximum size.
+
+h3. How @LRUHash@ is used in the project
+
+There are two @LRUHash@ instances in class @Coordinator@:
+
+# A storage for interaction processors,
+# A storage for @File@ objects.
+
+The first instance is used to limit the overall number of interactions which are kept in memory.  Once the @LRUHash@ is filled and a new interaction needs to be stored the least recently used one is expired and removed.
+
+The second one is needed because @InteractionProcessor@ instances keep their @File@ object open and the limit for open file handles per process is usually much lower than the reasonable limit for interactions kept in memory.  So @File@ objects are stored in the @LRUHash@ and closed whenever necessary and reopened as well.
+
+h3. Why do you use @equal?@?
+
+There are no "equivalent" nodes in a single @LRUHash@ instance because they all have different keys.  Actually the concept of equivalence is not needed here; rather I just needed to check for _identity_ which is exactly what @equal?@ does.
+
+h3. Why did you not use PUPA's Ruby/Cache?
+
+ged suggested in "his comment":http://blog.rubybestpractices.com/posts/rklemme/012-LRU-Integration.html#comment-12710034 the use of "PUPA's Ruby/Cache":http://www.nongnu.org/pupa/ruby-cache.html.  I had looked at it before cooking "my own little version":http://github.com/rklemme/muppet-laboratories/blob/8fe594bfae1a80c50214eb2bdd383c35c0c5eed8/lib/lruhash.rb and decided against using it for several reasons:
+
+# It did not include the "default_proc mechanism of Ruby's Hash":http://ruby-doc.org/core/classes/Hash.html#M002854 although you can use "@fetch@":http://www.nongnu.org/pupa/ruby-cache-MANUAL.html#label:43 with a block the same way as in "Hash":http://ruby-doc.org/core/classes/Hash.html#M002849.
+# It uses the notion of "object size" (explained "here":http://www.nongnu.org/pupa/ruby-cache-MANUAL.html#label:7) as one of the limits of cache size.  Besides the problems with defining "object size" which I pointed to "here":http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-talk/242080 and "here":http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-talk/329527 the more crucial reason was the problem with updating the cache's idea of the current size of objects (either the overhead is significant, because every time the overall size limit is checked all objects need to be looked at or the cache cannot be aware of size changes if it caches object sizes).
+# It uses wall clock expiration time for cached objects -- something I did not have use for in my implementation.
+# The fun of cooking my own.
+
+While items 2 and 3 could be remedied by using arbitrary large limits the overhead of calculating values would remain (at least the "documentation":http://www.nongnu.org/pupa/ruby-cache-MANUAL.html does not state that the overhead is saved when any of these limits are left out).
+
+h3. Performance Observations
+
+While I did not actually measure timings the current version is significantly slower than the first draft version which kept everything in memory before writing out interactions to individual files.  I suspect that this may be caused by these factors:
+
+# Criterion evaluation is done multiple times per interaction (although it's still a dummy currently).
+# Frequent opening and closing of files caused by LRU handling of IO objects which is necessary because of the much lower limit of open file handles compared with interaction instances.
+
+Both were introduced to get rid of log file lines as soon as possible.  This also lead to a complex design (especially in the area of evaluation of the criterion).  The effect may change though if real criteria are used.  This is certainly something that I need to analyze.
+
+An improved version would probably get rid of the immediate writing of lines as soon as possible and defer that to the point in time when the interaction is removed from the LRU cache of interactions.  That way the criterion needs to be executed only once, can be made much simpler -- especially for complex criteria which need to look at multiple entries such as the time range criterion.  Also, we do not need to keep multiple files open.
+
+__Note: This shows how important it is to keep an open mind and to think again about the code you have written from time to time.  I have discovered quite a bit of quirks I put into my code by this.  Of course you can say that if you do it right the first time, this is never necessary -- but who would claim to write optimal code in the first attempt?__
+
+h3. Finally, a Best Practice
+
+During my vacation I read "Zen and the Art of Motorcycle Maintenance":http://en.wikipedia.org/wiki/Zen_and_the_Art_of_Motorcycle_Maintenance (you can "browse the text":http://www.virtualschool.edu/mon/Quality/PirsigZen/ but I'd rather read a real book).  I had read it some 15 years ago and wanted to go back to this fascinating text which provides so many perspectives and crystallization points for thought.
+
+Now, what does this have to do with Ruby?  The best practice here is: once in a while do something completely different.  It helps keep your mind flexible and will open it up to new approaches to old matters as well as inspire your creativity.  You will also notice, that while you're away from your everyday business your mind will actually continue to work on it which typically shows by suddenly having an idea that turns up when you least expect it.
+
