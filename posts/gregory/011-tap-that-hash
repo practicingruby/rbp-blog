@@ -13,7 +13,7 @@ Rather than describing in detail how this series will work, I'll just begin with
 
 h3. Object#tap, a seemingly benign addition.
 
-Ruby 1.9 gives us <tt>tap</tt>.  And <tt>tap</tt> is sort of neat because it can be useful as a debugging tool, especially in chained code.
+Ruby 1.9 gives us <tt>tap</tt>.  And <tt>tap</tt> is sort of neat because it can be useful as a debugging tool, especially in "chained code":http://moonbase.rydia.net/mental/blog/programming/eavesdropping-on-expressions.html.
 
 <pre name="code" class="ruby">
   >>  [1,2,3].map { |x| x + 1 }.tap { |y| p y }.inject(:+)
