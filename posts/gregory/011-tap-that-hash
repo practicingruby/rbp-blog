@@ -3,6 +3,8 @@
 =description
 Ruby 1.9 gives us Object#tap, which is immediately useful for some benign purposes.  But lately I've been getting more creative and can use some peer review to tell me if what I'm doing is elegant or ugly.
 =entry
+<i>UPDATE: Be sure to read the comments.  I've already learned a lot from them, and you might, too.</i>
+
 Though the "Ruby Best Practices":http://rubybestpractices.com book covers Ruby 1.9, it is decidedly not a "Ruby 1.9 Best Practices" book.   The reason for this, of course, is that common idioms for Ruby 1.9 haven't evolved yet. 
 
 Let's work together to change that.   Every week until Ruby 1.9.2 comes out, I'll be coming up with short, manageable bits of Ruby 1.9 code for discussion, as part of a "Ruby 1.9 Style" series.  These should not be taken to be authoritative in any way, but instead work as conversation starters so that we can move forward as a community and separate the good from the bad when hacking code on Ruby 1.9.
@@ -58,7 +60,7 @@ def sexy
 end
 </pre>
 
-This code is definitely more DRY, and looks pretty clean.  The only problem with it is that since it relies on ActiveSupport, you're essentially sifting through DHH's junk drawer for a piece of non-standard functionality for a fairly basic purpose.  While it may not be a "Rails Best Practice", I tend to shy away from this sort of thing to keep from being too dependent on a framework that I only use part of the time.
+This code <strike>is definitely more DRY, and</strike> looks pretty clean.  The only problem with it is that since it relies on ActiveSupport, you're essentially sifting through DHH's junk drawer for a piece of non-standard functionality for a fairly basic purpose.  While it may not be a "Rails Best Practice", I tend to shy away from this sort of thing to keep from being too dependent on a framework that I only use part of the time.
 
 But if we think for a second, how would <tt>returning</tt> be implemented?  Something like this, right?
 
