@@ -50,7 +50,7 @@ Using <tt>returning</tt>, this can be cleaned up a bit:
 
 <pre name="code" class="ruby">
 def sexy
-  returning({}) do |results
+  returning({}) do |results|
     [:x, :y, :z].each do |letter|
       results[letter] = rand(100)
     end
