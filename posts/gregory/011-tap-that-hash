@@ -103,7 +103,7 @@ What I'm doing here is calling <tt>tap</tt> on a default hash and then populatin
 
 This approach adds a little complexity, but in my experience, having to explicitly return a collection at the end of a method can be cumbersome, and I frequently forget about it during refactoring and cause my tests to go red on me.  
 
-What do you think? Is <tt>Object#tap</tt> the new <tt>returning</tt>?  Or should we put this carefully knife back into DHH's junk drawer for safekeeping? I'm pretty sure Rails didn't invent this functionality, but that's where a lot of us might have encountered it first.
+What do you think? Is <tt>Object#tap</tt> the new <tt>returning</tt>?  Or should we put this knife carefully back into DHH's junk drawer for safekeeping? I'm pretty sure Rails didn't invent this functionality, but that's where a lot of us might have encountered it first.
 
 Help me decide whether this is elegant or nasty in the comments below.
 
