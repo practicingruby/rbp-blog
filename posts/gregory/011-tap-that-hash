@@ -1,5 +1,5 @@
 =title Should I Tap that Hash?  (Ruby 1.9 Style)
-=timestamp 2009.07.07 05:00 UTC
+=timestamp 2009.08.05 12:00 UTC
 =description
 Ruby 1.9 gives us Object#tap, which is immediately useful for some benign purposes.  But lately I've been getting more creative and can use some peer review to tell me if what I'm doing is elegant or ugly.
 =entry
