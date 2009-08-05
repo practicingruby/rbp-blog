@@ -54,8 +54,6 @@ def sexy
     [:x, :y, :z].each do |letter|
       results[letter] = rand(100)
     end
-
-    results
   end
 end
 </pre>
