@@ -99,9 +99,9 @@ I've started on a few Ruby 1.9 production apps, and that's where I first ran int
   end
 </pre>
 
-What I'm doing here is calling <tt>tap</tt> on a default hash and then populating it via the code within the block.  If I was simply iterating over some values, I might use <tt>inject</tt> or <tt>each_with_object</tt>, but my needs were a little more complex here.
+What I'm doing here is calling <tt>tap</tt> on a default hash and then populating it via the code within the block.  If I was simply iterating over some values, I might use <tt>inject</tt> or <tt>each_with_object</tt>, but my needs were a little more complicated here.
 
-This adds a little complexity, but in my experience, having to explicitly return a collection at the end of a method can be cumbersome, and I frequently forget about it during refactoring and cause my tests to go red on me.  
+This approach adds a little complexity, but in my experience, having to explicitly return a collection at the end of a method can be cumbersome, and I frequently forget about it during refactoring and cause my tests to go red on me.  
 
 What do you think? Is <tt>Object#tap</tt> the new <tt>returning</tt>?  Or should we put this carefully knife back into DHH's junk drawer for safekeeping? I'm pretty use Rails didn't invent this functionality, but that's where a lot of us might have encountered it first.
 
