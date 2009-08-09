@@ -1,0 +1,104 @@
+=title A bit of Optimization
+=timestamp 2009.08.09 22:47 +0200
+=description The dramatic decrease of performance bugged me.  Today I show, how I managed to remedy that - and even get a faster version than before.
+=entry
+As suggested "earlier":http://blog.rubybestpractices.com/posts/rklemme/013-LRU-Explanations.html I did a bit of benchmarking and found these timings of the first version which kept everything in memory and the next version with two LRU storages (for InteractionProcessor and IO objects):
+
+<pre>
+v0.1
+
+robert@fussel ~/Eigene Dateien/Projects/muppet-laboratories
+$ time ruby19 bin/sample-animal.rb sample.log
+
+real    11m53.226s
+user    6m34.561s
+sys     4m33.921s
+
+
+v0.2.1
+
+robert@fussel ~/Eigene Dateien/Projects/muppet-laboratories
+$ time ruby19 bin/sample-animal.rb sample.log
+
+real    25m40.842s
+user    14m40.655s
+sys     8m29.701s
+</pre>
+
+I then went on and refactored the code in these ways:
+
+# removed LRU storage of @IO@ objects
+# removed state pattern and replaced it with a single filter test again
+
+The solution now resembles the first version quite a bit with the difference that the storage of @InteractionProcessor@ instances is now an @LRUHash@.  The @InteractionProcessor@ now looks very simple -- again:
+
+<pre name="code" class="ruby">
+  class InteractionProcessor
+    
+    # mode for writing files
+    OPEN_MODE = IO::WRONLY | IO::CREAT | IO::TRUNC
+
+    attr_reader :id, :coord, :entries
+
+    def initialize(id, coordinator)
+      @id = id
+      @coord = coordinator
+      @entries = []
+    end
+
+    # Process the first line
+    def process_initial(time_stamp, line)
+      process(time_stamp, line)
+    end
+
+    # Process an initial line
+    def process(time_stamp, line)
+      @entries << Entry.new(time_stamp, line)
+    end
+
+    # Append a continuation line to the last entry
+    def append_line(line)
+      @entries.last.line << line
+    end
+
+    def finish
+      if ! @entries.empty? && @coord.filter[self]
+        fn = file_name
+        FileUtils.mkdir_p(File.dirname(fn))
+
+        File.open(fn, OPEN_MODE) do |io|
+          @entries.each {|e| io.puts(e.line)}
+        end
+      end
+    end
+
+    private
+
+    # calculate the file name, this fails if
+    # there are no entries!
+    def file_name
+      ts = @entries.first.time_stamp
+      File.join(@coord.options.output_dir,
+                ts.strftime('%Y-%m-%d'),
+                ts.strftime('%H-%M'),
+                ts.strftime('%S.%3N-') + id)
+    end
+  end
+</pre>
+
+And now this is the timing we get:
+
+<pre>
+v0.3
+
+robert@fussel ~/Eigene Dateien/Projects/muppet-laboratories
+$ time ruby19 bin/sample-animal.rb sample.log
+
+real    7m29.546s
+user    2m16.702s
+sys     4m8.296s
+</pre>
+
+Now, this is even faster than the first version!  The difference seems to mainly be caused by a reduction in user time.  I would have expected at most a small change in system time for less paging since we limit the memory usage.  Maybe the difference is caused by the fact that the main @Hash's@ size does not increase beyond a fixed limit.
+
+I guess the LRU based storage of file handles qualified as premature optimization: apparently it wasn't necessary to get rid of individual log lines as fast as possible.  Instead, it makes more sense to treat an interaction as entity and wait with the processing until the interaction is complete (well, not really: until the LRU storage decides, that the interaction must be purged from memory).  That's a nice example how granularity of processing directly influences performance and application design.  In fact, treating an interaction as entity is probably also the "most straightforward":http://en.wikipedia.org/wiki/KISS_principle approach.  And it turns out to be more efficient than the much more complex state pattern logic.
