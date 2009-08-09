@@ -1,0 +1,114 @@
+=title Should I Tap that Hash?  (Ruby 1.9 Style)
+=timestamp 2009.08.05 12:00 UTC
+=description
+Ruby 1.9 gives us Object#tap, which is immediately useful for some benign purposes.  But lately I've been getting more creative and can use some peer review to tell me if what I'm doing is elegant or ugly.
+=entry
+<i>UPDATE: Be sure to read the comments.  I've already learned a lot from them, and you might, too.</i>
+
+Though the "Ruby Best Practices":http://rubybestpractices.com book covers Ruby 1.9, it is decidedly not a "Ruby 1.9 Best Practices" book.   The reason for this, of course, is that common idioms for Ruby 1.9 haven't evolved yet. 
+
+Let's work together to change that.   Every week until Ruby 1.9.2 comes out, I'll be coming up with short, manageable bits of Ruby 1.9 code for discussion, as part of a "Ruby 1.9 Style" series.  These should not be taken to be authoritative in any way, but instead work as conversation starters so that we can move forward as a community and separate the good from the bad when hacking code on Ruby 1.9.
+
+Rather than describing in detail how this series will work, I'll just begin with some real content and you can get a sense of the format from that.  The only key thing is to remember to not be lazy, and to actually comment on these posts.  Ruby 1.9 is basically the wild west right now, and its going to take quite a few sound voices to tame it.  So be sure to share your thoughts after you take a look at the proposed idiom below.
+
+h3. Object#tap, a seemingly benign addition.
+
+Ruby 1.9 gives us <tt>tap</tt>.  And <tt>tap</tt> is sort of neat because it can be useful as a debugging tool, especially in "chained code":http://moonbase.rydia.net/mental/blog/programming/eavesdropping-on-expressions.html.
+
+<pre name="code" class="ruby">
+  >>  [1,2,3].map { |x| x + 1 }.tap { |y| p y }.inject(:+)
+  [2, 3, 4]
+  => 9
+</pre>
+
+There isn't much conceptual weight here, either.  Essentially, you're looking at something like this:
+
+<pre name="code" class="ruby">
+  def tap
+    yield(self)
+    self
+  end
+</pre>
+
+But hmm, doesn't that look familiar?
+
+h3. Object#tap as an alternative to ActiveSupport's returning
+
+Those who work with Rails or with ActiveSupport in some other capacity will have seen <tt>returning</tt>.  The problem it is meant to solve is seen in the code below.
+
+<pre name="code" class="ruby">
+  def ugly
+    results = {}
+
+    [:x, :y, :z].each do |letter|
+      results[letter] = rand(100)
+    end
+
+    results
+  end
+</pre>
+
+Using <tt>returning</tt>, this can be cleaned up a bit:
+
+<pre name="code" class="ruby">
+def sexy
+  returning({}) do |results|
+    [:x, :y, :z].each do |letter|
+      results[letter] = rand(100)
+    end
+  end
+end
+</pre>
+
+This code <strike>is definitely more DRY, and</strike> looks pretty clean.  The only problem with it is that since it relies on ActiveSupport, you're essentially sifting through DHH's junk drawer for a piece of non-standard functionality for a fairly basic purpose.  While it may not be a "Rails Best Practice", I tend to shy away from this sort of thing to keep from being too dependent on a framework that I only use part of the time.
+
+But if we think for a second, how would <tt>returning</tt> be implemented?  Something like this, right?
+
+<pre name="code" class="ruby">
+  def returning(obj)
+    yield(obj)
+    obj
+  end
+</pre>
+
+Go check out the end of the previous section.  What we can see now is that <tt>returning</tt> is just <tt>Object#tap</tt> inside out!  So what happens when we use <tt>tap</tt> that way?  Let's take a look.
+
+h3. Tapping that Hash.
+
+I've started on a few Ruby 1.9 production apps, and that's where I first ran into attempting to use <tt>tap</tt> as if it were <tt>returning</tt>.  Take a look at this bit of code:
+
+<pre name="code" class="ruby">
+  def times_for_period(date)
+    days = work_days_for_period(date)
+    regular_hours_by_week = Hash.new(0)
+
+    { :regular_hours => 0, :other_hours => Hash.new(0) }.tap do |results|
+      days.each do |d|
+        times = d.times
+
+        results[:regular_hours] += times[:regular_hours]
+        regular_hours_by_week[d.date.cweek] += times[:regular_hours]
+
+        times[:other_hours].each { |k,v| results[:other_hours][k] += v }
+      end
+
+      results[:weekly_hours] = regular_hours_by_week.keys.sort.map do |k| 
+        regular_hours_by_week[k]
+      end
+    end
+  end
+</pre>
+
+What I'm doing here is calling <tt>tap</tt> on a default hash and then populating it via the code within the block.  If I was simply iterating over some values, I might use <tt>inject</tt> or <tt>each_with_object</tt>, but my needs were a little more complicated here.
+
+This approach adds a little complexity, but in my experience, having to explicitly return a collection at the end of a method can be cumbersome, and I frequently forget about it during refactoring and cause my tests to go red on me.  
+
+What do you think? Is <tt>Object#tap</tt> the new <tt>returning</tt>?  Or should we put this knife carefully back into DHH's junk drawer for safekeeping? I'm pretty sure Rails didn't invent this functionality, but that's where a lot of us might have encountered it first.
+
+Help me decide whether this is elegant or nasty in the comments below.
+
+h3. A Gentle Reminder
+
+I have to warn you, some of my ideas might be bad.  I'll be posting code that I find interesting or stuff that I don't know exactly how I feel about.  If we hit a dud from time to time, it's only to be expected.  But if you want to help me out, consider contributing content to this series.  If you have an idea for a guest post, go ahead and email me with the details, and I'll get back to you.
+
+Looking forward to your thoughts on this one and many more in the coming weeks!
