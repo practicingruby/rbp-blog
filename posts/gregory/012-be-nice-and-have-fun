@@ -1,0 +1,17 @@
+=title Be Nice and Have Fun
+=timestamp 2009-08-21 11:25 UTC
+=description
+In the wake of yet another Ruby drama scene, there is one community Best Practice that always works.  
+=entry
+Yet again, we're experiencing "a firestorm":http://news.ycombinator.com/item?id=773106 that will shake things up and change the Ruby community in a big way.  But like anything else, the best thing we can do is remember that the sky is not falling, and that all internet drama is ephemeral at best.
+
+Sure, we'll all dearly miss a valued community member who inspired many of us.  But thanks to distributed revision control systems, we'll be able to commemorate _why through his works, currently being "mirrored on github":http://github.com/whymirror .
+
+So what do we do in this post _why world?  The answer to that is fairly simple: the same thing we've been doing.  The true spirit of the Ruby community (and even the free software hacker community at large) is to work on fun stuff, and try to be nice to people.  If we can keep that up, the sky will not fall, and may even make room for new stars to light up the present darkness.
+
+I'll let this brief statement stand on its own here, as RBP has no intentions of becoming a gossip blog, but feel free to leave your thoughts in the comments.  
+
+Expect a new Ruby 1.9 series post some time before or just after LSRC.  Until then, keep your heads up folks.
+
+<i>NOTE: I have Aaron Patterson to thank for expressing what I was thinking in words 'do fun stuff and try to be nice'</i>
+
