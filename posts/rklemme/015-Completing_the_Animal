@@ -1,0 +1,157 @@
+=title Completing the Animal
+=timestamp 2009.08.24 23:09 +0200
+=description We are coming close to the end to the Laboratory series: finally the animal is complete and munches away on your logfiles.
+=entry
+h3. Leftovers
+
+Summertime was a bit tough -- but the end is near!  Today I will cover two major parts that were needed to complete the "animal".  After that I will present lessons that I learned in this public blog software project.  Muppet Laboratories will then close their doors but "the code":http://github.com/rklemme/muppet-laboratories/tree/master will still be there.
+
+For a fully functioning Animal mainly two things were missing:
+
+# command line parsing,
+# creation of a proper filter mechanism based on command line arguments.
+
+We will first look at command line parsing.
+
+h3. Command Line Parsing
+
+There is actually no rocket since involved whatsoever.  The most noteworthy piece of information is probably that you need to include 'optparse/time' in order to be able to allow @OptionParser@ to parse time stamps passed as option arguments.  (Funny thing is, @OptionParser@ will also happily accept strings like "now" and parse them as timestamps.)
+
+<pre name="code" class="ruby">
+require 'ostruct'
+require 'optparse'
+require 'optparse/time'
+
+  def self.parse_command_line(argv = ::ARGV) 
+    o = OpenStruct.new(:output_dir => '.')
+
+    # parse
+    OptionParser.new do |opts|
+      opts.on '-d', '--dir=DIRECTORY', 'Output directory ' do |v|
+        o.output_dir = v
+      end
+
+      opts.on '-r', '--rx=REGEXP', ::Regexp, 'Regular expression matched',
+      'against log line text' do |v|
+        o.rx = v
+      end
+
+      opts.on '-t', '--time=TIME', ::Time, 'timestamp' do |v|
+        o.ts = v
+      end
+
+      opts.on '-s', '--start=TIME', ::Time, 'start timestamp' do |v|
+        o.start_ts = v
+      end
+
+      opts.on '-e', '--end=TIME', ::Time, 'end timestamp' do |v|
+        o.end_ts = v
+      end
+
+      opts.on '--ids=ID_LIST', ::Array, 'Comma separated list of interaction ids' do |v|
+        (o.ids ||= Set.new).merge v
+      end
+
+      opts.on '--id-file=FILE', 'File with ids one per line',
+       '(empty lines are ignored)' do |v|
+        s = o.ids ||= Set.new
+
+        File.foreach v do |line|
+          line.strip!
+          s << line unless line == ''
+        end
+       end
+
+      opts.on '--buffer=INTERACTIONS', ::Integer,
+        'Max no. of interactions to keep in memory' do |v|
+        o.max_size = v
+        end
+
+      opts.on_tail '-h', '--help', 'Print this help' do
+        puts opts
+        exit 0
+      end
+    end.parse! argv
+
+    raise 'Only one of time or (start, end) allowed' if o.ts && (o.start_ts || o.end_ts)
+    raise 'Missing end timestamp' if o.start_ts && !o.end_ts
+    raise 'Missing start timestamp' if !o.start_ts && o.end_ts
+
+    o
+  end
+</pre>
+
+I personally find @OptionParser@ very elegant and complete but other seem to prefer other command line parsing packages, like "GetoptLong":http://ruby-doc.org/stdlib/libdoc/getoptlong/rdoc/index.html and there are "others around":http://totalrecall.wordpress.com/2008/09/05/command-line-parsing-choosing-a-ruby-library/ as well.  Main advantages of @OptionParser@ in my opinion:
+
+* Options, their documentation and their processing are all placed close to each other.
+* Built in support for conversion of argument strings to most basic types and even lists of values.
+* It is a part of the standard Ruby distribution, i.e you can safely assume that it is available.
+
+h3. Filter Creation
+
+There are several approaches that can be taken on creating a bit of filter code from options taken from the command line -- all have different strengths and weaknesses:
+
+# Interpreting the option set on each filter invocation (slow but easy to implement).
+# Combination of written filter code with filter criteria values stuffed in a closure (faster than the first option but equally easy to implement).
+# Generation of filter code (usually fastest, can be a bit complex to implement).
+
+I picked option 2 because of the speed advantage and the avoidance of "safety issues":http://www.rubycentral.com/pickaxe/taint.html that come with using @eval@.  I also find it a bit inelegant to generate code but that's a purely aesthetic argument which I don't claim any substance for.  (But since we're into Ruby at least partly for the fun, that argument is not too far off the mark.)
+
+As interface I choose @lambda's@ square brackets.  So, here is the filter creation code:
+
+<pre name="code" class="ruby">
+    def create_filter(opts)
+      # store in local variables to ensure
+      # ensure values do not get changed
+      # and a small speed improvement
+      o_ids = opts.ids
+      o_ts = opts.ts
+      o_start_ts = opts.start_ts
+      o_end_ts = opts.end_ts
+      o_rx = opts.rx
+
+      f = case
+          when o_ids
+            warn 'WARNING: Ignoring time filters with ids given' if
+            o_ts || o_start_ts || o_end_ts
+            lambda {|ip| o_ids.include? ip.id}
+          when o_ts
+            lambda {|ip|
+              ip.entries.first.time_stamp <= o_ts &&
+                ip.entries.last.time_stamp >= o_ts
+            }
+          when o_start_ts && o_end_ts
+            lambda { |ip|
+              ip.entries.last.time_stamp >= o_start_ts && 
+                ip.entries.first.time_stamp <= o_end_ts
+            }
+          end
+
+      case
+      when f && o_rx
+        lambda {|ip| f[ip] && ip.entries.any? {|e| o_rx =~ e.line}}
+      when o_rx
+        lambda {|ip| ip.entries.any? {|e| o_rx =~ e.line}}
+      when f
+        f
+      else
+        YES
+      end
+    end
+</pre>
+
+As you can see there is a bit of prioritization going on: I choose to ignore time range options if also interaction ids are used as filter criterion.  Reason is that interactions are usually short and additional time based filters would either have to add more interactions to the result or remove interactions whose id was selected (depending on whether "and" or "or" combination was chosen).
+
+The text filter (regular expression really) on the other hand is "and" connected with the other filter, i.e. if the list of interactions selected by time or ids is large then it will be narrowed down through the text filter.
+
+One word about time filters: when given a single point in time, the test is pretty straightforward -- the first timestamp must be lower and the last timestamp must be larger than the test time, i.e. the interaction was active at the given time.  The test for a given time interval (start and end time given separately) may look a bit odd at first.  However, there is no typo involved.  The test ensures that the test interval and the interaction's time interval overlap.  Or put differently: the test ensures that all interactions are included that were active during the test interval.
+
+h3. Things left to do
+
+For now I am pretty satisfied with the results so I do not feel a lot pressure to continue working on it.  However, there are a few things that could be done:
+
+* Cleanup of @require@ and deletion of source files that were not used.
+* Adding of statistics output like lines read, lines written, interactions found etc.
+* Profiling and optimization.
+
+Anything else?
