@@ -1,0 +1,208 @@
+=title James will be right back after these interuptions 
+=timestamp 2009.08.31 23:09 +0500
+=description Keeping your focus and flow while still making notes of bugs and quirks can be challenging. Lucky, as Ruby hackers, we can build tools to reduce the friction of mundane tasks 
+=entry
+
+
+h1. James will be right back after these interuptions 
+
+h3.  How many times has this happened to? 
+
+<blockquote>
+[VOICE MUCH LIKE BILLY MAYS]: You're working on some code, making good progress, solving a particular issue, when Oh No!,  
+you've run into a new bug.  Now what?
+
+You could open a browser, go to your issue tracker, and open a ticket. But that could take several minutes!
+
+Your train of thought would be derailed, code momentum lost, and time wasted!  But you can't just let that bug slide away!  Don't you wish there was an easier way to handle this?
+
+</blockquote>
+
+As far as I know there have been no late-night TV commercials selling solutions to software developers, but there are times we could use them.  The problem of staying focused on one task, while not ignoring others,
+is a real one, at least for me.
+
+Here's what happens: I'll pick a bug to fix or feature to add, and set out to complete it.  Almost inevitably, though, I'll encounter other issues or interests.  If it looks to be minor, I'm often tempted to fix it right then. Sometimes this is trivial; a typo in the UI text in the file I'm working on.  These are the cases where even adding a FIXME or TODO to the code would be about as much work as just fixing the problem.
+
+Other times, though, it's obvious that this new concern will take a bit of time. Or, maybe worse, there's no simple way to quickly judge how much work would be needed.  Dropping what you're doing to fix something else isn't a recommended.  Given that each task is prone to uncover a new task, you're doomed from the start to never finish anything.  
+
+That leaves two (admittedly broad) options.  One is to ignore everything that isn't immediately related to the immediate task.  The other is to stop what you're doing and make a note of the problem.  But how long is *that* going to take?
+
+Lately I've been interested in focus and attention.  Like many people my ability to focus often varies.  For tasks that don't have an intrinsic lure (e.g. bug fixing) I work best if I stick to well-defined tasks over specific durations.  (This is an approach sometimes referred to as time boxing. Some formal examples are The Pomodoro Technique  and The Autofocus System).
+
+An important aspect is to really spend that time doing that specific task.  If it leads to assorted sub-tasks,  it matters how much time those things take, since time is limited  If necessary digressions take too long, the whole "do one thing" plan falls apart, as does one's focus.
+
+So now we have two problems.  One, the code distraction that just appeared, and two, the need for a way to quickly and effectively record it. Here's what I've been doing about that second one.
+
+I first started looking into the idea  of rapid notation when I was working a contract job that needed some detailed time tracking.  After spending two hours adding what seemed like a simple feature to a Java Web app I wanted to be able to look a back a see just where the time went.  
+
+I started by using a plain text file.  Every so often, when I found myself doing something that didn't seem to be directly adding to a solution (for example, rebooting the app server to fix JVM  out-of-memory issues) I made a note.
+
+It worked OK, but it was a bit slow.  There was a lot of friction on opening the file, adding text, and saving it.  Even leaving the file open all the time was not helpful enough.  As I usually work at the command line I wrote a small Ruby script to let me write my notes write from the terminal.  
+
+
+<pre name="code" class="ruby">
+
+    #!/usr/bin/env ruby
+
+    @data_file = "/home/james/data/_at-today-please.txt" 
+
+    def ts; Time.now.to_s; end
+
+    def edit
+      IO.popen "gvim #{@data_file} & "
+    end
+
+    def add
+      msg = ARGV.join( ' ' ).to_s.strip
+      File.open(@data_file, "a") do |f|
+        f.print "--- #{ts}:\n\t#{msg}\n\n\n"
+      end
+    end
+
+    ARGV.empty? ? edit : add
+ </pre>
+
+I'm not making any claims for this code other than follows the principal of WFJ: Works for James.  I have it in a file at <pre>~/bin/@</pre>; adding a short note is about as simple as it gets.  If I need to add something complex (or something that just doesn't play well at the command line), I pass no arguments and edit the file directly.
+
+It's flawed, of course.  Depending on the shell, different chracters (quote marks, for example) can throw things off.
+
+But it works good enough for quick simple time-stamped notes.
+
+h3.  But wait, there's more!
+
+Some time after this hack I found myself working with Trac.  It does a good job of coordinating source code, issues, project planning, and assorted other goodies.  Entering bugs, though, was a drag.  The Web UI meant entering text in multiple fields and selecting values from a few dropdown lists.   Once again, to keep from getting too distracted  while developing I wrote some code to post tickets from the command line.  The project was called Tracula (because the key to any project is a clever punny name) and was helped the development process by removing some of the friction of tracking issues uncovered during development.  Usage hit some snags when different versions of Trac required somewhat more gnarly means of athenticating HTTP posts, while my use of Trac dropped in favor of other project management tools.
+
+Nonetheless, the general idea stayed with me, and when picking any tool I look to see if there's a simple HTTP interface that allows for automation and custom, command-line driven clients.
+
+I now have "several projects on GitHub.com":http://github.com/Neurogami, which has become much like a hosted Trac, but with more ass-kickery. Each repo can have an issue tracker, and I've just started using it for my "Rhesus":http://github.com/Neurogami/rhesus/tree/master project.
+
+Rhesus is yet another WFJ tool that has been evolving as I use it.  I had been making notes about it it various places when I realized there was an actual bug tracker available.  I added a few things, and immediatley wondered if there was an API for this.  And "there is":http://develop.github.com (thanks, Engine Yard!).
+
+With Tracula there were three key options: fetch a list of open tickets; post a single new ticket; do a batch post of mulitple tickets.
+
+How do do these with the GitHub API?  Well, fetching tickets is really easy, since there's no need for any authentication.  If you have @curl@ or @wget@ installed, it's a just a well-crafted URL:
+
+    http://github.com/api/v2/json/issues/list/Neurogami/rhesus/open 
+
+will give you a list of open Rhesus issues.  Very slick, but since the results are a JSON string, maybe not the easiest thing to read. You can change that to XML or YAML if you like, but for better control, how about using some Ruby to slurp it in and present it in a more refined manner?  
+
+
+h3. And if you call RIGHT NOW ...
+
+A basic approach to showing the current set of open issues might be: make a call to the GitHub API; parse the results into some usful Ruby structure; selective show the details to avoid overcrowding the screen.  One thing you need to consider, though, is just how often will the list of issues change relative to the number of times you want to see it.  In my case, I'll likely want to see the list way more often than it will change.  To make life easier both for me and for GitHub, I want my code to cache the list of issues and render that cache by default.   I'm also going to make this a Rake task, and I'll allow for a parameter to indicate that the cache should be updated.
+
+<pre name="code" class="ruby">
+
+  namespace :issues do
+    desc 'Open issues'
+    task :open do
+      paged_issues ENV['GH_NO_CACHE']
+    end
+  end
+</pre>
+
+The @page_issues@ method will grab the set of issues and render them one by one:
+
+<pre name="code" class="ruby">
+
+  def ___
+    warn "\n" + '_' * 30
+  end
+
+  def paged_issues no_cache = false
+    ARGV.clear # Otherwise the call to gets will immediatly find input
+    warn "Hit <enter> after each issue to see the next one."
+    issues(no_cache).each do |issue|
+      ___
+      warn "Title: #{issue['title']}"
+      warn "Details: \n#{issue['body']}"
+      ___
+      gets
+    end
+    warn "\nThat's it!"
+  end
+</pre>
+
+The @issues@ method will either pull from the cache or fetch anew from GitHub
+
+<pre name="code" class="ruby">
+
+    def issues no_cache = false
+      issues_cache = 'issues.yaml'
+      if no_cache || !File.exist?(issues_cache)
+         warn "Reloading issues from GitHub ..."
+         File.open( issues_cache, 'w'){ |f| f.puts get_issues }
+      end
+      YAML.load(IO.read(issues_cache))['issues']
+    end
+</pre>
+
+h3. Operators are standing by!
+
+What about adding a new issue?  The docs say that an authorized POST is needed.  And what's an authoroized POST? It's an HTPP POST with parameters for your user name (@login@) and and your authorization token (@token@).  The latter may be found on your GitHub account page. 
+
+Doing a POST is a bit trickier than just reading a URL.
+
+<pre name="code" class="ruby">
+
+     namespace :issues do
+      # ...
+      desc 'Create a new issue'
+      task :create do
+        issue_details = ENV['DETAILS'].to_s.strip
+        if issue_details.empty?
+          warn "No issue details!"
+        else
+          title, body =  issue_details.split(' -- ', 2)
+          create_issue  title, body 
+        end
+      end
+    
+     # ...
+     end
+</pre>
+
+
+Rake is not the most friendly when it comes to passing arguments, so to (somewhat) simplfy things I decided to use one parameter that employed a delimiter to set off the issue title and body.  The code that does the actual ticket creation is obvlious to this, and could easily be used in a regular Ruby app.  The choice of making something a Rake task or a stand-alone executable depends on how you expect to use it.  With Rake, it's easy to get a reminder of what tasks are available using @rake -T@.  The downside is that argument handling is not so nice.
+
+(Were this more than demo code, though, I would ultimatly make the code code a library so that having both a Rake task and a standalone app would be equally easy.  And, in fact, some folks have been working on GitHub API libraries.)
+
+<pre name="code" class="ruby">
+
+      def create_issue title, body
+        require 'net/http'
+        require 'uri'
+
+        token = ENV['GH_AUTH_TOKEN']
+        url = 'http://github.com/api/v2/yaml/issues/open/Neurogami/rhesus'
+        res = Net::HTTP.post_form(URI.parse(url),
+                                  {'title'=> title, 
+                                      'body' => body,
+                                      'login' => 'Neurogami',
+                                       'token'=> token }
+                                 )
+        warn res.body
+
+      end
+</pre>
+     
+As for bulk posting of tickets, well, maybe in version 2.
+
+h3.  But that's not all;  you'll also get this stunning library!
+
+I must confess that I've been writing the code as I wrore this post.  It's an amazingly useful way to get some code done.
+
+I thought about the whole "Oh, if you were really smart, you'd make this a library" thing, and, well, I made this a library thing.
+
+You can get the code here: "http://github.com/Neurogami/ghissues/tree/master":http://github.com/Neurogami/ghissues/tree/master
+
+It's basically the above code, with some provisions for reading a local config file that defines the repo, repo owner, and a file for saving a cache of the repo issues.   Now, a down-side of coding-for-content is that certain nicities, like docs and tests, may fall by the wayside.  The code, however, is pretty simple. 
+
+Re-doing the Rake tasks using this gem is left as an exercise for the reader.
+
+h3. We now return you to your program
+
+I've written a few other apps along these lines. One let's me add items to my list at Todoist.com. I can even set reminders to pester me to do something later.  Very handy.  There are numerous existing apps out there for things like this.  (Check out this thread on "Hacker News.":http://news.ycombinator.com/item?id=770064).  See if one doesn't help you do more with less friction.
+
+But if you can't find one that really works for you, consider writing your own.  It's not hard, and well worth the effort to get something that really fits your style and keeps you moving.
+
