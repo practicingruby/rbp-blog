@@ -196,13 +196,13 @@ Doing a POST is a bit more complex than just reading from a URL, but no big deal
      
 Note that the code pulls the authentication token from an environment variable. That's done to avoid having to embed it in the code or some config file that may inadvertently reach the wrong eyes.
 
-s for bulk posting of tickets, well, maybe in version 2.
+As for bulk posting of issues, well, better add a ticket for that.
 
 h3.  But that's not all;  you'll also get this!
 
 I must confess that I've been writing the code as I wrote this post.  It's an amazingly useful way to get some code written.
 
-But I thought about the whole "Oh, if you were really doing this right, you'd make this a library" thing, and, well, I made this a library thing.
+I thought about the whole "Oh, if you were really doing this right, you'd make this a library" thing, and, well, I made this a library thing.
 
 You can get the code here: "http://github.com/Neurogami/ghissues/tree/master":http://github.com/Neurogami/ghissues/tree/master
 
