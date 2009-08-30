@@ -1,10 +1,10 @@
-=title James will be right back after these interuptions 
+=title James will be right back after these interruptions 
 =timestamp 2009.08.31 23:09 +0500
 =description Keeping your focus and flow while still making notes of bugs and quirks can be challenging. Lucky, as Ruby hackers, we can build tools to reduce the friction of mundane tasks 
 =entry
 
 
-h1. James will be right back after these interuptions 
+h1. James will be right back after these interruptions 
 
 h3.  How many times has this happened to? 
 
@@ -62,7 +62,7 @@ It worked OK, but it was a bit slow.  There was a lot of friction on opening the
     ARGV.empty? ? edit : add
  </pre>
 
-I'm not making any claims for this code other than follows the principal of WFJ: Works for James.  I have it in a file at <pre>~/bin/@</pre>; adding a short note is about as simple as it gets.  If I need to add something complex (or something that just doesn't play well at the command line), I pass no arguments and edit the file directly.
+I'm not making any claims for this code other than follows the principal of WFJ: Works for James.  I have it in a file at ~/bin/@; adding a short note is about as simple as it gets.  If I need to add something complex (or something that just doesn't play well at the command line), I pass no arguments and edit the file directly.
 
 It's flawed, of course.  Depending on the shell, different chracters (quote marks, for example) can throw things off.
 
@@ -82,7 +82,7 @@ With Tracula there were three key options: fetch a list of open tickets; post a 
 
 How do do these with the GitHub API?  Well, fetching tickets is really easy, since there's no need for any authentication.  If you have @curl@ or @wget@ installed, it's a just a well-crafted URL:
 
-    http://github.com/api/v2/json/issues/list/Neurogami/rhesus/open 
+      http://github.com/api/v2/json/issues/list/Neurogami/rhesus/open 
 
 will give you a list of open Rhesus issues.  Very slick, but since the results are a JSON string, maybe not the easiest thing to read. You can change that to XML or YAML if you like, but for better control, how about using some Ruby to slurp it in and present it in a more refined manner?  
 
@@ -110,7 +110,7 @@ The @page_issues@ method will grab the set of issues and render them one by one:
   end
 
   def paged_issues no_cache = false
-    ARGV.clear # Otherwise the call to gets will immediatly find input
+    ARGV.clear # Otherwise the call to gets will immediately find input
     warn "Hit <enter> after each issue to see the next one."
     issues(no_cache).each do |issue|
       ___
@@ -137,11 +137,21 @@ The @issues@ method will either pull from the cache or fetch anew from GitHub
     end
 </pre>
 
+
+This allows for
+
+    rake issues:open
+
+and
+
+    rake issues:open  GH_NO_CHACHE=true
+
+
 h3. Operators are standing by!
 
-What about adding a new issue?  The docs say that an authorized POST is needed.  And what's an authoroized POST? It's an HTPP POST with parameters for your user name (@login@) and and your authorization token (@token@).  The latter may be found on your GitHub account page. 
+What about adding a new issue?  The docs say that an authorized POST is needed.  And what's an authorized POST? It's an HTPP POST with parameters for your user name (@login@) andyour authorization token (@token@).  The latter may be found on your GitHub account page. 
 
-Doing a POST is a bit trickier than just reading a URL.
+Doing a POST is a bit more complex than just reading a URL.
 
 <pre name="code" class="ruby">
 
@@ -163,9 +173,9 @@ Doing a POST is a bit trickier than just reading a URL.
 </pre>
 
 
-Rake is not the most friendly when it comes to passing arguments, so to (somewhat) simplfy things I decided to use one parameter that employed a delimiter to set off the issue title and body.  The code that does the actual ticket creation is obvlious to this, and could easily be used in a regular Ruby app.  The choice of making something a Rake task or a stand-alone executable depends on how you expect to use it.  With Rake, it's easy to get a reminder of what tasks are available using @rake -T@.  The downside is that argument handling is not so nice.
+Rake is not the most friendly when it comes to passing arguments, so to (somewhat) simplify things I decided to use one parameter that employed a delimiter to set off the issue title and body.  The code that does the actual ticket creation is obvious to this, and could easily be used in a regular Ruby app.  The choice of making something a Rake task or a stand-alone executable depends on how you expect to use it.  With Rake, it's easy to get a reminder of what tasks are available using @rake -T@.  The downside is that argument handling is not so nice.
 
-(Were this more than demo code, though, I would ultimatly make the code code a library so that having both a Rake task and a standalone app would be equally easy.  And, in fact, some folks have been working on GitHub API libraries.)
+(Were this more than demo code, though, I would ultimately make the code code a library so that having both a Rake task and a standalone app would be equally easy.  And, in fact, some folks have been working on GitHub API libraries.)
 
 <pre name="code" class="ruby">
 
@@ -190,7 +200,7 @@ As for bulk posting of tickets, well, maybe in version 2.
 
 h3.  But that's not all;  you'll also get this stunning library!
 
-I must confess that I've been writing the code as I wrore this post.  It's an amazingly useful way to get some code done.
+I must confess that I've been writing the code as I wrote this post.  It's an amazingly useful way to get some code done.
 
 I thought about the whole "Oh, if you were really smart, you'd make this a library" thing, and, well, I made this a library thing.
 
