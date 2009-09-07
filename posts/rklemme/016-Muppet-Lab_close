@@ -9,6 +9,7 @@ It is time to look back at the Muppet Laboratory series.  Here's my list of note
 * The first version with LRU caching integrated was way too complex and had ridiculous performance.  Continuous checking of interactions against the search criteria made the code complex and slow.  In this case the "premature optimization":http://en.wikipedia.org/w/index.php?title=Premature_optimization was worse than ineffective.
 * I am test lazy (I confess) but apparently this works remarkably well.  Note, that this does not mean I don't test.  But for my scripts I usually do not write "unit tests":http://www.ruby-doc.org/stdlib/libdoc/test/unit/rdoc/classes/Test/Unit.html or "RSpecs":http://rspec.info/.  (file under: Ruby Bad Practices -- fortunately the acronym is the same)
 * Overall the LRU approach works remarkably well at limiting memory usage while processing huge amounts of input data so I would say the plan succeeded mostly.
+* I found the idea to use block passed to a method as a class body especially interesting.  I will probably recycle this for other cases where I want to provide a framework (including command line parsing) which needs to be filled with user code.
 * Summertime is a bad time for a blog series -- author and readers are occupied with other things, mainly enjoying sunny outsides.
 
 What did you consider most valuable for you?  What would you have done differently (software as well as blog series wise)?  I would be curious to learn what your thoughts are.
