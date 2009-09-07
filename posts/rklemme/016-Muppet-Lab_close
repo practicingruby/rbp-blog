@@ -1,0 +1,18 @@
+=title Muppet Labs closing for now
+=timestamp 2009.09.07 20:35 +0200
+=description Now that the code has reached a final version and interest in the blog series has died away Muppet Laboratories will close the door for now.
+=entry
+h3. Looking back
+
+It is time to look back at the Muppet Laboratory series.  Here's my list of noteworthy items -- I will keep it rather short as interest in the series seems to have dwindled anyway:
+
+* The first version with LRU caching integrated was way too complex and had ridiculous performance.  Continuous checking of interactions against the search criteria made the code complex and slow.  In this case the "premature optimization":http://en.wikipedia.org/w/index.php?title=Premature_optimization was worse than ineffective.
+* I am test lazy (I confess) but apparently this works remarkably well.  Note, that this does not mean I don't test.  But for my scripts I usually do not write "unit tests":http://www.ruby-doc.org/stdlib/libdoc/test/unit/rdoc/classes/Test/Unit.html or "RSpecs":http://rspec.info/.  (file under: Ruby Bad Practices -- fortunately the acronym is the same)
+* Overall the LRU approach works remarkably well at limiting memory usage while processing huge amounts of input data so I would say the plan succeeded mostly.
+* Summertime is a bad time for a blog series -- author and readers are occupied with other things, mainly enjoying sunny outsides.
+
+What did you consider most valuable for you?  What would you have done differently (software as well as blog series wise)?  I would be curious to learn what your thoughts are.
+
+h3. What's ahead?
+
+The next article will be about the versatility of @Struct@.  This is another "swiss army knife":http://blog.rubybestpractices.com/posts/gregory/009-beautiful-blocks.html of the lazy Ruby coder.
