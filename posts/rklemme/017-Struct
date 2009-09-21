@@ -190,11 +190,12 @@ From time to time you will want additional methods in your @Struct@ class.  Well
 <pre name="code" class="ruby">
 irb(main):001:0> Point = Struct.new :x, :y do
 irb(main):002:1*   def distance(point)
-irb(main):003:2>     Math.sqrt((point.x - self.x) ** 2 + (point.y - self.y) ** 2)
-irb(main):004:2>   end
-irb(main):005:1> end
+irb(main):003:2>     Math.sqrt((point.x - self.x) ** 2 +
+irb(main):004:3*       (point.y - self.y) ** 2)
+irb(main):005:2>   end
+irb(main):006:1> end
 => Point
-irb(main):006:0> Point[3,4].distance Point[0,0]
+irb(main):007:0> Point[3,4].distance Point[0,0]
 => 5.0
 </pre>
 
@@ -203,11 +204,12 @@ This obsoletes the frequently seen idiom which uses inheritance from a @Struct@ 
 <pre name="code" class="ruby">
 irb(main):001:0> class Point < Struct.new(:x, :y)
 irb(main):002:1>   def distance(point)
-irb(main):003:2>     Math.sqrt((point.x - self.x) ** 2 + (point.y - self.y) ** 2)
-irb(main):004:2>   end
-irb(main):005:1> end
+irb(main):003:2>     Math.sqrt((point.x - self.x) ** 2 +
+irb(main):004:3*       (point.y - self.y) ** 2)
+irb(main):005:2>   end
+irb(main):006:1> end
 => nil
-irb(main):006:0> Point[3,4].distance Point[0,0]
+irb(main):007:0> Point[3,4].distance Point[0,0]
 => 5.0
 </pre>
 
