@@ -1,5 +1,5 @@
 =title The Complete Class
-=timestamp 2009.10.24 20:03 +0200
+=timestamp 2009.10.24 20:05 +0200
 =description There are a few concepts you have to implement for many classes such as equivalence, hash code calculation etc.  Today I will discuss these and provide a sample class implementation with all of them.
 =entry
 __A remark: we enabled comment moderation because the blog was recently target of spam.  You probably have not seen much of it because we were pretty quick in removing it manually.  So if your comment does not show up please be patient.__
