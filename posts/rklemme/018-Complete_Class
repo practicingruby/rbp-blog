@@ -253,8 +253,8 @@ The semantic is completely up to the class at hand and there are no general guid
 
 <pre name="code" class="ruby">
   # Check whether we have that track or track title by title.
-  def ===(track)
-    t = (track.title rescue track)
+  def ===(track_or_title)
+    t = (track_or_title.title rescue track_or_title)
     tracks.find {|tr| t == tr.title}
   end
 
