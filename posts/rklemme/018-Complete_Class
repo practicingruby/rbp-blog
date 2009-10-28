@@ -177,7 +177,8 @@ Many classes have a natural ordering such as integers which are ordered by their
       (interpret <=> o.interpret).nonzero? ||
       (title <=> o.title).nonzero? ||
       (tracks <=> o.tracks).nonzero? ||
-      pause <=> o.pause :
+      (pause <=> o.pause) || 
+      0 :
       nil
   end
 </pre>
