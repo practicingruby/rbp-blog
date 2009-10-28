@@ -173,13 +173,12 @@ Many classes have a natural ordering such as integers which are ordered by their
   include Comparable
 
   def <=>(o)
-    c = interpret <=> o.interpret
-    return c unless c == 0
-    c = title <=> o.title
-    return c unless c == 0
-    c = tracks <=> o.tracks
-    return c unless c == 0
-    pause <=> o.pause
+    self.class == o.class ?
+      (interpret <=> o.interpret).nonzero? ||
+      (title <=> o.title).nonzero? ||
+      (tracks <=> o.tracks).nonzero? ||
+      (pause <=> o.pause) || 0 :
+      nil
   end
 </pre>
 
