@@ -3,7 +3,7 @@
 =description
 A common way of studying the game of Go is to work backwards from a bad position to discover what a better move would have been.  In this article, I'll show you how to do that with Ruby code as well.
 =entry   
-When we know something is ugly or "evil", we're quick to replace it with what we know to be a better solution.  But if we don't know *why* the solution is better, it makes it hard for us to investigate those things that look reasonable on the surface, but have weaknesses just beneath the skin.
+When we know something is ugly or "evil", we're quick to replace it with what we know to be a better solution.  But if we don't know *why* the solution is better, it makes it hard for us to investigate those things that look reasonable on the surface, yet have weaknesses just beneath the skin.
 
 I'll run through a quick example of what I mean, and then, it'll be your turn to run with it and report back here.  While I don't use this approach all the time, I find it's a neat tool to have handy when you're trying to push your understanding of your code just a little bit farther.
 
@@ -26,7 +26,7 @@ It's pretty common knowledge that continuations in Ruby are evil.  But let's pre
   end
 </pre>
 
-This doesn't look so bad.  All we're doing is iterating over a two-dimensional structure and skipping ahead to the next row if there is a problem with any of the fields. But having to pass along the <tt>next_row</tt> callback seems a bit heavy handed.  Preserving the same basic flow, we could be using <tt>catch</tt> / <tt>throw</tt> instead:
+The continuation approach actually doesn't look so bad.  All we're doing is iterating over a two-dimensional structure and skipping ahead to the next row if there is a problem with any of the fields. But having to pass along the <tt>next_row</tt> callback seems a bit heavy handed, and also begs the question of what sort of magic it might be concealing.  Preserving the same basic flow, we could be using <tt>catch</tt> / <tt>throw</tt> instead, lowering the conceptual baggage:
 
 <pre name="code" class="ruby">
   table.each do |row|
