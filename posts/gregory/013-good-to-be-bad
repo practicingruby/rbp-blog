@@ -52,6 +52,7 @@ So, now, we have something that looks more-or-less like a transactional block, w
         do_something_with(field)
       else
         STDERR.puts "skipping a bad row"
+        return
       end
     end
   end
