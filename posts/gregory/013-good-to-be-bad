@@ -74,4 +74,4 @@ Then, try to fix up what you built by using more idiomatic, simpler code.  Your 
 
 What's the difference?  Now, something that used to be a somewhat arbitrary rule to you is now common sense.  As contexts shift, you may need to conduct new experiments, but repeat this exercise often enough and you'll start to see a powerful intuition develop that allows you to internalize your design decisions rather than running through a punch list of patterns.  And at least for me, I find that experience a lot more fun.  I hope you will, too.
 
-If you try out this exercise, please share what you've done, either via a link to your own blog, or a "gist":gist.github.com.  I'm interested in how many bad ideas we can rack up here. :)
+If you try out this exercise, please share what you've done, either via a link to your own blog, or a "gist":http://gist.github.com.  I'm interested in how many bad ideas we can rack up here. :)
