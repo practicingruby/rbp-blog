@@ -1,0 +1,282 @@
+=title Structs inside out
+=timestamp 2009.09.21 23:48 +0200
+=description I will try to expose the utility of class Struct which is part of the standard library.  And it does not even need a require!  Read on for full story.
+=entry
+Today we're back to normal blog mode, where each article stands for itself.  Muppet Labs are closed and we will be continuing our journey across the Ruby universe starting with an indepth look at Ruby's @Struct@ class -- Ruby's Swiss army knife for structured data.
+
+@Struct@ can be used without any additional @require@ statement -- it's just there.  This means it comes with zero additional overhead during initial interpreter startup -- one of the many advantage of using @Struct@.  But first let's look at the basics.
+
+h3. Data Container
+
+Class @Struct@ is a strange beast if you are confronted with it the first time: it has a method @new@ like other classes.  But that method does not return an instance of @Struct@ but rather a class which is a subclass of class @Struct@:
+
+<pre name="code" class="ruby">
+irb(main):001:0> pnt = Struct.new :x, :y
+=> #<Class:0x101c3d68>
+irb(main):002:0> pnt.class
+=> Class
+irb(main):003:0> pnt.ancestors
+=> [#<Class:0x101c3d68>, Struct, Enumerable, Object, Kernel, BasicObject]
+</pre>
+
+Arguments to @Struct.new@ are names of fields that the generated class will have.  These names must be provided as @Symbols@ which makes sense, because these field names are basically identifier you hardcode into the program.  (I will explain later why this is an accurate assessment when I look at @Struct@ vs. @OpenStruct@ vs. @Hash@.)  You must provide them as @Symbols@ because of another peculiarity of @Struct@:
+
+<pre name="code" class="ruby">
+irb(main):001:0> Struct.constants
+=> [:Tms]
+irb(main):002:0> s = Struct.new "Point", :x, :y
+=> Struct::Point
+irb(main):003:0> Struct.constants
+=> [:Tms, :Point]
+irb(main):004:0> t = Struct.new "doesNotWork", :x, :y
+NameError: identifier doesNotWork needs to be constant
+        from (irb):5:in `new'
+        from (irb):5
+        from /usr/local/bin/irb19:12:in `<main>'
+</pre>
+
+I have to say I never used this feature of @Struct@ because
+
+* I don't want all my custom classes in a single namespace because that leads to potential issues,
+* I prefer explicit assignment to constants which makes clearer what's happening.
+
+If someone knows advantages of this auto constantification which I overlooked please let us know via the "comment function":#disqus_thread.  Otherwise I suggest to rely on standard constant magic if you want to name your @Struct@:
+
+<pre name="code" class="ruby">
+irb(main):053:0> pnt.name
+=> nil
+irb(main):054:0> Point = pnt
+=> Point
+irb(main):055:0> pnt.name
+=> "Point"
+</pre>
+
+h3. Behavior
+
+A @Struct@ generated Ruby class is more similar to a C++ struct than to a C struct because it does not only carry data but also functionality.  Some of that is already predefined when @Struct.new@ returns:
+
+<pre name="code" class="ruby">
+irb(main):001:0> pnt = Struct.new :x, :y
+=> #<Class:0x101c2fa0>
+irb(main):002:0> puts pnt.instance_methods(false)
+x
+x=
+y
+y=
+=> nil
+irb(main):003:0> puts Struct.instance_methods(false)
+==
+eql?
+hash
+to_s
+inspect
+to_a
+values
+size
+length
+each
+each_pair
+[]
+[]=
+select
+values_at
+members
+=> nil
+</pre>
+
+These can be devided into two categories:
+
+# methods which originally deal with struct members.
+# methods that allow an instance to mimic behavior of other classes.
+
+h4. Struct Member Behavior
+
+First of all there are attribute accessors (those defined in the @Struct@ generated class, irb listing position 2).  Then there are those methods that make a @Struct@ instance usable as @Hash@ key:
+
+* eql?
+* hash
+
+These are defined in such a way that two @Struct@ instances are equivalent if all of their fields are:
+
+<pre name="code" class="ruby">
+irb(main):014:0> a = pnt.new 1,2
+=> #<struct x=1, y=2>
+irb(main):015:0> b = pnt.new 1,2
+=> #<struct x=1, y=2>
+irb(main):016:0> a.eql? b
+=> true
+irb(main):017:0> a.hash
+=> -1066353017
+irb(main):018:0> b.hash
+=> -1066353017
+</pre>
+
+Method @==@ also implements a similar equivalence relation but with a twist:
+
+<pre name="code" class="ruby">
+irb(main):019:0> b = pnt.new 1.0,2
+=> #<struct x=1.0, y=2>
+irb(main):020:0> a.eql? b
+=> false
+irb(main):021:0> a == b
+=> true
+</pre>
+
+It uses method @==@ of field values internally in the same way as @eql?@ uses @eql?@ of field values.  By providing these methods @Struct@ can save you a lot of tedious typing of pretty dull code that you would hack manually otherwise.  As we all know, the less code we have to write the less errors we can do...
+
+h4. Mimicry
+
+A @Struct@ can -- within certain limits -- mimic an @Array@ as well as a @Hash@:
+
+<pre name="code" class="ruby">
+# Array alike
+irb(main):027:0> a.to_a
+=> [1, 2]
+irb(main):028:0> a[0]
+=> 1
+irb(main):029:0> a[1]
+=> 2
+irb(main):030:0> a.values_at 1,0
+=> [2, 1]
+irb(main):031:0> a.length
+=> 2
+irb(main):032:0> a.size
+=> 2
+irb(main):033:0> a.each {|e| p e}
+1
+2
+=> #<struct x=1, y=2>
+irb(main):034:0> a.select {|e| e % 2 == 0}
+=> [2]
+irb(main):035:0> a << "more" # of course not
+NoMethodError: undefined method `<<' for #<struct x=1, y=2>
+        from (irb):41
+        from /usr/local/bin/irb19:12:in `<main>'
+
+# Hash alike
+irb(main):036:0> a[:x]
+=> 1
+irb(main):037:0> a["x"]
+=> 1
+irb(main):038:0> a.each_pair {|k,v| printf "%p => %p\n",k,v}
+:x => 1
+:y => 2
+=> #<struct x=1, y=2>
+irb(main):039:0> a.keys # not quite
+NoMethodError: undefined method `keys' for #<struct x=1, y=2>
+        from (irb):38
+        from /usr/local/bin/irb19:12:in `<main>'
+irb(main):040:0> a.members
+=> [:x, :y]
+irb(main):041:0> a[:y]=123
+=> 123
+irb(main):042:0> a
+=> #<struct x=1, y=123>
+</pre>
+
+Btw. the generated class also exposes some interesting methods, which do not really need additional explanation:
+
+<pre name="code" class="ruby">
+irb(main):049:0> pnt.members
+=> [:x, :y]
+irb(main):050:0> pnt[10,20] # for lazy typers
+=> #<struct x=10, y=20>
+</pre>
+
+h4. Custom Behavior
+
+From time to time you will want additional methods in your @Struct@ class.  Well, there is a "hidden" feature -- the documentation does not mention it but you can pass a block to @Struct.new@ which will be used as class body:
+
+<pre name="code" class="ruby">
+irb(main):001:0> Point = Struct.new :x, :y do
+irb(main):002:1*   def distance(point)
+irb(main):003:2>     Math.sqrt((point.x - self.x) ** 2 +
+irb(main):004:3*       (point.y - self.y) ** 2)
+irb(main):005:2>   end
+irb(main):006:1> end
+=> Point
+irb(main):007:0> Point[3,4].distance Point[0,0]
+=> 5.0
+</pre>
+
+This obsoletes the frequently seen idiom which uses inheritance from a @Struct@ generated class to add more methods:
+
+<pre name="code" class="ruby">
+irb(main):001:0> class Point < Struct.new(:x, :y)
+irb(main):002:1>   def distance(point)
+irb(main):003:2>     Math.sqrt((point.x - self.x) ** 2 +
+irb(main):004:3*       (point.y - self.y) ** 2)
+irb(main):005:2>   end
+irb(main):006:1> end
+=> nil
+irb(main):007:0> Point[3,4].distance Point[0,0]
+=> 5.0
+</pre>
+
+When using inheritance like this you are wasting resources (a class in this case) and so far I see only one advantage: changing the constructor is a bit easier because the old implementation is available via @super@ without having to resort to @alias@ or reimplementing member initialization.  If you want to have multiple subclasses of a @Struct@ class then inheritance is OK of course.  But in that case I would rather make the super class a named class by assigning it to a constant and use that later when subclassing.
+
+h3. Struct vs. OpenStruct vs. Hash
+
+All three classes offer functionality with some similarities and overlap.  Sometimes you can use them interchangeably.  Still there are some guidelines you can use to decide when to use which of these.  As always -- take these recommendations with a grain of salt.  If you have your own different rules of thumb let us know.
+
+Use @Struct@ if
+
+* you need a data container and fields are fixed and known beforehand (i.e. at time of writing of the code),
+* you need a structured @Hash@ key,
+* you want to quickly define a class with a few fields,
+* you need to detect errors caused by misspelled field names.
+
+Use @OpenStruct@ if
+
+* the number of fields is fixed at runtime but varies frequently during development time (this is often the case for objects that should hold the result of command line option parsing),
+* you need a mock or a want to quickly have objects at hand which can be filled via usual attribute setters and getters.  You might want to replaced with a proper class (or @Struct@) later -- with explicit attribute declarations via @attr_accessor@ and relatives.
+
+Use @Hash@ if
+
+* the number of fields is unknown at coding time,
+* there is a potentially unlimited number of fields (e.g. when reading key values from a file as is often the case for script based text processing).
+
+Now it also becomes apparent why I indicated that @Symbols@ are appropriate for naming @Struct@ fields: when defining a @Struct@ you are actually declaring attributes much the same way as with an ordinary class.  Still, @Struct@ is a bit inconsistent here when it allows @Symbols@ and @Strings@ as keys for the @Hash@ like access via @[]@ and @[]=@.  The convenience of being able to use both probably outweighs this inconsistency.  Overall that @Hash@ likelyness is probably one of the less important features of @Struct@.  You are likely going to use it when refactoring from / to real @Hashes@ of if you have an application that has to deal with several @Structs@ in a uniform way and needs to use metadata (obtained via #members) to access fields.
+
+h3. Deficiencies, any?
+
+My whishlist for @Struct@ is pretty short.  The only thing that I am missing is an equally quick and elegant way to add @Comparable@ functionality to a generated @Struct@ class.  That could be achieved by having something like this:
+
+<pre name="code" class="ruby">
+class Struct
+  def self.comparable
+    define_method :<=> do |o|
+      members.each do |m|
+        c = self[m] <=> o[m]
+        return c unless c == 0
+      end
+      0
+    end
+    include Comparable
+  end
+end
+</pre>
+
+Now we can do
+
+<pre name="code" class="ruby">
+irb(main):014:0> Point = Struct.new(:x, :y).comparable
+irb(main):015:0> puts points = (1..5).map {Point[rand(4), rand(4)]}
+#<struct Point x=3, y=3>
+#<struct Point x=1, y=3>
+#<struct Point x=2, y=3>
+#<struct Point x=1, y=0>
+#<struct Point x=0, y=0>
+=> nil
+irb(main):016:0> puts points.sort
+#<struct Point x=0, y=0>
+#<struct Point x=1, y=0>
+#<struct Point x=1, y=3>
+#<struct Point x=2, y=3>
+#<struct Point x=3, y=3>
+=> nil
+</pre>
+
+h3. Summary
+
+Today we looked at various aspects of Ruby's built in class @Struct@.  @Struct@ allows you to create classes quickly (typically in a one liner) while providing a lot of useful functionality out of the box -- most notably it is the fastest way to get a class suitable as a @Hash@ key (apart from using one of the other built in classes like @String@, @Symbol@ or even @Array@).  If you haven't been using @Struct@ so far you might want to try it out in your next hack.  Enjoy less typing with more @Structs@!

@@ -1,0 +1,270 @@
+=title The Complete Class
+=timestamp 2009.10.24 20:05 +0200
+=description There are a few concepts you have to implement for many classes such as equivalence, hash code calculation etc.  Today I will discuss these and provide a sample class implementation with all of them.
+=entry
+__A remark: we enabled comment moderation because the blog was recently target of spam.  You probably have not seen much of it because we were pretty quick in removing it manually.  So if your comment does not show up please be patient.__
+
+There are some basic concepts (often called "aspects") that need to be implemented for many classes although not all classes need all (or even any) of them:
+
+* initialization
+* conversion to a printable string
+* equivalence
+* hash code calculation
+* comparability
+* cloning (@clone@ and @dup@)
+* freezing
+* customized persistence (@Marshal@ and @Yaml@)
+* matching
+* math and operator overloading
+
+Which of these is needed for a particular class depends of course completely on the circumstances.  Classes which are never written to disk or used in a DRb context will not need customized persistence handling.  For other classes there might not be a reasoable ordering.
+
+We will look at these concepts individually in subsequent sections.  For the sake of this presentation I will create a slightly artificial class which will have particular properties in order to be able to show all the concepts:
+
+* mutable fields
+* redundant fields, i.e. fields which carry cached values that can be derived from other fields
+* at least two fields for ordering priorities
+
+Class @Album@ implements a music album with a title, interpret, sequence of tracks and a fixed pause duration between tracks.  I picked a slightly different approach than Eric in "his article":http://blog.segment7.net/articles/2008/12/17/friendly-ruby-objects in two ways:
+
+* Eric has a stronger focus on collaboration with standard library classes while my guiding question was "what does a class need to be complete and consistent?",
+* I present all the features in a single class to show how aspects play together.
+
+You will likely never implement all these aspects in a single class.  Even for those aspects you do use, you might not use the same implementations I will present.  That's OK.  The implementations presented in this article are intended to cover aspects thoroughly even though you will not always have to do that in practice.  For example, certain code is there in order to make the class work properly as part of an inheritance hierarchy.  If you write a one off class for a script which is never intended for inheritance you can simplify many of the presented methods.
+
+I left out the topic of math and operator overloading since that does not mix well with the concept of music album.  Instead I will cover that in the next article in the blog which will present a class that shows how to override operators in Ruby and that plays well with Ruby's built in numeric classes.
+
+h3. Initialization
+
+Implementing method @initialize@ is typically one of the first things I do when implementing a new class unless I can use the default implementation of @Struct@.  There are a few things though that are worth considering.
+
+First of all, who owns arguments to @initialize@?  It is important to make clear what happens to arguments that are provided to the call to @new@.  There are three cases
+
+# the value is immutable (like @Fixnum@) or
+# the caller retains ownership or
+# ownership is transferred to the new instance.
+
+Case 1 is the simple one: basically you do not need care thinking about who owns the object as there are no bad effects which can be caused by "aliasing":http://en.wikipedia.org/wiki/Aliasing_(computing).  If the instance is mutable these effects can show up.  If you want to make your code as robuts as possible you must ensure you got your own copy of the instance (typically via copying it, for example by using @dup@).  The downside of this is of course that this costs performance as you'll likely copy too many objects.  In practice you will probably most of the time do nothing special and keep the code as simple as an assignment.
+
+<pre name="code" class="ruby">
+class Album
+
+  def initialize(title, interpret, pause = 0)
+    super()
+
+    # main properties
+    self.title = title
+    self.interpret = interpret
+    @tracks = []
+
+    # additional properties
+    self.pause = pause
+
+    # redundant properties
+    # left out
+  end
+
+  def title=(t)
+    @title = t.dup.freeze
+  end
+
+  def interpret=(i)
+    @interpret = i.dup.freeze
+  end
+
+  def pause=(time)
+    @pause = time
+    @duration = nil
+  end
+
+end
+</pre>
+
+The other important aspect is inheritance.  Most classes that are written probably do not have a @super@ in their @initialize@ method.  If there are chances that you reopen the class and add mixin modules you should include @super()@ right from the start because even if you only implicitly inherit @Object@ and @initialize@ in Object does nothing you may later reopen the class and add a mixin module which has an @initialize@ method itself.  If you inherit another class than @Object@ you should explicitly mention arguments with @super@ and not rely on having the same argument list as the super class initializer.  That way you are making the call more explicit and are robust against changes in your @initialize@ method.
+
+<pre name="code" class="ruby">
+class CdAlbum < Album
+  attr_accessor :bar_code
+
+  def initialize(t, i, code)
+    super(t, i, 2)
+
+    self.bar_code = code
+  end
+end
+</pre>
+
+While we're at it: if you write a module which is intended as mixin and needs initialization itself the initializer should simply pass on all arguments in order to be compatible with arbitrary inheritance chains:
+
+<pre name="code" class="ruby">
+module AnotherMixin
+  # Prepare internal state and pass on all
+  # arguments to the super class
+  def initialize(*a, &b)
+    super
+    @list = []
+  end
+end
+</pre>
+
+h3. Conversion to a printable String
+
+Often it is desirable to be able to convert an instance to a human readable string.  Which representation is most appropriate depends on the uses of the class.  One policy is to create a string representation so the instance can be later reconstructed given this string as is the case for all the numeric types from the standard library.  In the case of our sample class we will provide all interesting information:
+
+<pre name="code" class="ruby">
+  def to_s
+    "Album '#{title}' by '#{interpret}' (#{tracks.size} tracks)"
+  end
+</pre>
+
+If you want to reuse a string field as external representation you could copy it in order to avoid bad effects from aliasing.  However, since typically @to_s@ is invoked for printing and no references are held I would say most of the time it is safe to not explicitly copy the field in these cases.
+
+h3. Equivalence
+
+There are two methods that deal with object equivalence @eql?@ and @==@.  (Method @equal?@ tests for object _identity_ and should *not* be overridden.)  Some core classes do have different equivalence relations implemented:
+
+<pre name="code" class="ruby">
+irb(main):003:0> 2 == 2.0
+=> true
+irb(main):004:0> 2.eql? 2.0
+=> false
+</pre>
+
+But most of the time both methods will implement the same equivalence relation.  This also helps avoid confusion.  Note that @eql?@ is special because it is used by @Hash@ and @Set@ to test for instance equivalence.  We will come to that in a minute when we look at hash code calculation.
+
+Equivalence of instances must be tested against significant fields and should ignore redundant fields.  Looking at derived field values does not add anything to equivalence and makes the process slower at best.
+
+<pre name="code" class="ruby">
+  def eql?(album)
+    self.class.equal?(album.class) &&
+      title == album.title &&
+      interpret == album.interpret &&
+      tracks == album.tracks
+  end
+
+  alias == eql?
+</pre>
+
+Now here you see a test for class identity which you likely have not seen in other classes.  Why is it there?  "Mathematical equivalence":http://en.wikipedia.org/wiki/Equivalence_relation is a symmetric relation which means that if @a.eql? b@ returns @true@ so should @b.eql? a@.  Implementing @eql?@ and @==@ that way also helps prevent strange effects when working with @Hash@ instances.  So if you are going to compare two instances of a class and a subclass then you might get @true@ when called on the super class instance and false on the subclass instance.  The same happens for two completely unrelated classes where the set of fields of one instance is a subset of those of the other instance.  You may actually be tricked into thinking they are equivalent because the common fields are equivalent while the two instances represent completely different concepts.  The only way to remedy this is to check for identity of the class.
+
+The reason that omitting the class identity check does not cause issues most of the time is simple: usually you stuff uniform instances into a @Hash@ or @Set@ and even if you mix different classes most of the time they will have different fields and different field values.  Still it is good to remember the point in case you experience unexpected effects with @Hash@ keys.
+
+Note that I omitted the test for self identity which you might be used to from Java classes.  I believe this is a premature optimization because most of the time you are going to test different instances for equivalence so most of the time you pay the penalty of the failing identity check and win only in rare circumstances.
+
+h3. Hash Code Calculation
+
+This topic is closely related to instance equivalence: classes @Hash@, @Array@, @Set@ and other core classes rely on the fact that equivalent instances also return the same hash code.  Note that this is not symmetric: instances wich have the same hash code may actually not be equivalent.  But if the hash code differs they must not be equivalent.
+
+An instance's hash code should be based on the same fields that are used for determining equivalence.  Our class @Album@ has more fields and it is advisable to do some bit operations (often involving XOR) to combine all member hash codes into a single value in order to ensure better diversity of these values.  If you base the hash code only on a single field you increase the likelyhood that non equivalent instances fall into the same bucket of the @Hash@ which makes additional equivalence checks via @eql?@ necessary.  You can find more about how hash tables work on "Wikipedia":http://en.wikipedia.org/wiki/Hash_table.
+
+<pre name="code" class="ruby">
+  def hash
+    title.hash ^
+      interpret.hash ^
+      tracks.hash
+  end
+</pre>
+
+h3. Comparability
+
+Many classes have a natural ordering such as integers which are ordered by their numeric value.  If your class does also have a natural order you can implement operator @<=>@ and include module @Comparable@ to get implementations of @<@, @<=@ etc. for free.
+
+<pre name="code" class="ruby">
+  include Comparable
+
+  def <=>(o)
+    self.class == o.class ?
+      (interpret <=> o.interpret).nonzero? ||
+      (title <=> o.title).nonzero? ||
+      (tracks <=> o.tracks).nonzero? ||
+      (pause <=> o.pause) || 
+      0 :
+      nil
+  end
+</pre>
+
+h3. Cloning
+
+When cloning or duping an instance the default mechanism sets all fields of the new instance to refer to the same objects as the cloned instance.  While this is not an issue with immutable instances (e.g. @Fixnum@ or instances which are frozen) bad things can happen if you have a mutable instance (for example @Array@ or @String@) which is suddenly referenced by two instances which both believe they are the sole owner of it.  All bad effects can happen including violation of class invariants and the instance state likely becomes inconsistent.  Do deal with such cases even for shallow copies such as @#clone@ and @#dup@ you need to copy a bit more.  Fortunately Ruby provides a hook (@#initialize_copy@) which is invoked after the instance has been copied and which can make appropriate adjustments.  In our case we only need top copy the @Array@ of @Track@ instances because all other fields are immutable:
+
+<pre name="code" class="ruby">
+  def initialize_copy(source)
+    super
+    @tracks = @tracks.dup
+  end
+</pre>
+
+There is a "recent discussion on comp.lang.ruby":http://groups.google.com/group/comp.lang.ruby/browse_frm/thread/8a24226a54e79d24/9667453664f2633d#9667453664f2633d that started out with the subject of deep cloning but uncovered some general aspects of cloning.
+
+h3. Freezing
+
+For freezing similar reasoning applies as for cloning: immutable fields need no additional attention as you cannot change those objects anyway.  For others you need to decide how deep you want the freeze to go.  In case of class @Album@ we certainly want to prevent addition of more tracks after an album has been frozen.  We also explicitly trigger calculation of @duration@ so to avoid errors when accessing the duration on the frozen instance; the value cannot change any more anyway.  This also makes it important to invoke @super@ as last method.
+
+<pre name="code" class="ruby">
+  def freeze
+    # unless frozen?
+    @tracks.freeze 
+    duration
+    # end
+
+    super
+  end
+</pre>
+
+Note that the code is robust against multiple invocations of @#freeze@ because duration is calculated only once (on first transition from unfrozen to frozen).  If you have more complex calculations going on that involve state changes of the instance you should place @unless frozen?@ and @end@ around the custom freeze code.
+
+h3. Custom Persistence
+
+If you want to serialize the complete state of your instance there is nothing more to do: you can simply use @Marshal@ and @YAML@ from scratch.  However, if you have redundant data (such as field @duration@ in our case) which you want to omit from the serialization you have to adjust the process yourself.
+
+For @Marshal@ the proper approach is to use the newer approach which invoves writing methods @marshal_dump@ and @marshal_load@.  The former is supposed to return something which is serialized instead of the current instance and the latter is invoked on a new empty object and handed the deserialized object so fields can be initialized properly.
+
+<pre name="code" class="ruby">
+  def marshal_dump
+    a = (super rescue [])
+    a.push(@title, @interpret, @pause, @tracks)
+  end
+
+  def marshal_load(dumped)
+    super rescue nil
+    @title, @interpret, @pause, @tracks = *dumped.shift(4)
+  end
+</pre>
+
+For YAML it is even simpler: you basically just need to ensure @to_yaml_properties@ returns a list of symbols containing only those members that you want serialized.
+
+<pre name="code" class="ruby">
+  def to_yaml_properties
+    a = super
+    a.delete :@duration
+    a
+  end
+</pre>
+
+Both approaches do have their own strengths: with @Marshal@ it is easier to completely replace an object with something else.  While that can be done with @YAML@ as well it is not as simple and elegant as in the case of @Marshal@.  @YAML@ on the other hand shines because you need to override only a single method.
+
+One word about the implementations: while these methods could look simpler I picked an approach which also works when inheritance comes into play.  You can repeat the pattern of @marshal_dump@, @marshal_load@ and @to_yaml_properties@ throughout a class hierarchy and still have each method only deal with fields of the class in which it is defined.  That makes it easier to deal with later additions or removals of fields in some class in the hierarchy.  This is even more so important when dealing with mixin modules, which can happen on a per instance basis (via @#extend@).
+
+h3. Matching
+
+I use the term "matching" for the functionality of the three equals operator (@===@) and for the matching operator (@=~@).  The first is used in @case@ statements and with @Array#grep@ while the latter is usually used only explicitly.
+
+The semantic is completely up to the class at hand and there are no general guidelines that could be given.  Implement it when it is reasonable for your class.  If you want to elegantly use instances of your class in @case@ expressions you have to implement @===@ doing something meaningful.
+
+<pre name="code" class="ruby">
+  # Check whether we have that track or track title by title.
+  def ===(track_or_title)
+    t = (track_or_title.title rescue track_or_title)
+    tracks.find {|tr| t == tr.title}
+  end
+
+  # Match title against regular expression.
+  def =~(rx)
+    rx =~ title
+  end
+</pre>
+
+h3. Summary
+
+Today we looked at a class which implements various common aspects that you will meet over and over again when coding Ruby.  Many of these are in fact present in other programming languages as well: Java has serialization, @equals@ and hash code calculation.  C++ also has an equivalence operator and other operators that can be overloaded to implement ordering etc.  You can find the "full code of the class":http://gist.github.com/217641 at github.
+
