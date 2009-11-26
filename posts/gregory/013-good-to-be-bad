@@ -26,7 +26,7 @@ It's pretty common knowledge that continuations in Ruby are evil.  But let's pre
   end
 </pre>
 
-The continuation approach actually doesn't look so bad.  All we're doing is iterating over a two-dimensional structure and skipping ahead to the next row if there is a problem with any of the fields. But having to pass along the <tt>next_row</tt> callback seems a bit heavy handed, and also begs the question of what sort of magic it might be concealing.  Preserving the same basic flow, we could be using <tt>catch</tt> / <tt>throw</tt> instead, lowering the conceptual baggage:
+The continuation approach actually doesn't look so bad.  All we're doing is iterating over a two-dimensional structure and skipping ahead to the next row if there is a problem with any of the fields. But having to pass along the <tt>next_row</tt> callback seems a bit heavy handed, and also makes one wonder what sort of magic it might be concealing.  Preserving the same basic flow, we could be using <tt>catch</tt> / <tt>throw</tt> instead, lowering the conceptual baggage:
 
 <pre name="code" class="ruby">
   table.each do |row|
