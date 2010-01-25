@@ -57,13 +57,13 @@ We also took a look at "rvm":http://rvm.beginrescueend.com/ , which is another n
 
 Between these three tools, the students ended up with all they needed to explore the different implementations and versions for themselves.   But that was really just the beginning.   David then went on to discuss the various peculiarities across the board, and was sure to discuss where certain implementations or versions excel, and where they fall behind.
 
-I'm happy to say that while very students in our class had even tried Ruby 1.9 before our training, every one of them had the opportunity to do so before this session ended.
+I'm happy to say that while very few of the students in our class had even tried Ruby 1.9 before our training, every one of them had the opportunity to do so before this session ended.
 
 h4. Meta-programming
 
 At one point in time, everyone using Ruby thought meta-programming was some sort of magic.  But in a post-Rails world, it is increasingly easy to help folks understand that all of this "voodoo" we do is really just making use of public method calls provided by Ruby objects that allow you to modify Ruby itself.  Once a decent understanding of Ruby's object model is established, all of the rest of the puzzle pieces just seem to fall into place.  
 
-This session had a lot of great discussions, and several exercises to encourage students to actively learn the tricks of the trade.   Along the way, we stumbled across this interesting distinction between <tt>undef_method</tt> and </tt>remove_method<tt>:
+This session had a lot of great discussions, and several exercises to encourage students to actively learn the tricks of the trade.   Along the way, we stumbled across this interesting distinction between <tt>undef_method</tt> and <tt>remove_method</tt>:
 
 <pre name="code" class="ruby">
   class A
@@ -109,7 +109,7 @@ Finally, David gave an open ended testing exercise that was a big hit.   Pizza c
 
 h4. Style and Substance
 
-This was my topic, and it went way better than I could have expected it to.  I had a lot more content prepared than what I ended up getting to, mainly because we decided to collect some of the open questions that had come up in class and discuss those before running our scheduled content.  The infamous class variable problem was discussed in great deal, and while I thought I had mastered their weaknesses, I even managed to mess up one of my assumptions about their behavior.  Incase you've never been exposed to this fun before:
+This was my topic, and it went way better than I could have expected it to.  I had a lot more content prepared than what I ended up getting to, mainly because we decided to collect some of the open questions that had come up in class and discuss those before running our scheduled content.  The infamous class variable problem was discussed in great detail, and while I thought I had mastered their weaknesses, I even managed to mess up one of my assumptions about their behavior.  Incase you've never been exposed to this fun before:
 
 <pre name="code" class="ruby">
   class A
