@@ -1,0 +1,179 @@
+=title Reflections from "The Compleat Rubyist"
+=timestamp 2010-01-25 15:36 UTC
+=description
+Reflections on our recent training event <a href="http://thecompleatrubyist.com">The Compleat Rubyist</a>, held January 22-23 in Tampa, FL.   Everybody learned a ton, including us instructors.
+=entry
+Ever since 2005, I've been attending and speaking at Ruby events.  But the one thing I always wanted to do was run training sessions.  Thankfully, over the last couple years, LSRC has allowed me to get my feet wet -- but only as one of many excellent choices in a lineup of Ruby's best and brightest.  Until last weekend, I had never participated in professional training event that stood on its own.
+
+What eventually became "The Compleat Rubyist" training, was originally an idea for "The Compleat Rubyist" book promotion.  Jeremy McAnally, David A. Black, and myself have all written Ruby books, and they seem to compliment each other well.  But in doing this, we realized that it would be more valuable, and more fun, to bring our show out on the open road rather than package it up in a box set.
+
+Thus, our training event was born, and we set our sights on Tampa, FL for its first incarnation.
+
+h3. The Training
+
+Both David and Jeremy have professional training experience, and it felt good to take advantage of their experience there.  David had suggested that rather than having a linear, specific set of bullet points to teach from, that we could break our training into four half-day sessions that were representive of some of the most important topics in the Ruby community.  This would give us a lot of leeway to adjust our materials and discussions based on individual student needs.   The topics we picked were "Ruby Versions and Implementations", "Metaprogramming", "Testing", and "Style and Substance".   Though these may seem a bit amorphous on first sight, they do a pretty good job of covering four key topics that a budding Rubyist must understand and come to appreciate.
+
+Here are just a few thoughts from each of the modules, after seeing how things played out in class.
+
+h4. Ruby Versions and Implementations
+
+One of the main things that keep people from trying out the alternative Ruby implementations and the various versions of Ruby is that they're understandably afraid of messing up their systems.  So David took a three-pronged approach to helping students overcome that fear.  
+
+The easiest stepping stone, perhaps, was to use <a href="http://ruby-versions.net/">ruby-versions.net</a>.  This great resource (maintained by David), lets you try out all sorts of ruby versions and implementations via a shell account so that you don't need to worry about touching anything on your own machine.  While this isn't meant to be a long term solution, it's probably the easiest way that you can try out pretty much any version of Ruby without having to go hunt down, install, and configure their packages.
+
+In addition to this, David showed folks how to make use of multiruby (a tool that's part of ZenTest).  My favorite example of the whole day was one showing that using Ruby 1.8.7, it's possible to write code that works on neither 1.8.6 nor 1.9.1, which lead into a whole other interesting discussion:
+
+<pre name="code" class="ruby">
+  $ multiruby -e "p 'hello'.map(&:upcase)"
+
+  VERSION = 1.8.6-p388
+  CMD     = ~/.multiruby/install/1.8.6-p388/bin/ruby -e p 'hello'.map(&:upcase)
+
+  -e:1: wrong argument type Symbol (expected Proc) (TypeError)
+
+  RESULT = pid 3988 exit 1
+
+  VERSION = 1.8.7-p249
+  CMD     = ~/.multiruby/install/1.8.7-p249/bin/ruby -e p 'hello'.map(&:upcase)
+
+  ["HELLO"]
+
+  RESULT = pid 3991 exit 0
+
+  VERSION = 1.9.1-p378
+  CMD     = ~/.multiruby/install/1.9.1-p378/bin/ruby -e p 'hello'.map(&:upcase)
+
+  -e:1:in `<main>': undefined method `map' for "hello":String (NoMethodError)
+
+  RESULT = pid 3995 exit 1
+
+  TOTAL RESULT = 2 failures out of 3
+
+  Passed: 1.8.7-p249
+  Failed: 1.8.6-p388, 1.9.1-p378
+</pre>
+
+We also took a look at "rvm":http://rvm.beginrescueend.com/ , which is another neat tool for managing multiple Ruby versions.  While not necessarily a tool for every possible need, it is a very easy way of managing multiple rubies side by side without trashing your system-wide configurations.
+
+Between these three tools, the students ended up with all they needed to explore the different implementations and versions for themselves.   But that was really just the beginning.   David then went on to discuss the various peculiarities across the board, and was sure to discuss where certain implementations or versions excel, and where they fall behind.
+
+I'm happy to say that while very students in our class had even tried Ruby 1.9 before our training, every one of them had the opportunity to do so before this session ended.
+
+h4. Meta-programming
+
+At one point in time, everyone using Ruby thought meta-programming was some sort of magic.  But in a post-Rails world, it is increasingly easy to help folks understand that all of this "voodoo" we do is really just making use of public method calls provided by Ruby objects that allow you to modify Ruby itself.  Once a decent understanding of Ruby's object model is established, all of the rest of the puzzle pieces just seem to fall into place.  
+
+This session had a lot of great discussions, and several exercises to encourage students to actively learn the tricks of the trade.   Along the way, we stumbled across this interesting distinction between <tt>undef_method</tt> and </tt>remove_method<tt>:
+
+<pre name="code" class="ruby">
+  class A
+    def foo
+      "bar"
+    end
+  end
+
+  class B < A
+    def foo
+      "baz"
+    end
+
+    remove_method :foo
+  end
+
+  class C
+    def foo 
+      "bar"
+    end
+  end
+
+  class D < C
+    def foo
+      "baz"
+    end
+
+    undef_method :foo
+  end
+
+  p B.new.foo # "bar"
+
+  p D.new.foo # raise NoMethodError
+</pre>
+
+h4. Testing
+
+Fortunately, virtually all of our students had experience with test driven development of some sort or another.  I think that's a big difference between the Ruby ecosystem today and of say, 5 years ago.  But similar to versions and implementations, there are so many choices out there that it's hard to know what's what.  Jeremy kicked off this module with a state of the union address, breaking down the various different philosophies and toolchains there are out there, and what each of them bring to the table.
+
+Once we got people thinking about the different options for testing out there, we decided to give them a glimpse behind the curtain to realize just how non-magical testing could be.  To do this, we demonstrated not one, but two minimal testing frameworks that we built in less than a page or two of code to demonstrate the key concepts.  While neither of these tools would be sensible to use in production, they both show how non-magical a test runner is under the hood.
+
+Finally, David gave an open ended testing exercise that was a big hit.   Pizza came, but some of our students ignored it until we reminded them to take a break.   Many kept working on through lunch, all pairing together and actively discussing all sorts of language questions that went far beyond the scope of the exercise.
+
+h4. Style and Substance
+
+This was my topic, and it went way better than I could have expected it to.  I had a lot more content prepared than what I ended up getting to, mainly because we decided to collect some of the open questions that had come up in class and discuss those before running our scheduled content.  The infamous class variable problem was discussed in great deal, and while I thought I had mastered their weaknesses, I even managed to mess up one of my assumptions about their behavior.  Incase you've never been exposed to this fun before:
+
+<pre name="code" class="ruby">
+  class A
+    @@foo = "from A"
+  end
+   
+  class B < A
+    @@foo = "from B"
+  end
+   
+  # What's the value of @@foo in A now...?
+   
+  class A
+    puts @@foo
+  end
+   
+  # => from B
+   
+  # They're shared up the hierarchy?? BOOOO!!!
+  # What's even worse? This ->
+   
+  class C
+  end
+   
+  class D < C
+    @@bar = "Magically different..."
+  end
+   
+  class C
+    @@bar = "And delicious."
+  end
+   
+  class D
+    puts @@bar
+    # => Magically different...
+  end
+   
+  class C
+    puts @@bar
+    # => And delicious.
+  end
+   
+  # ZOMG THEY'RE NOT SHARED NOW.
+</pre>
+
+Of course, the only sensible style advice here is to not use class variables at all, and since class instance variables can do the job just as well, that's not really a big deal.  We discussed how to do that, and then moved on to the regularly scheduled content.
+
+I'm not sure whether we had an especially strong set of students or if people are just starting to "get" basic Ruby style idioms, but based on the first day and a half, it was evident that our students didn't need to be told these basic things.   Instead, I talked about "Ruby Style and Substance" at a more philosophical and design-oriented level, which is where I think our community tends to be weakest.  Without giving too much away, a lot of my examples stemmed from discussions we've been having about refactoring Prawn before it's 1.0 release, so you can check out our mailing list for a whole bunch of interesting design discussions if you want access to some of the raw materials I used for this session.
+
+In the end, we gave everyone a chance to try their hand at basic API design for a fictional library we cooked up.  I'm proud to say that every one of our students produced something that would be passable in an open source project.  Ideally speaking, I'd like to say some of them took inspiration from what they learned in class, but no matter how they ended up there, I'm happy to see people writing code that looks like it comes from Ruby. This is especially encouraging considering that every one of our students came to Ruby after Rails was popularized.
+
+h3. The Event
+
+We wanted "The Compleat Rubyist" to be not just a training, but an "event" as well.  Because we were trying to keep registration costs low, we didn't have much officially scheduled for this, but Tampa.rb really helped us pull through.  Folks congregated at the nearby bar and restaurant Bahama Breeze from the time class ended until late into the evening Friday night.   It was nice to have a mixture of students from the training and locals who just stopped by to hang out and say hi.  I can honestly say that the sort of conversations I was having that night were on par with any I've had at the various conferences I've been at, but without all the associated commotion.
+
+Pizza lunch on Saturday was a great way for us to leave a large chunk of semi-unscheduled time to discuss whatever topics students had on their mind.  With a relatively small class size, I was able to get to know a number of the attendees, unlike my experience at most conferences these days.  
+
+While I expected to have a good time, I ended up having a blast.  Based on my discussions with Jeremy and David, and the feedback from our students, I gather most others did as well.
+
+h3. The Future
+
+While the Tampa, FL Compleat Rubyist event is now a thing of the past, we're already thinking about how we can bring this session to other places.  I was a little worried before the event that I wouldn't want to just go somewhere else and do the same show, but now I know that every one of these is going to be different, since so much of the content was based on interaction with our attendees.
+
+So, if the stuff I've said here interests you, you should follow <a href=http://twitter.com/compleatrubyist>compleatrubyist on twitter</a>.  We used our account actively during the event to share various little tips, and probably will continue to do that over time.  But that's also the place where you'll see announcements about upcoming events, or ask us any questions you might have.
+
+While I don't typically like to use this blog for active marketing, I can honestly say that "The Compleat Rubyist" was a lot of fun, and that I think our students learned a ton.  If folks like these summaries, I'll try to get one out after each event.  But it will be more fun, of course, if you come join us!   
+
