@@ -1,0 +1,25 @@
+=title Weekend Reading: RBP Chapter 1
+=timestamp 2010-01-29 14:32 UTC
+=description
+From the time I began writing the "Ruby Best Practices" book, I knew I'd eventually release it under a Creative Commons license.  It's now time to start that process.  This post releases the book's first chapter, "Driving Code Through Tests".
+=entry
+
+If you're reading this blog, you're probably aware the the "Ruby Best Practices":http://oreilly.com/catalog/9780596523015 book exists.  Even if you haven't read it, you probably have a sense for the sort of topics we cover based on the content you've seen on this blog. But now, everyone is going to get a chance to read RBP the way its meant to be read: as a conversation.  
+
+For the next 8 weeks, I will post a chapter from RBP every Friday.  You don't need to pay me a cent if you download it, but what I do want you to do is leave a comment here sharing your thoughts once you've finished reading.  This way, we can use the RBP's content as a jumping off point for conversation, rather than treating it like some sort of static rulebook. Through this process, we can discover what our common practices really are.  Over time, I will incorporate these ideas back into the manuscript, helping to keep the book up to date and relevant.
+
+h3. Today's Topic
+
+The first chapter I am releasing is <a href="http://sandal.github.com/rbp-book/pdfs/ch01.pdf">Driving Code Through Tests</a>,  which covers a number testing philosophies and techniques.  It aims to be framework agnostic, but leans on the Test::Unit API for its examples.  The core idea of this chapter is to expose folks to the "spirit" of testing, rather than just the mechanics of it.
+
+Upon re-reading this chapter in the winter of 2010 having written it in the spring of 2008, there are definitely a couple things I think differently about now.  But as it turns out, I was more surprised by how much hasn't changed, and how well this chapter seems to have stood the test of time.  Of course, you may disagree, and I encourage you to tell me so if that's the case. :)
+
+Ready to get started?  Go ahead and <a href="http://sandal.github.com/rbp-book/pdfs/ch01.pdf">download the chapter</a> now.  Remember, if you click that link, I'm expecting you to post back here with your thoughts (or alternatively, write a response on your own blog and send me a link).  If you find a technical error, you can report it via <a href="http://github.com/sandal/rbp-book/issues">Github issues</a>.
+
+h3. For Your Consideration
+
+O'Reilly is being really nice to me by letting me give away my book, especially considering that I haven't quite cleared my advance yet.  So if you like what you see, and want to be able to read it all now instead of waiting eight weeks for it, please consider buying the book.  You can get it <a href="http://oreilly.com/catalog/9780596523015">directly from the publisher</a> or via <a href="http://www.amazon.com/Ruby-Best-Practices-Gregory-Brown/">amazon</a>.  While I do make a little more money when you buy from O'Reilly, I wasn't expecting to get rich off of RBP, so don't feel bad buying the discounted copies from Amazon.  But I'm pretty sure that seeing a spike in sales would encourage them to do more open source books, so... keep that in mind.
+
+For those wishing to do interesting things with this material, note that it is released under the "Creative Commons NC-SA":http://creativecommons.org/licenses/by-nc-sa/3.0/ license.  This will become immensely more useful once the source documents are posted in late March, but if you've got any questions at all about this, you can ask me, and I'll ask my publisher, and we'll get back to you.
+
+_Anyway that's all for now, enjoy the chapter and let me know what you think!_
