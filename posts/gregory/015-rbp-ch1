@@ -4,9 +4,9 @@
 From the time I began writing the "Ruby Best Practices" book, I knew I'd eventually release it under a Creative Commons license.  It's now time to start that process.  This post releases the book's first chapter, "Driving Code Through Tests".
 =entry
 
-If you're reading this blog, you're probably aware the the "Ruby Best Practices":http://oreilly.com/catalog/9780596523015 book exists.  Even if you haven't read it, you probably have a sense for the sort of topics we cover based on the content you've seen on this blog. But now, everyone is going to get a chance to read RBP the way its meant to be read: as a conversation.  
+If you're reading this blog, you probably know that the "Ruby Best Practices":http://oreilly.com/catalog/9780596523015 book exists.  Even if you haven't read it, you might have a sense for the sort of topics we cover based on the content you've seen on this blog. But now, everyone is going to get a chance to read RBP the way its meant to be read: as a conversation.  
 
-For the next 8 weeks, I will post a chapter from RBP every Friday.  You don't need to pay me a cent if you download it, but what I do want you to do is leave a comment here sharing your thoughts once you've finished reading.  This way, we can use the RBP's content as a jumping off point for conversation, rather than treating it like some sort of static rulebook. Through this process, we can discover what our common practices really are.  Over time, I will incorporate these ideas back into the manuscript, helping to keep the book up to date and relevant.
+For the next 8 weeks, I will post a chapter from RBP every Friday.  You don't need to pay me a cent if you download it, but what I do want you to do is leave a comment here sharing your thoughts once you've finished reading.  This way, we can use RBP's content as a jumping off point for conversation, rather than treating it like some sort of static rulebook. Through this process, we can discover what our common practices really are.  Over time, I will incorporate these ideas back into the manuscript, helping to keep the book up to date and relevant.
 
 h3. Today's Topic
 
