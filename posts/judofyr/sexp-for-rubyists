@@ -1,0 +1,241 @@
+=title Sexp for Rubyists
+
+=timestamp 2010-02-04 21:00 GMT
+
+=description
+
+<em>Sorry to interrupt you, but you've totally lost me. What <strong>is</strong> this "Sexp"
+you're speaking of? I've heard it before, but never quite understood it...</em>
+
+
+=entry
+
+_Sorry to interrupt you, but you've totally lost me. What *is* this "Sexp"
+you're speaking of? I've heard it before, but never quite understood it..._
+
+Oh, don't feel sorry!  It's still quite esoteric for Rubyists.
+
+_Yeah..._
+
+Okay.  Let's start at the beginning.  Lisp!
+
+_With all the parenthesis?_
+
+Bingo!  Have you tried it?
+
+_Not really.  It seems a little too "hardcore", if you know what I mean?_
+
+Ah, yes. It's just a neat little language, nothing to be afraid of. Let me
+show you an example:
+
+<pre>
+(define (plus-five n)
+  (+ n 5))
+</pre>
+
+_It's a method that adds five to the argument?  Like this:_
+
+<pre name="code" class="ruby">
+def plus_five(n)
+  n + 5
+end
+</pre>
+
+Yep, but more importantly: It's also an example of S-expressions. Because Sexp
+is really just a data format.
+
+_Data format?  Like YAML?_
+
+Just like YAML.  It has support for numbers, symbols, pairs, lists and nil.
+
+_Really?_
+
+Let me explain a few more things. You see, Lisp wasn't originally supposed to
+be programmed in S-expression. Nope, the idea was to have complex,
+human-readable _M-expressions_ which should manipulate data in S-expressions.
+
+<pre>
+    Data  =  S-expressions
+    Code  =  M-expressions
+</pre>
+
+Another idea was that M-expressions could easily be compiled into
+S-expressions. So the computer itself would only work with S-expressions,
+while humans could focus on M-expressions.
+
+<pre>
+    M-expressions  -->   S-expressions
+</pre>
+
+However, the first Lisp implementations only accepted S-expressions since it
+was easier to start from there and rather add M-expression support later.
+
+_So what happend with these M-expressions?_
+
+They were "receded into the indefinite future" as the creator, John McCarthy,
+said. It turned out that S-expressions were readable enough.
+
+_Go on, please._
+
+Now Lisp suddenly used S-expressions for both code and data. The interesting
+thing is how code was represented in Lisp. It's in fact very simple: The first
+element in the list is the operator/function and the rest is the
+operands/arguments:
+
+<pre>
+    (+ 1 2)
+    (plus-five 5)
+    (factorial 10)
+</pre>
+
+This makes Lisp a very simple language to implement. You need very few
+primitives before you have a fully working Lisp system. In fact, I would
+recommend watching James Coglan's screencast. There isn't any audio since he
+used it in a talk he gave, but it's still fairy interesting.
+
+<object width="581" height="421"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=4339116&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=00ADEF&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=4339116&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=00ADEF&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="581" height="421"></embed></object><p><a href="http://vimeo.com/4339116">Scheme interpreter in 15 minutes</a> from <a href="http://vimeo.com/jcoglan">James Coglan</a> on <a href="http://vimeo.com">Vimeo</a>.</p>
+
+_Wow.  I must definitely check out Lisp._
+
+Indeed. He's also written a "real" Lisp implementation in Ruby if you're
+interested: "Heist":http://github.com/jcoglan/heist. Oh, and I'll also have to
+recommend "The Little Schemer":http://www.ccs.neu.edu/home/matthias/BTLS/ by
+Daniel P. Friedman and Matthias Felleisen, it has inspired me in several
+ways...
+
+_I will, but back to Sexp?_
+
+No.  Let's talk about AST.
+
+_AST? While *I* certainly appreciate these digressions, (_whispers_) others
+might be a little bored, you know?_
+
+Don't worry, this is pretty essential. An Abstract Syntax Tree is a tree
+representation of source code. Compilers and interpreters never work directly
+on the source code, but parses it into an AST which is much easier work with.
+Your Ruby example above could look something like:
+
+<pre>
+[Def,
+  plus_five
+  [n]
+  [Call, n, +, [[Lit, 5]]]]
+</pre>
+
+The basic idea here is that we only deal with _nodes_ like Def, Call and Lit,
+and every node has a set of _children_. In this tree the nodes are built like
+this:
+
+<pre>
+[Def, method_name, arguments, body] # => def method_name(*arguments); body; end
+[Lit, number]                       # => (integer)
+[Call, receiver, method_name, arguments] # => receiver.method_name(*arguments)
+</pre>
+
+_I think I get your point.  This is very similar to S-expressions!_
+
+<pre>
+(def plus_five (n)
+  (call n + 5))
+</pre>
+
+Yes! It turns out that S-expressions are excellent to represent abstract
+syntax trees. And when compiler gurus talk about S-expressions, they don't
+talk about the file format, they talk about the way Lisp represent it's code:
+The first element in the list is the operator/function and the rest are the
+operands/arguments.
+
+_So S-expressions themselves aren't very exciting, it all depends on what you
+put in them?_
+
+Exactly.  The Sexp-class basically looks like this:
+
+<pre name="code" class="ruby">
+class Sexp < Array
+  def sexp_type
+    self[0]
+  end
+  
+  def sexp_body
+    self[1..-1]
+  end
+end
+</pre>
+
+A glorified Array.  That's all there is to it.
+
+_And what do people put in these Sexps?_
+
+Let me show you an example. First, @gem install ruby_parser@. Then:
+
+<pre name="code" class="ruby">
+require 'ruby_parser'
+require 'pp'
+
+pp RubyParser.new.parse(<<-EOF)
+def plus_five(n)
+  n + 5
+end
+EOF
+</pre>
+
+_Interesting:_
+
+<pre>
+s(:defn,
+ :plus_five,
+ s(:args, :n),
+ s(:scope,
+   s(:block,
+     s(:call, s(:lvar, :n), :+, s(:arglist, s(:lit, 5))))))
+</pre>
+
+This is the _syntatic_ strucure of our code. It's not possible to reconstruct
+the original snippet character-by-character; you only get what the
+compiler/interpreter/virtual machine actually sees. And often that's exactly
+the only thing we want.
+
+_Aha.  Who decided this structure and these names by the way?_
+
+Well, I'm not quite certain, but I believe ParseTree by Ryan Davis started it
+all.
+
+_Oh, ParseTree sounds familiar._
+
+It extracts the raw AST that Ruby 1.8 uses internally. It's not very elegant,
+so Ryan also wrote UnifiedRuby which cleans it up a bit. RubyParser returns
+such a cleanup up Sexp.
+
+_And what do people use these cleaned up Sexps for?_
+
+There's plenty of projects floating around, here's some I've heard of:
+
+* "Flog":http://ruby.sadi.st/Flog.html analyzes your code and shows how complex your methods are, and which you should refactor.
+* "Flay":http://ruby.sadi.st/Flay.html analyzes your code for structural similarities, ready to be DRYed out!
+* "Roodi":http://github.com/martinjandrews/roodi warns you about design issues.
+* "Reek":http://github.com/kevinrutherford/reek detects code smells.
+* "Saikuro":http://saikuro.rubyforge.org/ is a "cyclomatic complexity analyzer".
+* "Ambition":http://ambition.rubyforge.org/ let's you write SQL statements as Ruby blocks.
+* "Parkaby":http://github.com/judofyr/parkaby compiles Markaby-like code into super-fast code.
+* "RewriteRails":http://github.com/raganwald/rewrite_rails adds syntactic abstractions (like Andand) to Rails projects without monkey-patching.
+
+_Cool, that's more than I thought._
+
+And if more people knew about them, I guess there would be even more.
+
+_Let me recap:_
+
+_For Rubyists, Sexp is an Array-ish list where the first element is the
+operator/function and the rest is the operands/arguments. The arguments can
+also contain other Sexp. When I think about it, that's probably the most
+important thing: They are nested._
+
+_I guess it's mostly useful when we're actually manipulating code that
+executes. Like source code or templates?_
+
+Exactly!
+
+_Ah, excellent.  Why were we talking about Sexps again?_
+
+Hm.. Now that's a good question. I simply don't remember. Let's talk about it
+another time, shall we?
