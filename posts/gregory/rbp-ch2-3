@@ -1,0 +1,25 @@
+=title Weekend Reading: RBP Chapters 2-3
+=timestamp 2010-02-05 14:00 UTC
+=description
+Releasing Chapter 2 and 3 of my book, "Ruby Best Practices".  Last week's comments on Chapter 1 were great, so hopefully we can keep that up this week.
+=entry
+
+If you're reading this blog, you probably know that the "Ruby Best Practices":http://oreilly.com/catalog/9780596523015 book exists.  Even if you haven't read it, you might have a sense for the sort of topics we cover based on the content you've seen on this blog. But now, everyone is going to get a chance to read RBP the way its meant to be read: as a conversation.  
+
+If you missed <a href="http://www.blog.rubybestpractices.com/posts/gregory/015-rbp-ch1.html">last week's post</a>, which introduces chapter 1, you'll want to check that out.  There was some great discussion among readers that add a lot to what I had to say in the book.  I expect we'll see the same thing happen this time around, so please don't forget to share your thoughts after reading the material released this week.
+
+h3. Today's Topics
+
+This week, I'm releasing two chapters, <a href="http://sandal.github.com/rbp-book/pdfs/ch02.pdf">Designing Beautiful APIs</a> and <a href="http://sandal.github.com/rbp-book/pdfs/ch03.pdf">Mastering the Dynamic Toolkit</a>.  Incase the latter sounds familiar, it is indeed the book's sample chapter.  But it also happens to be my favorite chapter in the book, so I didn't want to skip over it without a chance for discussion.
+
+So remember, if you click those links, your responsibility is to participate in the discussion here by offering up your thoughts about what you've read.  Best practices cannot be rules that are simply absorbed and followed if they are to be of any use... instead, they must be extracted from and influenced by those who work with the real problems that they are meant to solve.  
+
+Even if you don't have direct comments about the book chapters, but instead would like to share your experiences with the topics they cover, that would be great.
+
+h3. For Your Consideration
+
+O'Reilly is being really nice to me by letting me give away my book, especially considering that I haven't quite cleared my advance yet.  So if you like what you see, and want to be able to read it all now instead of waiting eight weeks for it, please consider buying the book.  You can get it <a href="http://oreilly.com/catalog/9780596523015">directly from the publisher</a> or via <a href="http://www.amazon.com/Ruby-Best-Practices-Gregory-Brown/dp/0596523009">amazon</a>.  While I do make a little more money when you buy from O'Reilly, I wasn't expecting to get rich off of RBP, so don't feel bad buying the discounted copies from Amazon.  But I'm pretty sure that seeing a spike in sales would encourage them to do more open source books, so... keep that in mind.
+
+For those wishing to do interesting things with this material, note that it is released under the "Creative Commons NC-SA":http://creativecommons.org/licenses/by-nc-sa/3.0/ license.  This will become immensely more useful once the source documents are posted in late March, but if you've got any questions at all about this, you can ask me, and I'll ask my publisher, and we'll get back to you.
+
+_Anyway that's all for now, enjoy the chapters and let me know what you think!_
