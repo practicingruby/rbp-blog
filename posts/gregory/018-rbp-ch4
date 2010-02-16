@@ -3,14 +3,26 @@
 =description
 After a short delay, the <i>Text Processing and File Management</i> chapter of <i>Ruby Best Practices</i> is now available for you to read and discuss.
 =entry
-If you're reading this blog, you probably know that the "Ruby Best Practices":http://rubybestpractices.com book exists.  Even if you haven't read it, you might have a sense for the sort of topics we cover based on the content you've seen on this blog. But now, everyone is going to get a chance to read RBP the way its meant to be read: as a conversation.  
+If you're reading this blog, you probably know that the "Ruby Best Practices":http://rubybestpractices.com book exists.  Even if you haven't read it, you might have a sense for the sort of topics we cover based on the content you've seen on this blog. But now, everyone is going to get a chance to read RBP the way its meant to be read: as a conversation. 
+
+h3. Progress so far.
 
 We've already released the first three chapters, and discussion has been great.  If you haven't seen them already, check out the first week's <a href="http://blog.rubybestpractices.com/posts/gregory/015-rbp-ch1.html">discussion on testing</a>, and then head over and look at the <a href="http://blog.rubybestpractices.com/posts/gregory/rbp-ch2-3.html">double header on API design and metaprogramming</a>.  These discussions should give you a sense of the wide range of ideas our readers have been sharing as a result of this book study.
 
+h3. How To Read RBP
+
 Readers are encouraged to <a href="http://jsomers.net/blog/kenjitsu">fight RBP as they read it</a>, rather than just soaking up the information.  Although I claim this book is about "Best Practices", the only reason that is true is that it's a result of countless conversations with folks who are deep in the Ruby trenches getting stuff done.  The only way for RBP to remain current and relevant is to continue these discussions, using its content as a jumping off point for fresh ideas.
 
-So, if you're willing to participate in the discussion afterwards, go ahead and <a href="http://sandal.github.com/rbp-book/pdfs/ch04.pdf">download Chapter 4 now</a>.  Don't worry if it takes you more than a few days finish reading it, you can come back and comment any time.
+h3. Today's Topic
+
+If you're willing to participate in the discussion afterwards, go ahead and <a href="http://sandal.github.com/rbp-book/pdfs/ch04.pdf">download Chapter 4 now</a>.  Don't worry if it takes you more than a few days finish reading it, you can come back and comment any time.
 
 While chapters 2 and 3 were about somewhat subtle features, this chapter is as concrete as they come.  Those with some Perl blood in them should find it familiar, as it's all about how to munge text and move stuff around on your filesystem.  But those who struggle with the scripting side of Ruby should find a number of techniques that will make their job easier.
 
 Enjoy, and come back next Tuesday (2010.02.23) for Chapter 5, "Functional Programming Techniques".
+
+h3. For Your Consideration
+
+O'Reilly is being really nice to me by letting me give away my book, especially considering that I haven't quite cleared my advance yet.  So if you like what you see, and want to be able to read it all now instead of waiting eight weeks for it, please consider buying the book.  You can get it <a href="http://oreilly.com/catalog/9780596523015">directly from the publisher</a> or via <a href="http://www.amazon.com/Ruby-Best-Practices-Gregory-Brown/dp/0596523009">amazon</a>.  While I do make a little more money when you buy from O'Reilly, I wasn't expecting to get rich off of RBP, so don't feel bad buying the discounted copies from Amazon.  But I'm pretty sure that seeing a spike in sales would encourage them to do more open source books, so... keep that in mind.
+
+For those wishing to do interesting things with this material, note that it is released under the "Creative Commons NC-SA":http://creativecommons.org/licenses/by-nc-sa/3.0/ license.  This will become immensely more useful once the source documents are posted in late March, but if you've got any questions at all about this, you can ask me, and I'll ask my publisher, and we'll get back to you.
