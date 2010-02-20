@@ -71,7 +71,7 @@ irb(main):008:0> s2
 => [Complex, Rational, Bignum, Float, Fixnum, Integer, Numeric]
 </pre>
 
-The rationale behind this is that only types which can be used as integers should implement @to_int@.  Method @to_i@ is merely a conversion method which turns "something" into an int.  I chose to base @to_hex@ on @to_int@ because this increases the number of cases where you can immediately use a @HexNum@.  If you need more strict argument checks, you can use @HexNum()@ (the method) which is modeled similar to @Integer()@ and in fact uses it internally in order to benefit from its argument checking.
+The rationale behind this is that only types which can be used as integers should implement @to_int@.  Method @to_i@ is merely a conversion method which turns "something" into an int.  I chose to base @to_hex@ on @to_i@ because this increases the number of cases where you can immediately use a @HexNum@.  If you need more strict argument checks, you can use @HexNum()@ (the method) which is modeled similar to @Integer()@ and in fact uses it internally in order to benefit from its argument checking.
 
 You might have expected @HexNum@ to inherit @Integer@.  Actually, that's what I would have done, too.  But, it turns out, if you make a class inherit @Integer@ you cannot create instances of it any more:
 
@@ -279,7 +279,7 @@ Now you can also see how comparison works for @HexNum@: if the type is known we 
 
 h3. Math and Operator Overloading
 
-Now that we understood while role @#coerce@ plays in Ruby's operator land we can implement all the operators available in a way as to ensure we always get proper results.  In our case this means, we always want to have a @HexNum@ result with proper int math.
+Now that we understand which role @#coerce@ plays in Ruby's operator land we can implement all the operators available in a way as to ensure we always get proper results.  In our case this means, we always want to have a @HexNum@ result with proper int math.
 
 There is one thing that we need to ensure for all operators: they must handle their own type directly.  If we fail to do that, we may end up in infinite recursion:
 
