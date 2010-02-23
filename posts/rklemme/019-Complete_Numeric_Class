@@ -1,0 +1,431 @@
+=title The Complete Numeric Class
+=timestamp 2010.02.20 15:25 +0100
+=description If you want to create a class to do math with (more precisely, a class with that employs operator overloading) additional aspects come into play compared to the class I presented in "The Complete Class".
+=entry
+As announced in the "previous article":018-Complete_Class.html we will look at a complete number class today.  I will use the example of a integer number which, when printed, will show up as hex number (as opposed to the decimal presentation of @Fixnum@ and relatives).  As before the main point is not sophisticated logic or usefulness of the class.  Instead I will keep the logic simple so we can focus on the aspects I try to convey with today's article:
+
+* conversions into @HexNum@
+* conversions of @HexNum@ to other types
+* equivalence vs. comparability
+* type coercion
+* math and operator overloading
+
+For completeness reasons other aspects mentioned in the previous article will be implemented as well but I won't discuss them in detail here.
+
+h3. Conversions into @HexNum@
+
+The first step into the world of @HexNum@ is creation of a new object of course.  This part is not that much interesting and so I will only gloss over the implementation.  I have provided a few ways:
+
+* constructor
+* conversion methods (@to_hex@),
+* explicit method (similar to @Integer()@).
+
+These are shown in the code snippet below:
+
+<pre name="code" class="ruby">
+class HexNum < Numeric
+
+  # Create a new instance from an int or String.
+  def initialize(val)
+    case val
+    when String
+      @i = parse_string(val)
+      @s = val.frozen? ? val : val.dup.freeze
+    when Numeric
+      @i = val.to_i
+    else
+      raise ArgumentError, 'Cannot convert %p' % val
+    end
+  end
+
+end
+
+# more conversions
+
+def HexNum(i)
+  HexNum.new(Integer(i))
+end
+
+class Object
+  def to_hex
+    HexNum.new(to_i)
+  end
+end
+</pre>
+
+As you can see, a @HexNum@ consists of an integer value and optionally a @String@.  The integer value is the mandatory part which will be used in most methods while the @String@ is just an helper intended to make conversions to @String@ more efficient (I did not make any measurements though - I mainly wanted to make the class a tad more interesting).
+
+Method @Object.to_hex@ is based on the presence of method @to_i@.  This is debatable.  Basing this conversion on method @to_int@ is as reasonable IMHO.  As you can see, the set of classes which implement @to_i@ differs from those which implement @to_int@:
+
+<pre name="code" class="ruby">
+irb(main):002:0> s1 = []; s2 = []
+=> []
+irb(main):003:0> ObjectSpace.each_object(Module) do |m|
+irb(main):004:1* s1 << m if m.instance_methods.include? :to_i
+irb(main):005:1> s2 << m if m.instance_methods.include? :to_int
+irb(main):006:1> end
+=> 407
+irb(main):007:0> s1
+=> [Complex, Rational, Process::Status, Time, File, ARGF.class, IO, Bignum, Float, Fixnum, Integer, String, NilClass]
+irb(main):008:0> s2
+=> [Complex, Rational, Bignum, Float, Fixnum, Integer, Numeric]
+</pre>
+
+The rationale behind this is that only types which can be used as integers should implement @to_int@.  Method @to_i@ is merely a conversion method which turns "something" into an int.  I chose to base @to_hex@ on @to_i@ because this increases the number of cases where you can immediately use a @HexNum@.  If you need more strict argument checks, you can use @HexNum()@ (the method) which is modeled similar to @Integer()@ and in fact uses it internally in order to benefit from its argument checking.
+
+You might have expected @HexNum@ to inherit @Integer@.  Actually, that's what I would have done, too.  But, it turns out, if you make a class inherit @Integer@ you cannot create instances of it any more:
+
+<pre name="code" class="ruby">
+irb(main):007:0> class X < Integer
+irb(main):008:1> end
+=> nil
+irb(main):009:0> X.new
+NoMethodError: undefined method `new' for X:Class
+        from (irb):9
+        from /usr/local/bin/irb19:12:in `<main>'
+irb(main):010:0> class X;end
+=> nil
+irb(main):011:0> def X.new; allocate; end
+=> nil
+irb(main):012:0> X.new
+TypeError: allocator undefined for X
+        from (irb):11:in `allocate'
+        from (irb):11:in `new'
+        from (irb):12
+        from /usr/local/bin/irb19:12:in `<main>'
+irb(main):013:0> Integer.class
+=> Class
+irb(main):014:0>
+</pre>
+
+This is a bit unfortunate since @Integer@ would be the proper base class for our @HexNum@.  Inheriting @Numeric@ is the second best we can do.
+
+
+h3. Conversions to other types
+
+These conversions are done by the typical set of @to_xyz@ methods:
+
+<pre name="code" class="ruby">
+  # conversions
+
+  def to_s
+    @s ||= (@i < 0 ? '-0x%x' % -@i : '0x%x' % @i).freeze
+  end
+
+  def to_i
+    @i
+  end
+
+  alias to_int to_i
+
+  def to_hex
+    self
+  end
+</pre>
+
+Please note that for efficiency reasons class @HexNum@ also contains a method @to_hex@.  Other than that there are really no surprises here.  Conversion to string may look a bit complicated but it's really just the different treatment of negative and positive values plus caching of the converted @String@.  The #freeze just ensures that changes of the cached value outside the class cannot backfire.  If we weren't using @#freeze@ here, we would have to create a new @String@ instance for every @to_s@ invocation which would defy the whole point of caching the value.
+
+
+h3. Mutability
+
+An important point to note is that the class is immutable.  While this is not mandatory creating a mutable class does not blend well with how Ruby handles arithmetic operators.  If you implement operator + as in place modification you will get all the issues typically caused by aliasing, i.e. using the same instance from different places in code.  As they say, "When in Rome do as the Romans do" - so we will stick with the convention used throughout Ruby's core library and make our @HexNum@ immutable too.  That way we can use instances of @HexNum@ where we would otherwise have used @Fixnums@ or @Bignums@.  And after all this was the aim of the exercise: to demonstrate how to create a class that seemlessly blends with all the other numeric types of Ruby's core and standard library.
+
+
+h3. Equivalence vs. Comparability
+
+Now we slowly get to the more interesting topics.  Every class has comparison for equivalence through method @#eql?@ and operator @==@ (see also the discussion of the topic in the "previous article":018-Complete_Class.html).  For seamless blending of @HexNum@ with other numeric types comparison with @==@ should only look at the numerical value so that @HexNum(1)@ and @1.0@ compare @true@.  However since we do not have influence on @Fixnum's@ and @Float's@ implementation of @===@ and since equivalence is a symmetric relation (i.e. @a == b@ must return the same as @b == a@) we can only establish equivalence with other @HexNum@ instances.  I think this is unfortunate.  I can only speculate about Matz's reasons to not use @#coerce@ in this situation: I assume he did it this way for performance reasons since these types of comparisons are very frequent in a program.
+
+So, this is how equivalence checking code looks like:
+
+<pre name="code" class="ruby">
+  # equivalence
+
+  def eql?(num)
+    self.class.equal?(num.class) && @i == num.to_i
+  end
+
+  alias == eql?
+</pre>
+
+No big surprises here.  You'll note the type check which is necessary because of the aforementioned implementation details of core classes.
+
+Things stand dramatically different with respect to comparison operator @<=>@.  The definition of this operator's semantics was nicely presented by Marc in "his comments":http://blog.rubybestpractices.com/posts/rklemme/018-Complete_Class.html#comment-21155640 to the last article.  Basically, @<=>@ must return @nil@ if classes of compared instances are differnt.  But what is this?
+
+<pre name="code" class="ruby">
+irb(main):001:0> 1 <=> 1.0
+=> 0
+irb(main):002:0> 1 <=> 1.5
+=> -1
+irb(main):003:0> 0.5 <=> 1
+=> -1
+irb(main):004:0> 0.5 <=> 1 << 40
+=> -1
+irb(main):005:0>
+</pre>
+
+Numeric classes allow for comparison across a wide range ot types.  Can we make @HexNum@ blend in here?  It turns out, that we can.  This is the time to introduce a functionality that took me a while understand initially.  But this is at the heart of Ruby's operator overloading and probably the single most important point to consider when implementing numeric types.
+
+h3. What's this @#coerce@ thingy?
+
+When talking about equivalence it might have occurred to you that the behavior of @==@ should depend not on a single class but actually on the type of _both_ arguments.  The rule whether two objects are equivalent include's both object's class and statements about state of both instances (in case of @HexNum@ for example, both must have the same integer value).  Now, Ruby - like many object oriented languages - has 'single "dispatch":http://en.wikipedia.org/wiki/Dynamic_dispatch' which means only the type of the receiver (the object to the left of the dot in a method call or @self@) determines which method is actually used.  This works remarkably well most of the time but there are cases where you rather want to make the dispatch (and thus the decision which code is executed) depend on the receiver and one or more of the method's arguments.  Binary operators are a typical case of this.
+
+The usual solution in other languages is to overload a method based on argument types and in Ruby you would likely employ some form of type checking similar to what I have done in @HexNum's@ method @#initialize@.  However, this approach has a fundamental drawback: when writing class A the author must know all classes B, C and D that are used as argument types.  This hurts extensibility seriously since for every new numeric type the code of older types needs adjustment.  While this would be possible due to Ruby's dynamic nature this is on the one hand tedious and it would have performance implications on the other hand because you would likely be implementing those "enahancements" in Ruby (and not C) and methods would have to check for more and more types.
+
+Ruby's solution to this is very elegant (as many other aspects of the language): whenever a methods receives a type different from its own type it asks that type to do a conversion so the operation can finally be handled.  It does that via method @#coerce@ which receives the _caller_ as argument so the other (presumably newer) type can find an adequate conversion.  That way, only types written later need to know about older types (e.g. everything in the core and standard library).  Let's look at how @#coerce@ works by using it on some standard types:
+
+<pre name="code" class="ruby">
+irb(main):001:0> 1.coerce 2
+=> [2, 1]
+irb(main):002:0> 2.0.coerce 1
+=> [1.0, 2.0]
+irb(main):003:0> 1.coerce 2.0
+=> [2.0, 1.0]
+</pre>
+
+The result of invoking @#coerce@ has two interesting properties:
+
+# The types of returned values are identical.
+# The return value is really an @Array@ with the order reversed compared to the invocation (the receiver is the _second_ object in the array).
+
+While we immediately see the usefulness of 1 (every class should know how to handle instances of itself) the second property irritated me at first.  But it does make sense if you consider that the argument to @#coerce@ is really the original receiver of the method call.
+
+I don't want to hide some inconsistencies of the standard functionality from you:
+
+<pre name="code" class="ruby">
+irb(main):004:0> 1.coerce 1<<40
+=> [1099511627776.0, 1.0]
+irb(main):005:0> (1<<40).coerce 2
+=> [2, 1099511627776]
+irb(main):006:0> (1<<40).coerce 3.0
+TypeError: can't coerce Float to Bignum
+        from (irb):6:in `coerce'
+        from (irb):6
+        from /usr/local/bin/irb19:12:in `<main>'
+irb(main):007:0> 3.0.coerce 1<<40
+=> [1099511627776.0, 3.0]
+irb(main):008:0> 1<<40
+=> 1099511627776
+irb(main):009:0> (1<<40) + 3.0
+=> 1099511627779.0
+</pre>
+
+You can add @Bignum@ and @Float@ but @#coerce@ fails on one direction.  If anybody can provide a sensible explanation of this please let us know.  For the moment I am inclined to believe that it's due to the fact that implementations of core types are done in C and there are probably some corners cut.
+
+Now look at a simple example which demonstrates the mechanics of @#coerce@:
+
+<pre name="code" class="ruby">
+$ ruby19 <<CODE
+> a = 1
+> b = Object.new
+> def b.coerce(x) [x,2] end
+> p b
+> set_trace_func lambda {|*a| p a}
+> puts a + b
+> CODE
+#<Object:0x10028284>
+["c-return", "-", 5, :set_trace_func, #<Binding:0x10027dd0>, Kernel]
+["line", "-", 6, nil, #<Binding:0x10027adc>, nil]
+["c-call", "-", 6, :+, #<Binding:0x10027724>, Fixnum]
+["call", "-", 3, :coerce, #<Binding:0x1002721c>, #<Object:0x10028284>]
+["line", "-", 3, :coerce, #<Binding:0x10026e48>, #<Object:0x10028284>]
+["return", "-", 3, :coerce, #<Binding:0x10026924>, #<Object:0x10028284>]
+["c-call", "-", 6, :+, #<Binding:0x100263e4>, Fixnum]
+["c-return", "-", 6, :+, #<Binding:0x10025fbc>, Fixnum]
+["c-return", "-", 6, :+, #<Binding:0x10025a28>, Fixnum]
+["c-call", "-", 6, :puts, #<Binding:0x10025424>, Kernel]
+["c-call", "-", 6, :puts, #<Binding:0x10024f54>, IO]
+["c-call", "-", 6, :to_s, #<Binding:0x10024854>, Fixnum]
+["c-return", "-", 6, :to_s, #<Binding:0x10023db8>, Fixnum]
+["c-call", "-", 6, :write, #<Binding:0x10023878>, IO]
+3["c-return", "-", 6, :write, #<Binding:0x10022f9c>, IO]
+["c-call", "-", 6, :write, #<Binding:0x10022ae8>, IO]
+
+["c-return", "-", 6, :write, #<Binding:0x10022768>, IO]
+["c-return", "-", 6, :puts, #<Binding:0x1002227c>, IO]
+["c-return", "-", 6, :puts, #<Binding:0x10021b0c>, Kernel]
+</pre>
+
+As you can see in line 6 @Fixnum's@ operator @+@ is invoked.  Since @Fixnum@ does not know how to add an @Object@ it invokes its @#coerce@.  For simplicity reasons we always return a fixed value of 2 for the @Object@ instance and as you can see @Fixnum's@ operator @+@ is invoked again and now returns immediately.  The final result is properly calculated as 3.
+
+Now let's look at @HexNum's@ method @#coerce@ given the long introduction it looks surprisingly simple:
+
+<pre name="code" class="ruby">
+  # coercion
+
+  def coerce(o)
+    [HexNum.new(o.to_int), self]
+  end
+
+  # comparability
+
+  include Comparable
+
+  def <=>(o)
+    case o
+    when HexNum
+      @i <=> o.to_i
+    when Numeric
+      @i <=> o
+    else
+      a, b = o.coerce(self)
+      a <=> b
+    end rescue nil
+  end
+</pre>
+
+We just try to create a new @HexNum@ if the other type can be converted to an integer and go from there.  In other cases you might have to check argument types to apply specific conversions but for our @HexNum@ this is enough to ensure functionality.
+
+Now you can also see how comparison works for @HexNum@: if the type is known we rely on comparison functionality of the standard library.  And in order to make @HexNum@ also work with classes written later @#coerce@ is invoked on all other arguments.  A last detail: if @#coerce@ fails it is supposed to throw an exception.  Since the contract of @<=>@ prohibits that we add a @rescue nil@ so we always end up with a proper comparison result.
+
+h3. Math and Operator Overloading
+
+Now that we understand which role @#coerce@ plays in Ruby's operator land we can implement all the operators available in a way as to ensure we always get proper results.  In our case this means, we always want to have a @HexNum@ result with proper int math.
+
+There is one thing that we need to ensure for all operators: they must handle their own type directly.  If we fail to do that, we may end up in infinite recursion:
+
+<pre name="code" class="ruby">
+irb(main):001:0> class X
+irb(main):002:1>   def +(o)
+irb(main):003:2>     case o
+irb(main):004:3>     when Integer
+irb(main):005:3>       o + 1
+irb(main):006:3>     else
+irb(main):007:3*       a, b = o.coerce(self)
+irb(main):008:3>       a + b
+irb(main):009:3>     end
+irb(main):010:2>   end
+irb(main):011:1>
+irb(main):012:1*   def coerce(o)
+irb(main):013:2>     [X.new, self]
+irb(main):014:2>   end
+irb(main):015:1> end
+=> nil
+irb(main):016:0> x = X.new
+=> #<X:0x10145c50>
+irb(main):017:0> x + 1
+=> 2
+irb(main):018:0> 1 + x
+SystemStackError: stack level too deep
+        from (irb):7:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+... 7229 levels...
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):18:in `+'
+        from (irb):18
+        from /usr/local/bin/irb19:12:in `<main>'irb(main):019:0> x + x
+SystemStackError: stack level too deep
+        from (irb):7:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+... 7229 levels...
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):8:in `+'
+        from (irb):19
+        from /usr/local/bin/irb19:12:in `<main>'irb(main):020:0>
+irb(main):021:0*
+</pre>
+
+So let's look at operator @+@:
+
+<pre name="code" class="ruby">
+  def +(o)
+    case o
+    when Integer
+      HexNum.new(@i + o)
+    when Numeric
+      HexNum.new(@i + o.to_i)
+    else
+      a, b = o.coerce(self)
+      a + b
+    end
+  end
+</pre>
+
+We know that all @Integer@ instances do return an @Integer@ instance from their implementation of operator @+@ so we can simply use that on our instance varible containing the numerical value.  For all other @Numeric@ instances (including @HexNum@ itself) we can work with the instance value converted to int.  All others are responsible for returning appropriate values for themself and the @HexNum@ instance so the math can work properly.
+
+Operator @*@ works a bit differently because for proper results of multiplication we need to use the numeric value as isand convert later:
+
+<pre name="code" class="ruby">
+  def *(o)
+    case o
+    when HexNum
+      HexNum.new(@i * o.to_i)
+    when Numeric
+      HexNum.new(@i * o)
+    else
+      a, b = o.coerce(self)
+      a * b
+    end
+  end
+</pre>
+
+Of course we could refactor common parts into an operator implementing method but I did not want to get too fancy here and rather demonstrate how particular math operations might need different treatment.  For other operators we rely on the argument's compatibility to an integer since other types do not really make sense here:
+
+<pre name="code" class="ruby">
+  # asymmetric binary operators
+
+  def <<(o)
+    HexNum.new(@i << o.to_int)
+  end
+
+  # bit operators
+
+  def &(o)
+    HexNum.new(@i & o.to_int)
+  end
+</pre>
+
+h3. Summary
+
+We have seen how a numeric class needs to be implemented differently from "other classes":018-Complete_Class.html that try to be complete.  The major point is to provide @#coerce@ with meaningful semantics and implement all operators.  As always you can find the complete code "at github":http://gist.github.com/309694.  Have fun playing around with it!
