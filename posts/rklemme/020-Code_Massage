@@ -92,8 +92,10 @@ We can exploit this fact and now we can write the code like this:
 <pre name="code" class="ruby">
 subst = Hash.new {|h,k| h[k] = "<<MAIL #{h.size}>>"}
 
-puts email.gsub(ADDR, &subst.method(:[]).to_proc)
+puts email.gsub(ADDR, &subst.method(:[]))
 </pre>
+
+__Note: code changed after arthurschreiber's comment.__
 
 Now, that looks ugly, doesn't it?  We should be able to do something about that, because after all we love Ruby for its elegance and clear syntax.  Yes, we can!
 
