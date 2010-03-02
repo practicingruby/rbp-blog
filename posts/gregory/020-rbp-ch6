@@ -1,0 +1,38 @@
+=title Ruby Tuesdays: RBP Chapter 6
+=timestamp 2010-03-02 7:00 UTC
+=description
+This week, we have the <i>When Things Go Wrong</i> chapter of <i>Ruby Best Practices</i> available for reading and discussion.  In it, you'll find practical tips that will make troubleshooting your Ruby code a whole lot easier.
+=entry
+If you're reading this blog, you probably know that the "Ruby Best Practices":http://rubybestpractices.com book exists.  Even if you haven't read it, you might have a sense for the sort of topics we cover based on the content you've seen on this blog. But now, everyone is going to get a chance to read RBP the way its meant to be read: as a conversation. 
+
+h3. Progress To Date
+
+We've already released the first five chapters, and discussion has been great.  Be sure to check out these previous posts if you haven't already:
+<ul>
+   <li><a href="http://blog.rubybestpractices.com/posts/gregory/015-rbp-ch1.html">Chapter 1: Driving Code Through Tests</a></li>,
+  <li><a href="http://blog.rubybestpractices.com/posts/gregory/rbp-ch2-3.html">Chapter 2: Designing Beautiful APIS / Chapter 3: Mastering the Dynamic Toolkit</a></li>
+  <li><a href="http://blog.rubybestpractices.com/posts/gregory/018-rbp-ch4.html">Chapter 4: Text Processing and File Management</a></li>
+  <li><a href="http://blog.rubybestpractices.com/posts/gregory/019-rbp-ch5.html">Chapter 5: Functional Programming Techniques</a></li>
+</ul>
+  
+These discussions should give you a sense of the wide range of ideas our readers have been sharing as a result of this ongoing book study.
+
+h3. How To Read RBP
+
+Readers are encouraged to <a href="http://jsomers.net/blog/kenjitsu">fight RBP as they read it</a>, rather than just soaking up the information.  Although I claim this book is about "Best Practices", the only reason that is true is that it's a result of countless conversations with folks who are deep in the Ruby trenches getting stuff done.  The only way for RBP to remain current and relevant is to continue these discussions, using its content as a jumping off point for fresh ideas.
+
+h3. Today's Topic
+
+This chapter on what to do "When Things Go Wrong" turned out to be one of the most enjoyable ones to write.  Having a strong ability to troubleshoot and debug code is a powerful skill to have, and I do my best to share all my secrets here.
+
+Go ahead and <a href="http://sandal.github.com/rbp-book/pdfs/ch06.pdf">download Chapter 6 now</a>.  You're encouraged to participate in the discussion here once you've had a chance to play with some of the ideas. Don't worry if it takes you more than a few days finish reading it, you can come back and comment any time.
+
+Enjoy, and come back next Tuesday (2010.03.09) for Chapter 7, "Reducing Cultural Barriers", which covers multilingualization (m17n) and localization (L10n) techniques.
+ 
+h3. For Your Consideration
+
+O'Reilly is being really nice to me by letting me give away my book, especially considering that I haven't quite cleared my advance yet (though I'm getting closer now, finally!) 
+
+If you like what you see, please consider buying the book.  You can get it <a href="http://oreilly.com/catalog/9780596523015">directly from the publisher</a> or via <a href="http://www.amazon.com/Ruby-Best-Practices-Gregory-Brown/dp/0596523009">amazon</a>.  I imagine that seeing decent sales numbers will encourage O'Reilly to keep moving towards making their content openly available, which would totally rock.
+
+For those wishing to do interesting things with this material, note that it is released under the "Creative Commons NC-SA":http://creativecommons.org/licenses/by-nc-sa/3.0/ license.  This will become immensely more useful once the source documents for the manuscript are posted in late March, but if you've got any questions at all about this, you can ask me, and I'll ask my publisher, and we'll get back to you.
