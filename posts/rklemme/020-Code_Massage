@@ -1,0 +1,180 @@
+=title Code Massage
+=timestamp 2010.02.28 14:32 +0100
+=description Playing around with code can be fun and even provide new insights into the language or coding techniques.
+=entry
+This article started out as a mental experiment and led to a surprising result.  I post this mostly for the fun of it.  But of course you can take something away from it.  With that I do mean not only technical solutions.  I believe firmly that a certain level of playfulness actually helps finding better solutions.  The other ingredient you need is a certain eagerness for improvement which means to not be be content too early.  OK, let's start.
+
+The scenario I started out was this: suppose you want to anonymize email addresses because you want to publish an email but not expose addresses to spam harvesting.  Yet, you want to make sure that every address is always represented with the same replacement address in order to not change the meaning.  You might immediately answer "We'll need a Hash so we can efficiently find addresses that have been replaced already" - and so did I.
+
+h3. Java Style
+
+If you are familiar with the Java standar library you know that @java.util.Map@ has methods to check whether a key is present, to set values and to retrieve values.  So after switching to Ruby you might be tempted to do it like this:
+
+<pre name="code" class="ruby">
+subst = {}
+
+puts email.gsub(ADDR) {|match|
+  if subst.has_key? match
+    subst[match]
+  else
+    subst[match] = "<<MAIL #{subst.size}>>"
+  end
+}
+</pre>
+
+Whenever we encounter an email address we must first check whether we have generated a replacement string for this address already.  If not, we create a new one.  No rocket science.
+
+h3. A little more sophisticated
+
+You might find documumentation of method "Hash#fetch":http://ruby-doc.org/ruby-1.9/classes/Hash.html#M000380 when reading the library documentation which comes in handy because the block is invoked if the key is not present in the @Hash@.  The code now looks a little shorter already:
+
+<pre name="code" class="ruby">
+subst = {}
+
+puts email.gsub(ADDR) {|match|
+  subst.fetch(match) {|k| subst[k] = "<<MAIL #{subst.size}>>" }
+}
+</pre>
+
+h3. O||=erator
+
+A similar thing can be achieved with the ubiquituous operator @||=@ which allows for conditional execution.  In case you are not yet familiar with it you'll find plenty of discussions in ruby-talk that revolve around this.  The short summary is that @a ||= b@ is equivalent to @a || a = b@ and _not_ @a = a || b@ as you might be tempted to believe.
+
+<pre name="code" class="ruby">
+subst = {}
+
+puts email.gsub(ADDR) {|match|
+  subst[match] ||= "<<MAIL #{subst.size}>>"
+}
+</pre>
+
+The code has become even more shorter.  But we are not finished yet!
+
+h3. Outsourcing
+
+If you need that replacement in multiple places of your code you'll likely put it into a method.  However, if you want to replace different things (i.e. you need different regular expressions) which can match the same string you might want to outsource the generation of the replacement string so you can use it with different calls of @gsub@.  You can of course do it with an additional method but there is a more elegant way to do it:
+
+<pre name="code" class="ruby">
+subst = Hash.new {|h,k| h[k] = "<<MAIL #{h.size}>>"}
+
+puts email.gsub(ADDR) {|match| subst[match]}
+</pre>
+
+We simply use @Hash's@ default proc functionality for this.  This is basically the same the fetch block does but now the code is attached to the @Hash@ instance and not to the @#fetch@ call.
+
+You might wonder, how much further can we get?  And indeed, this solution is probably the most idiomatic one and the one you see most frequent in seasoned Ruby developers' code.  It turns out though, that we can drive this further if we are prepared to use some newer Ruby features.
+
+h3. Getting tricky
+
+Since Ruby 1.8.7 you can use _anything_ as a block parameter to a method provided it implements a method @to_proc@ which returns a @Proc@.  Namely class @Symbol@ implements this method in the following way: it returns a proc which needs at least one argument when called and invokes the given method with the remaining arguments on that instance.  This allows for convenient operations like mapping data:
+
+<pre name="code" class="ruby">
+irb(main):001:0> (1..3).map &:to_s
+=> ["1", "2", "3"]
+</pre>
+
+One thing that bugged me was that the block handed to @gsub@ above does nothing more than basically only forward the @Hash@ lookup.  With the new feature it should be possible to make the code a bit more concise.  Luckily there are some core classes that implement @to_proc@ already:
+
+<pre name="code" class="ruby">
+$ ruby -e 'ObjectSpace.each_object(Module) {|m| p m if m.instance_methods.include? "to_proc"}'
+Method
+Proc
+Symbol
+
+$ ruby19 -e 'ObjectSpace.each_object(Module) {|m| p m if m.instance_methods.include? :to_proc}'
+Method
+Proc
+Symbol
+</pre>
+
+We can exploit this fact and now we can write the code like this:
+
+<pre name="code" class="ruby">
+subst = Hash.new {|h,k| h[k] = "<<MAIL #{h.size}>>"}
+
+puts email.gsub(ADDR, &subst.method(:[]))
+</pre>
+
+__Note: code changed after arthurschreiber's comment.__
+
+Now, that looks ugly, doesn't it?  We should be able to do something about that, because after all we love Ruby for its elegance and clear syntax.  Yes, we can!
+
+h3. Even shorter with a general solution
+
+Since we can use _any_ object why not provide a general mechanism for this case?  Not only @Hash@ but also @Array@ and a lot more classes provide method @[]@ as a general hook for lookup or exeution:
+
+<pre name="code" class="ruby">
+$ ruby19 -e 'ObjectSpace.each_object(Module) {|m| p m if m.instance_methods.include? :[]}'
+Thread
+Method
+Proc
+Struct::Tms
+MatchData
+Struct
+Hash
+Array
+Bignum
+Fixnum
+Symbol
+String
+</pre>
+
+Now, let's allow all these to be simply used as block parameters!
+
+<pre name="code" class="ruby">
+class Object
+  def to_proc(m = :[])
+    method(m).to_proc
+  end
+end
+
+subst = Hash.new {|h,k| h[k] = "<<MAIL #{h.size}>>"}
+
+puts email.gsub(ADDR, &subst)
+</pre>
+
+Now we can just pass any @Hash@ instance to @gsub@.  The working logic for calculating our replacement string is now completely restricted to the @Hash@ creation.  This is a really elegant solution!
+
+h3. Golf
+
+We can reduce the number of characters to type a bit more by throwing out the variable declaration and effectively turn this into a one liner:
+
+<pre name="code" class="ruby">
+puts email.gsub(ADDR, &Hash.new {|h,k| h[k] = "<<MAIL #{h.size}>>"})
+</pre>
+
+I don't think this is an improvement over the last variant but sometimes it helps driving things as far as possible to find out where in the process we reached the optimum.
+
+h3. The fun begins
+
+Some classes do also implement method @[]@ - we should be able to make good use of that as well.  We might be tempted to create a lot of @Struct@ instances via this method.  It can be done but we have to do some tweaking because @Struct.[]@ does not splat a single @Array@ argument so we have to redefine it a bit:
+
+<pre name="code" class="ruby">
+Name = Struct.new :forename, :surname
+
+# unfortunately this does not work with the default Struct.[]
+def Name.[](a)
+  new(*a)
+end
+
+p [
+  ["John", "Doe"],
+  ["John", "Cleese"],
+  ["Mickey", "Mouse"],
+].map(&Name)
+
+# maybe a bit better:
+def Name.create(a)
+  new(*a)
+end
+
+p [
+  ["John", "Doe"],
+  ["John", "Cleese"],
+  ["Mickey", "Mouse"],
+].map(&Name.to_proc(:create))
+</pre>
+
+I hope you had some fun reading this and more importantly playing around yourself.  Trying out all things will certainly help you discover new ways and improve your skills.
+
+As usually I have placed the "code at github":http://gist.github.com/317580 .  If you look at it, please don't get yourself hung up on the regular expression for matching email addresses.  This is a whole topic of its own and I just hacked something together to make the code work.
