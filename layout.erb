@@ -29,28 +29,26 @@
         <h1><a href="http://blog.rubybestpractices.com">Ruby Best Practices</a></h1>
         <h2 class="tagline">Increase Your Productivity -- Write Better Code</h2>
      </div>
-     
-     
-     <div id="navbar">
-       <div id="about">
-         <div align="center">
-         <% Korma::Blog.authors.each do |_,a| %>
-           <% next if a.guest %>
-           <a href="<%= a.bio_uri %>" title="<%= a.name %>"><img src="<%= a.gravatar(40) %>" alt="<%= a.name %>"></a>
-         <% end %>
-         <p><a href="/about">about us</a> |
-         <a href="http://rubybestpractices.com">book</a>  |
-         <a href="http://twitter.com/rubypractices">twitter</a></p>
-         <p>Disqus eating your code?<br/>Try pasting through <a href="http://blog.rubybestpractices.com:3000/code">this tool.</a></p>
-<p><a href="http://feeds2.feedburner.com/RubyBestPractices"><img src="http://feeds2.feedburner.com/~fc/RubyBestPractices?bg=99CCFF&amp;fg=444444&amp;anim=0" height="26" width="88" style="border:0" alt="" /></a></p>
-       </div>
-         </div>
-       </div>
-     </div>
-
-   </div>
 
      <div id="content">
+        <div id="navbar">
+          <div id="about">
+            <div align="center">
+            <% Korma::Blog.authors.each do |_,a| %>
+              <% next if a.guest %>
+              <a href="<%= a.bio_uri %>" title="<%= a.name %>"><img src="<%= a.gravatar(40) %>" alt="<%= a.name %>"></a>
+            <% end %>
+            <p><a href="/about">about us</a> |
+            <a href="http://rubybestpractices.com">book</a>  |
+            <a href="http://twitter.com/rubypractices">twitter</a></p>
+            <p>Disqus eating your code?<br/>Try pasting through <a href="http://blog.rubybestpractices.com:3000/code">this tool.</a></p>
+   <p><a href="http://feeds2.feedburner.com/RubyBestPractices"><img src="http://feeds2.feedburner.com/~fc/RubyBestPractices?bg=99CCFF&amp;fg=444444&amp;anim=0" height="26" width="88" style="border:0" alt="" /></a></p>
+          </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
        <div id="main">
         <%= yield %>
       </div>
