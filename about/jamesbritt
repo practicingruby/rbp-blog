@@ -1,8 +1,5 @@
 <h2 style='text-align:right; margin-bottom:-50px; color:#f63;'>James Britt</h2>
 
-<div align="right">
-"All posts by James":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
-
 <img src='http://www.jamesbritt.com/assets/2009/4/15/self-portrait_los-angeles-06_med.jpg' alt='James Britt' style='float:right; padding:50px 0 30px 30px;' height='360px' />
 
 I’m a software developer and writer living in "Scottsdale, Arizona":http://www.google.com/maps?q=Scottsdale,+AZ,+USA&sa=X&oi=map&ct=title. My primary development language is Ruby.
