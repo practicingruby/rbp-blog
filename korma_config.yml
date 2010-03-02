@@ -14,18 +14,22 @@ authors:
   jm:
     name: Jeremy McAnally
     email: jeremymcanally@gmail.com
+    guest: true
   laktek:
     name: Lakshan Perera
     email: lakshan@web2media.net
+    guest: true
   judofyr:
     name: Magnus Holm
     email: judofyr@gmail.com
   wyhaines:
     name: Kirk Haines
     email: wyhaines@gmail.com
+    guest: true
   seanohalpin:
     name: "Sean O'Halpin"
     email: sean.ohalpin@gmail.com
+    guest: true
   aaronp:
     name: "Aaron Patterson"
     email: aaron.patterson@gmail.com
