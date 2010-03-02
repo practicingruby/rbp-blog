@@ -26,6 +26,5 @@ I also hang out on the IRC channels #phx.rb, #rbp, #jruby, #ruby-pro, and #ruby-
 
 My favorite color is plaid, and I was born and raised "on an island in North America.":http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=Ft.+Washington+Avenue,+10033&sll=40.855777,-73.944799&sspn=0.051416,0.084972&ie=UTF8&z=16&iwloc=addr
 
-<div align="right">
-"All posts by James":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
+
 
