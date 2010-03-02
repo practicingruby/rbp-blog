@@ -28,5 +28,5 @@ My favorite color is plaid, and I was born and raised "on an island in North Ame
 
 <div align="right">
 "All posts by James":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
-
+</div>
 
