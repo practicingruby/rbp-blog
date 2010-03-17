@@ -14,8 +14,7 @@ The last few weeks have been a wild ride.  Starting in January, I've been releas
   <li><a href="http://blog.rubybestpractices.com/posts/gregory/021-rbp-ch7.html">Chapter 7: Reducing Cultural Barriers</a></li>
 </ul>
 
-At this point, I'd like to invite you to just <a href="http://sandal.github.com/rbp-book/pdfs/rbp_1-0.pdf">grab the whole thing</a> and read it at your leisure.  This includes the final chapter
-"Skillful Project Maintenance", as well as the three appendixes: "Writing Backwards Compatible Code", "Leveraging Ruby's Standard Library", and "Ruby Worst Practices".
+At this point, I'd like to invite you to just <a href="http://sandal.github.com/rbp-book/pdfs/rbp_1-0.pdf">grab the whole thing</a> and read it at your leisure.  This includes the final chapter "Skillful Project Maintenance", as well as the three appendixes: "Writing Backwards Compatible Code", "Leveraging Ruby's Standard Library", and "Ruby Worst Practices".
 
 But since the book is now open source, if you find something you don't like about it, it's your responsibility to help make it better!
 
