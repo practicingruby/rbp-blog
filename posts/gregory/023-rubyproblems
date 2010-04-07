@@ -4,7 +4,7 @@
 I'm pleased to announce the launch of rubyproblems.com, a new Ruby learning
 resource that readers of RBP are sure to enjoy.
 =entry
-Back on St. Patrick's day, I had made the following plug at the bottom of my post announcing the free release of my book:
+Back on St. Patrick's day, I had made the following plug about rubyproblems.com at the bottom of my last post:
 
 <blockquote>
 This site will provide realistic exercises that test your Ruby and general coding skills, along with detailed tutorials written in the style of RBP explaining possible solutions to the problems. The exercises will be free and open to everyone, the solutions we’ll be selling as nicely typeset, professionally edited, DRM-free PDF download
@@ -13,3 +13,14 @@ This site will provide realistic exercises that test your Ruby and general codin
 I am pleased to announce that this service did indeed launch yesterday, and that you can check it out by heading over to <a href="http://rubyproblems.com">rubyproblems.com</a> now.  If you need a bit more information, consider checking out <a href="http://rubybestpractices.com/rubyproblems-teaser.swf">this screencast</a> or <a href="http://rubyproblems.blogspot.com/2010/04/were-live.html">this announcement</a>.
 
 While this is still a bit of an experiment for us, we're really excited to see how things turn out.  Those who liked my book should love this site, so definitely check it out when you get a chance.
+
+And now, the RBP blog should return to its non-marketing-hype self.  In fact, I really want to find the time to write about why I think this is the most
+horrible syntax ever:
+
+<pre>
+describe Array do
+  its(:length) { should == 0 }
+end
+</pre>
+
+But I suppose that bit of flame bait will need to wait until a later day :)
