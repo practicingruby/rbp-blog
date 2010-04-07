@@ -17,7 +17,7 @@ While this is still a bit of an experiment for us, we're really excited to see h
 And now, the RBP blog should return to its non-marketing-hype self.  In fact, I really want to find the time to write about why I think this is the most
 horrible syntax ever:
 
-<pre>
+<pre name="code" class="ruby">
 describe Array do
   its(:length) { should == 0 }
 end
