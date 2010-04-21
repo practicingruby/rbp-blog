@@ -1,5 +1,5 @@
 =title If you want to see the wizard, go to Oz.
-=timestamp 2010-04-07 14:50 UTC
+=timestamp 2010-04-21 14:50 UTC
 =description
 The story of how I got involved in Ruby, and made one of the best friends
 anyone could ask for.  And also, why you should be registering for
@@ -7,7 +7,7 @@ Red Dirt RubyConf right now.
 =entry
 Back in June of 2005, I booked a flight out to Oklahoma City, OK, but it might as well have been to Oz.  I was off to see the wizard who had been teaching me black magic in both Perl and Ruby throughout my high school days.
 
-James Edward Gray II and I had somehow convinced Ruby Central, Inc. that a <a href="http://rubyforge.org/projects/gambit">web game framework</a> was worth a Codefest grant, and we used the money as a chance to finally meet each other in person.  At the time, we decided to build things from scratch, since Rails 0.12 didn't quite have the features we needed :)
+<a href="http://blog.grayproductions.net">James Edward Gray II</a> and I had somehow convinced Ruby Central, Inc. that a <a href="http://rubyforge.org/projects/gambit">web game framework</a> was worth a Codefest grant, and we used the money as a chance to finally meet each other in person.  At the time, we decided to build things from scratch, since Rails 0.12 didn't quite have the features we needed :)
 
 Not counting the friends I talked into playing around with programming, this was my first time ever working side by side with another hacker.  I didn't know what to expect, but by the time I left, I couldn't believe that what we had done was possible.  Safe to say, JEG2 blew my mind, in the way that any good wizard can.   Here's what I wrote just after returning home in June 2005:
 
@@ -40,14 +40,13 @@ me to new limits of what I can build. I think we both learned a lot
 from working together on this project.
 </blockquote>
 
-Whether he realizes it or not, James revealed a secret to me (perhaps by accident), that is to blame for all of my future successes in programming: Share your experiences and knowledge with others, and you win.  
-
 While there is a certain amount of altruism involved in mentoring a novice, it is an act that pays you back tenfold.  Every concept that you can teach another person is one that you must master through and through, in ways that you'd never even scratch the surface of if you were just using that knowledge to accomplish a particular task.
 
-Fast forward to 2010, and obviously JEG2 and I have come a long way.  We've both done talks throughout the US, and James even made it over to Japan last year.  We've both published books on Ruby, and made more friends in the community than we ever imagined possible back in 2005.  While part of me feels indebted to James still, I feel like I've paid it forward through my works. 
+Whether he realizes it or not, James revealed a secret to me (perhaps by accident), that is to blame for all of my future successes in programming: Share your experiences and knowledge with others, and you win.
 
-I will say though, that I had one thing under my belt that JEG2 didn't, up until now.  I had <a href="http://2007.goruco.com/volunteers/">helped design and run a Ruby conference</a>, and he hadn't.  Not one to be outdone,
-in 2010, JEG2 has decided to level that playing field by running <a href="http://reddirtrubyconf.com>Red Dirt RubyConf</a>.
+Fast forward to 2010, and obviously JEG2 and I have come a long way.  We've both done talks throughout the US, and James even made it over to Japan last year.  We've both published books on Ruby, and made more friends in the community than we ever imagined possible back in 2005.  While part of me feels indebted to James still, I feel like I've paid it forward through my works.  That made our mentorship role turn into a friendly rivalry, where we both keep pushing each other to get better at what we do, even if indirectly.  
+
+James had a big head start, so he normally beats me to the punch on things.  Up until recently, I had only one thing under my belt that JEG2 didn't: I had <a href="http://2007.goruco.com/volunteers/">helped design and run a Ruby conference</a>. Not one to be outdone, JEG2 has decided to level that playing field by running <a href="http://reddirtrubyconf.com>Red Dirt RubyConf</a>.  
 
 <h3>Red Dirt RubyConf: Your ticket to Oz</h3>
 
