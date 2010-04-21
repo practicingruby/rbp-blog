@@ -11,17 +11,17 @@ Back in June of 2005, I booked a flight out to Oklahoma City, OK, but it might a
 
 Not counting the friends I talked into playing around with programming, this was my first time ever working side by side with another hacker.  I didn't know what to expect, but by the time I left, I couldn't believe that what we had done was possible.  Safe to say, JEG2 blew my mind, in the way that any good wizard can.   Here's what I wrote just after returning home in June 2005:
 
-<blockquote>
+<blockquote><i>
 The last nine days were amazing. Exploited undocumented features of WEBRick. Making use of circular logic flows, making code do things that it wasn't built to do. Pushing the limits, building truly clever tools and libraries that will make people's lives easier, and more fun. 
 
 I myself feel like I'm standing a little taller after all the hard work we did. That was hacking in it's purest nature, and though I don't like to self attribute that word, there is nothing else to describe it. Ideas flowed any hour of the day, even in our dreams. No one tried to take charge, I didn't get mad when James replaced bits of my code with something better, and James didn't get mad when I questioned his logic and pushed him to raise the bar. In the rare occasion that I proved James wrong on something, he'd just shrug his shoulders, embrace The Right Way, and go with it.
 
 We joked around a lot referring to certain programming practices as "The way of life". Though that is quite silly when it applies to 80 character linewrap or a certain tab width, it was something that motivated us. We could look at our code, and at a glance see if it was following "The way" or not. When it wasn't, we waited for something better to come along, and then we did what we had to do to make it happen.
-</blockquote>
+</i></blockquote>
 
 Now, I was just a kid at the time, but I knew something important had just happened.  Most importantly I realized that the kind of interaction you can have over the internet, though amazing, pales in comparison to face-to-face interaction.  Here's what James had to say shortly after our first meeting:
 
-<blockquote>
+<blockquote><i>
 "We've just completed nine solid days of development on Gambit. Now
 that's a "Codefest" alright! I thought I would share a little with
 the curious about how I think it went...
@@ -38,7 +38,7 @@ would probably say that I've almost beat all his bad habits out of
 him. ;) True or not, I know he's always challenging me and pushing
 me to new limits of what I can build. I think we both learned a lot
 from working together on this project.
-</blockquote>
+</i></blockquote>
 
 While there is a certain amount of altruism involved in mentoring a novice, it is an act that pays you back tenfold.  Every concept that you can teach another person is one that you must master through and through, in ways that you'd never even scratch the surface of if you were just using that knowledge to accomplish a particular task.
 
