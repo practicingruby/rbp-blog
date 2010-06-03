@@ -1,0 +1,62 @@
+=title IDEA: Ruby Mendicant University
+=timestamp 2010-06-03 14:50 UTC
+=description
+It's time for another one of my crazy ideas:  This time, a free online Ruby training program.  Please read about it and let me know what you think.
+=entry
+Back in 2008, the highlight of my year was the <a href="http://http://majesticseacreature.com/mendicant/">Ruby Mendicant</a> project.  Through some stroke of luck, I ended up getting enough funding from independent community donations to take 22 weeks off of work to focus on building <a href="http://prawn.majesticseacreature.com">Prawn, a pure ruby PDF generation library that is now nearing its 1.0 release.
+
+Now in 2010, I'd like to do the same thing for Ruby training and education.  Similar to my <a href="http://www.oreillynet.com/ruby/blog/2008/03/id_love_to_quit_my_job_sort_of.html">original post that spawned Ruby Mendicant</a>, the details are currently fuzzy in my head, but I have enough of a rough outline to collect some comments on.
+
+h3. The Idea
+
+I want to run a free online school designed to help intermediate Ruby programmers master their craft.  Each session would include up to 20 or so participants and run for 3 weeks.
+
+The basic activities would include:
+  * an entrance exam (basic coding problem and questionnaire)
+  * selected readings in freely available Ruby books and online resources
+  * individual and group code review
+  * realistic problems to work on and discuss
+  * Q&A sessions
+  * a final exam (which if passed, would earn the student 'alumni' status)
+  * possibly some pre-recorded or live presentations
+  * a mailing list for students to discuss questions with me
+  * online discussions with guest speakers from our community.
+
+The goal would be to keep these classing going on a rolling basis, so that we could reach a large number of students in the course of a year.  If we did a schedule like 3 weeks on, 1 week off, we could do 13 sessions in a year, allowing me to reach up to 260 students. 
+
+Of the available slots, I would also like to reserve a certain amount of them for "hardship" situations.  People who are currently out of work, those who are in tough economic climates, or have some sort of difficulty in their lives that this opportunity could really help them overcome.  I have not yet figured out how to do this without introducing a ton of bias in my selections, and I have no way of verifying these details, but it seems like a good idea in theory to me at least.
+
+At least some of the sessions would be open to the community at large, and at least some of the material would be released under an open documentation license.  This way, while the core focus would be on affecting big change for small groups at a time, the whole community could benefit from the existence of this program as well.
+  
+h3. Funding
+
+The up front cost of building the material is large, enough where I would need to take a couple days off a week from consulting work for a period of 8 weeks or so to come up with adequate material.  While the replacement cost for that work is pretty high (over 6k), I could probably still get by well enough if I had about $3000 in donations to produce the initial material.
+
+The promising thing about the above lesson plan is that since a lot of it is interactive and tailored to individual efforts, once I build the core lesson plan, actually running the "school" will be comparatively less work.  I won't know at all until I actually run it, but I would expect that I could keep the school up and running for about $1500 a month.
+
+But in the Mendicant spirit, I only would want to keep this thing running if it was of value to the community.  So rather than looking for donations for the running of the school up front, I would only raise money to cover the initial costs of content creation.
+
+Whether the school lives or dies, grows or shrinks, would be based on the generosity of previous students as well as that of the community at large.
+
+h3. Schedule
+
+If I could raise enough money by the end of June, I could then shift my schedule around in July and August to allow me to work on content creation.  That would let me start the first class around the first week of September.
+
+h3. Why Me?
+
+Besides the <a href="http://http://majesticseacreature.com/mendicant/">Ruby Mendicant</a> project, I have also taught trainings at the Lone Star Ruby Conference (2008,2009), and am also part of the trio hosting "The Compleat Rubyist":http://thecompleatrubyist.com/.  I have written two books that are now completely free for people to download and read.  And other stuff.
+
+Trust me.  I'd be good at this :)
+
+If you're wondering what's in it for me:  I believe that free education is one of the most valuable things in the world, and I also learn a ton by teaching others.  If I can make enough money to offset my costs and maintain a decent house-and-wife life, I feel like this is a super good use of my time.
+
+h3. What do you think?
+
+Right now, feedback is key.  I only want to take this project on if I think it'll be a sure thing.   Please respond, answering these questions:
+
+  * Would you want to attend this online school?
+  * Would you be willing to donate to help with its creation? 
+  * Would you recommend this program to others?
+  * What can I do to make it even more awesome?
+  
+Thanks in advance for your suggestions.  Here's hoping that we can make this wok :)
