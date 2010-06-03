@@ -3,7 +3,7 @@
 =description
 It's time for another one of my crazy ideas:  This time, a free online Ruby training program.  Please read about it and let me know what you think.
 =entry
-Back in 2008, the highlight of my year was the <a href="http://http://majesticseacreature.com/mendicant/">Ruby Mendicant</a> project.  Through some stroke of luck, I ended up getting enough funding from independent community donations to take 22 weeks off of work to focus on building <a href="http://prawn.majesticseacreature.com">Prawn, a pure ruby PDF generation library that is now nearing its 1.0 release.
+Back in 2008, the highlight of my year was the <a href="http://http://majesticseacreature.com/mendicant/">Ruby Mendicant</a> project.  Through some stroke of luck, I ended up getting enough funding from independent community donations to take 22 weeks off of work to focus on building <a href="http://prawn.majesticseacreature.com">Prawn</a>, a pure ruby PDF generation library that is now nearing its 1.0 release.
 
 Now in 2010, I'd like to do the same thing for Ruby training and education.  Similar to my <a href="http://www.oreillynet.com/ruby/blog/2008/03/id_love_to_quit_my_job_sort_of.html">original post that spawned Ruby Mendicant</a>, the details are currently fuzzy in my head, but I have enough of a rough outline to collect some comments on.
 
