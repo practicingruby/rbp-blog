@@ -1,0 +1,105 @@
+=title Complexity
+=timestamp 2010.06.06 22:37 +0200
+=description For a while I have been pondering how to write about complexity.  I believe this term is a crucial one for our profession and we should understand it in order to be able to make a good job.  Today I will explore the first dimension of complexity: complexity to avoid redundancy.
+=entry
+If I tell you a program has 1,000,000 lines of code you'll immediately understand that this must be a complex piece of software.  Why is that?  You implicitly know that nobody copies the same 5 lines 200,000 times to create a long program which is full of redundancy.  This is another term we will have to consider while trying to improve our understanding of complexity.  As a first approximation we can say that a complex piece of software is free of redundancy.  This is of course an oversimplification and for various reasons that we will have to talk about in a minute we will not usually reach that mark in practice.
+
+This oversimplification however helps us to understand one important - if not the most important - task of software engineering: reduction of redundancy.  Assume that someone in an application you are writing you need to output all elements contained in an @Array@ in a special way (say, as an HTML unordered list).  You would probably write something like this:
+
+<pre name="code" class="ruby">
+  puts "<ul>"
+  
+  arr.each do |x|
+    puts "  <li>#{x}</li>"
+  end
+  
+  puts "</ul>"
+</pre>
+
+I know this is not the best of examples since you normally would be doing this with ERB or your favorite web framework.  Picking the right tools for the job is of course another important task in software engineering but we want to focus on something different which can be nicely demonstrated with this simple toy example.  (Also, you can easily follow by copying and pasting the code to IRB and play with it.)
+
+What do you do once you discover that you also have to apply the same formatting to a @Set@ in a different location of your program?  Right, you make it a function and write something like:
+
+<pre name="code" class="ruby">
+def format_list(enum)
+  puts "<ul>"
+  
+  enum.each do |x|
+    puts "  <li>#{x}</li>"
+  end
+  
+  puts "</ul>"
+end
+</pre>
+
+In other words, instead of increasing redundancy of your program you refactor a part of it so you can use this functionality in different locations.  Now you discover that you also need to be able to write to a file.  Instead of writing a second function that has a second argument for the file you want to write to you rather add an argument to this function potentially making it look like this:
+
+<pre name="code" class="ruby">
+def format_list(enum, out = $stdout)
+  out.puts "<ul>"
+  
+  enum.each do |x|
+    out.puts "  <li>#{x}</li>"
+  end
+  
+  out.puts "</ul>"
+end
+</pre>
+
+Again you avoided increasing redundancy of the application by adding complexity to this function which now is capable of applying the formatting in an even broader range of situations.  Let's push this one step further: now we also want to be able to do custom conversions of elements in the @Array@ instead of just always using @#to_s@.
+
+<pre name="code" class="ruby">
+TO_S = lambda {|o| o.to_s}
+
+def format_list(enum, out = $stdout, &convert)
+  convert ||= TO_S
+  
+  out.puts "<ul>"
+  
+  enum.each do |x|
+    out.puts "  <li>#{convert[x]}</li>"
+  end
+  
+  out.puts "</ul>"
+end
+</pre>
+
+Now we can call it for a list of @Floats@ like this:
+
+<pre name="code" class="ruby">
+  floats = [1.2345, 4.567, 64.3]
+  
+  format_list floats do |f|
+    "%010.3fcm" % f
+  end
+</pre>
+
+Again, complexity of this function increased but we gained versatility.  In this case we are particularly lucky because all calls of the initial version of the function still work and produce the exact same result.  We might have to take a bit of runtime overhead because the original string interpolation is likely faster for the general case where only @#to_s@ is needed.  (Btw, if this program runs on some form of virtual runtime environment (such as the JVM) the situation might be different because the JVM's runtime optimization might produce better results if there is just a single function which is called more often than multiple methods that each are called infrequently.)
+
+I'd say what we have seen above is a fairly typical evolution of a piece of software.  Instead of increasing redundancy of the program we increased complexity of this function.  It may seem that having different functions for various variants might be better, for example, these functions are certainly easier documented.  So why did we do this and strive to stick with a single function?
+
+Humans write software and while a piece of software might be bug free humans are not.  More importantly the world keeps "changing all the time":http://en.wikipedia.org/wiki/Heraclitus#Panta_rhei.2C_.22everything_flows.22 and so do requirements for software.  Either we did not read the spec properly or someone changed his mind and now all of a sudden we need to ouput ordered lists.  That's an easy change if we just have a single implementation:
+
+<pre name="code" class="ruby">
+def format_list(enum, out = $stdout, &convert)
+  convert ||= TO_S
+  
+  out.puts "<ol>"
+  
+  enum.each do |x|
+    out.puts "  <li>#{convert[x]}</li>"
+  end
+  
+  out.puts "</ol>"
+end
+</pre>
+
+The change is so minimal one barely sees it.  Yet, if we have to apply that change to multiple versions of this function potential for new bugs is much higher.  We might forget one of them (remember that all these do not necessarily be located in the same file) or we might misspell in some of them etc.  Also the effort is higher: for this particular change it might not be dramatic but just think about having to check in multiple files into your favourite source control system, having to update documentation for multiple functions, having to adjust unit tests or other test suites etc.
+
+All in all I think it is fair to say that we gained more than we lost.  We gained developer productivity and paid only a small runtime penalty and complexity of this function.  Up to this point we can say that increased complexity has brought about a better piece of software.  However you might have a premonition of degradation which will start if we add even more features to this function.  Here we have the first reason why we do not have redundancy free applications in software: humans can only handle a certain level of complexity efficiently and so we must avoid too complex systems if we want to be able to maintain the code.
+
+Another reason why we may end up with different versions of @format_list@ is the sheer size of an application.  Large applications need multiple authors and it is not too unrealistic that people independently invent similar functions in different parts.  While this would increase redundancy it might actually be desirable to do it: if there is just the one implementation of the function all components that need it must depend on the component that contains it.  Depending on the application and programming language used the price of an additional component dependency may actually be higher than the benefit.
+
+h3. Summary
+
+Today we looked at software complexity caused by adding features to a piece of software to avoid redundancy.  In our daily work we continuously have to make decisions that affect this dimension of software complexity.  We have also seen how we might want to retain some level of redundancy to keep software maintainable.  Next we will look at other dimensions of software complexity.  Hopefully we will eventually come up with a classification of factors that lead to software complexity - and how to tame them.
