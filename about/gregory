@@ -1,22 +1,27 @@
-<div style="width: 100px;  float: left;">
-!<%= @author.gravatar %>!
+<div style="float: right">
+"Articles by Gregory":<%= @author.index_uri %> | "RSS Feed":<%= @author.feed_uri %>
 </div>
 
-<div style="margin-left: 100px;">
+h2. Gregory Brown ( <a href="http://twitter.com/seacreature" style="text-decoration:none">@seacreature</a> )
 
-h2. Gregory Brown
+<div style="float: left; padding-right: 1em"><img src="http://a1.twimg.com/profile_images/1185695025/3577958529_54046296d0_b.jpg" width="300px"></div>
 
-I'm the author of the O'Reilly book <a href="http://rubybestpractices.com">Ruby Best Practices</a> and a fairly crunchy person when it comes down to it. I took off half a year in 2008 to work on the PDF generation library "Prawn":http://prawn.majesticseacreature.com, supported by the "kindness of the Ruby community":http://majesticseacreature.com/mendicant. I live in New Haven, CT with my girlfriend, some small animals, and a bamboo plant that seems to live without water.
+<div style="text-align: justify">
+In a past life, I was a professional technical author, trainer, developer, and project manager. These days, the vast majority of my time is spent on developing my role as a rogue professor at a creepy underground school <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>.
+
+When I'm not actively teaching or trying to push forward my ideas for an educational parallel to the Free Software Movement, I tend to write a lot. I've written the <a href="http://rubybestpractices.com">Ruby Best Practices</a> book for O'Reilly, and am currently working on two independently published eBooks: One on the Ruby object system, and one on software design. Those two books are still very much in the planning phase, but I'm doing a "backstage pass":https://spreadsheets.google.com/viewform?hl=en&formkey=dEd0MENtMXVmMElGNW1RamREZ1laNWc6MQ#gid=0 for them that is sort of like a beta books program on steriods. It's in closed beta right now, but I send out invites often.
+
+While RMU keeps me busy and is quickly causing me to run out of money, I am still reasonably active within the Ruby community. I attend users groups and conferences, and even teach live trainings from time to time. The amazing people in the Ruby community have always been what makes me want to do this kind of work, so please catch up with me and introduce yourself if you see me at any of the following events.
+</div>
 
 h3. Upcoming Events
 
 * "The Compleat Rubyist":http://thecompleatrubyist.com @ Brookline, MA (April 15-16)
 
-h3. Contact
+* "Red Dirt RubyConf":http://reddirtrubyconf.com/presentations/module-ruby-extend-self-end @ Oklahoma City, OK (April 21-22)
 
-I can be found on Twitter as "@seacreature":http://twitter.com/seacreature .
+* "BohConf":http://www.bohconf.com/ @ Baltimore, MD (May 16-19)
 
-<div align="right">
-"All posts by Gregory":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
-</div>
+<div style="float: right">
+"Articles by Gregory":<%= @author.index_uri %> | "RSS Feed":<%= @author.feed_uri %>
 </div>

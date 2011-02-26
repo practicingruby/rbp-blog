@@ -130,7 +130,7 @@ div#header {
 
 div#intro {
   border-bottom:1px solid #DDDDDD;
-  padding-bottom:0.2em;
+  padding-bottom:0.2pxem;
 }
 
 div#header h1 { padding-top: 0.3em; font-weight: bold;}
