@@ -10,8 +10,6 @@ run Proc.new { |env|
     req.path_info += "/index.html"
   end
 
-  
-
   # Pass the request to the directory app
   Rack::Directory.new(@root).call(env)
 }
