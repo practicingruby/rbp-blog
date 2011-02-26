@@ -123,10 +123,14 @@ div#header {
   height:60px;
   margin: auto;
   margin-top: 0.3em;
-  margin-bottom: 0.75em;
   padding:0;
   position:relative;
   width:725px;
+}
+
+div#intro {
+  border-bottom:1px solid #DDDDDD;
+  padding-bottom:0.2em;
 }
 
 div#header h1 { padding-top: 0.3em; font-weight: bold;}

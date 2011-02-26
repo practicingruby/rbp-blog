@@ -1,10 +1,13 @@
+<div id="intro">
+<p><small><i>The <a href="/about">Practicing Ruby blog</a> (formerly Ruby Best Practices) is a collaborative effort between Gregory Brown, James Britt, Robert Klemme and Magnus Holm. If you like what we do here, chances are you'll also like <a href="">Gregory's books</a>.</i></small></p>
+</div>
+
 <% @entries.each_with_index do |e,i| %>
   <h3><a href='<%= e.url %>'><%= e.title %></a></h3>
   <span><%= e.description %></span>
   <p> <em> <%= e.published_date.strftime("%Y-%m-%d %H:%M") %> by  <a href= '<%= e.author.index_uri %>'><%= e.author.name  %></a></em> 
    (<a href="<%= e.url %>#disqus_thread">View Comments</a>) </p>
-  <%= "<hr/>" unless i+1 == @entries.length %> 
-
+   <%= "hr/>" if i+1 == @entries.length %>
 <% end %>
 
 <script type="text/javascript">
