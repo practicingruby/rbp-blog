@@ -26,14 +26,6 @@
   <body>
     <div class="wrapper">
       <div id="header">
-        <h1><a href="http://blog.rubybestpractices.com">Practicing Ruby</a></h1>
-        <h2 class="tagline">Solve Interesting Problems -- Write Better Code</h2>
-     </div>
-     <div id="content">
-       <div id="main">
-        <%= yield %>
-      </div>
-
       <div id="navbar">
         <div id="about">
           <div align="center">
@@ -41,11 +33,15 @@
             <% next if a.guest %>
             <a href="<%= a.bio_uri %>" title="<%= a.name %>"><img src="<%= a.gravatar(40) %>" alt="<%= a.name %>"></a>
           <% end %>
-          <p><a href="">About This Blog</a></p>
           </div>
         </div>
       </div>
-
+      <h1><a href="http://blog.rubybestpractices.com">Practicing Ruby</a></h1>
+     </div>
+     <div id="content">
+       <div id="main">
+        <%= yield %>
+      </div>
     </div>
 
     <div id="footer">

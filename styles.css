@@ -1,7 +1,7 @@
 html, body, form, fieldset {
   -x-system-font:none;
   font-family:Georgia,"Times New Roman",Times,serif;
-  font-size:100%;
+  font-size:130%;
   font-size-adjust:none;
   font-stretch:normal;
   font-style:normal;
@@ -104,6 +104,15 @@ tt {
   background-color:#F7F7F7;
 }
 
+div#header a {
+  color:#000000;
+  text-decoration:none;
+}
+
+div#header a:hover {
+  color:#333333;	
+}
+
 /* layout */
 div#wrapper {
   background-color:#FFFFFF;
@@ -111,36 +120,35 @@ div#wrapper {
 
 div#header {
   border-bottom:1px solid #DDDDDD;
-  height:90px;
-  margin:0 auto;
+  height:60px;
+  margin: auto;
+  margin-top: 0.3em;
+  margin-bottom: 0.75em;
   padding:0;
   position:relative;
-  width:900px;
+  width:725px;
 }
 
-div#header h1 { margin-bottom: 0.2em; }
-div#header h2.tagline { margin:0; font-size:100%; }
+div#header h1 { padding-top: 0.3em; font-weight: bold;}
 
 div#content {
   margin:0 auto;
-  width:900px;
+  width:725px;
 }
 
 div#main {
   float:left;
   margin:10px 0 0;
-  width:580px;
+  width:725px;
 }
 
 div#navbar {
   float:right;
-  margin:10px 0 0 20px;
-  width:250px;
+  margin:0 0 0 0px;
 }
 
 div#navbar div#about {
  font-size: 130%;
- margin:1em 0 0; 
 }
 
 div#footer {
@@ -154,5 +162,5 @@ div#meta {
   font-family:Arial,Helvetica,sans-serif;
   font-size:90%;
   margin:0 auto;
-  width:900px;
+  width:750px;
 }
