@@ -1,4 +1,4 @@
-<div align="right">
+<div style="float: right">
 "Articles by Robert":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
 </div>
 
