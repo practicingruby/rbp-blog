@@ -181,7 +181,7 @@ end
 puts object.foo
 </pre>
 
-When we run this code, we see the following output, which traces the super calls all the way up from the method defined directly on our object to its super class.
+When we run this code, we see the following output, which traces the <tt>super</tt> calls all the way up from the method defined directly on our object to its superclass.
 
 <pre>
 - Method defined directly on an instance of B
