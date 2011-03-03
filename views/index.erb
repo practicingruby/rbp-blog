@@ -5,7 +5,7 @@
 <% @entries.each_with_index do |e,i| %>
   <h3><a href='<%= e.url %>'><%= e.title %></a></h3>
   <span><%= e.description %></span>
-  <p> <em> <%= e.published_date.strftime("%Y-%m-%d %H:%M") %> by  <a href= '<%= e.author.index_uri %>'><%= e.author.name  %></a></em> 
+  <p> <em> <%= e.published_date.strftime("%Y-%m-%d %H:%M") %> by  <a href= '<%= e.author.bio_uri %>'><%= e.author.name  %></a></em> 
    (<a href="<%= e.url %>#disqus_thread">View Comments</a>) </p>
    <%= "<hr/>" unless i+1 == @entries.length %>
 <% end %>
