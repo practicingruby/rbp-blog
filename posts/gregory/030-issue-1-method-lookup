@@ -3,7 +3,7 @@
 =description
 The very first issue of Practicing Ruby, originally published on November 9, 2010. The focus is on one of the most fundamental bits of Ruby knowledge one must master: the method lookup path.
 =entry
-<i>Originally published as part of the Practicing Ruby newsletter on November 9, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>.</i>
+<small><i>Originally published as part of the Practicing Ruby newsletter on November 9, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>.</i></small>
 
 I decided to start off this newsletter with one of the most basic but essential pieces of knowledge you can have about Ruby's object model: the way it looks up methods. Let's do a little exploration by working through a few examples.
 
