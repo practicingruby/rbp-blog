@@ -17,7 +17,7 @@ In <a href="http://blog.rubybestpractices.com/posts/gregory/030-issue-1-method-l
 
 The example we looked at in the previous issue just showed the mechanics of how the above process plays out, it didn't really hint at practical use cases. Today, we'll look at a scenario for each of these options and discuss some of the up and downs that come along with them. Rather than presenting the examples in method lookup order, I'll try to start with the most common ones and work my way out to the more special purpose ones.
 
-<small><i>NOTE: In a comment on issue #1, <a href="http://twitter.com/jeg2">@JEG2</a> correctly pointed out that this roadmap doesn't account for what happens after the whole class hierarchy is walked. Once <tt>BasicObject</tt> is reached, Ruby starts from the bottom again calling the method_missing hook, which is essentially an implicit step 6. I left this detail out for the sake of simplicity, but it's very important to at least be aware of.</i></small>
+<small><i>NOTE: In a comment on issue #1, <a href="http://twitter.com/jeg2">@JEG2</a> correctly pointed out that this roadmap doesn't account for what happens after the whole class hierarchy is walked. Once <tt>BasicObject</tt> is reached, Ruby starts from the bottom again calling the <i>method_missing</i> hook, which is essentially an implicit step 6. I left this detail out for the sake of simplicity, but it's very important to at least be aware of.</i></small>
 
 h3. When to use ordinary class definitions
 
