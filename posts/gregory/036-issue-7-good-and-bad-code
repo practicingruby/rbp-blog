@@ -26,7 +26,7 @@ loop do
 end
 </pre>
 
-The above code is good demo-ware, as long as you type really carefully and conveniently forget to finish a game before hitting ctrl+c. But to make a real, playable implementation, some end game conditions and basic validations are necessary. To my great joy, adding those in features this tight little script to explode into a hot mess of intertwined logic and nasty little hacks. Check out "the source tree":https://github.com/sandal/tictactoe/tree/7fd72a33aec33f75909d8c9d59a43423b0f66b24 that we ended up with at the end of Issue #6 to see how things turned.
+The above code is good demo-ware, as long as you type really carefully and conveniently forget to finish a game before hitting ctrl+c. But to make a real, playable implementation, some end game conditions and basic validations are necessary. To my great joy, adding those new features caused this tight little script to explode into a hot mess of intertwined logic and nasty little hacks. Check out "the source tree":https://github.com/sandal/tictactoe/tree/7fd72a33aec33f75909d8c9d59a43423b0f66b24 that we ended up with at the end of Issue #6 to see how things turned.
 
 While concise at less than 60 lines of code, it's pretty easy to see that this isn't the kind of software we should aspire to be writing. So the challenge was to start here and end up somewhere better.
 
