@@ -1,2 +1,2 @@
 #! /bin/bash
-phd $0 rbp-blog blog.rubybestpractices.com
+phd $0 rbp-blog rbp-blog
