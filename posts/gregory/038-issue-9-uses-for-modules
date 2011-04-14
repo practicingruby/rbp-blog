@@ -149,7 +149,7 @@ While not a technically complicated example, there is surprising power in having
 We can also invert this relationship by having our class define a template, and then relying on the module that we mix in to provide the necessary details. If we look back at an previous example <tt>TicTacToe</tt>, we can see a practical example of this technique by looking at the play method in our <tt>TicTacToe::Game</tt> class.
 
 <pre name = "code" class = "ruby">
-class TicTacToe
+module TicTacToe
   class Game
     def play
       catch(:finished) do
