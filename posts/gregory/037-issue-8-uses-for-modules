@@ -13,7 +13,7 @@ h3. Modules for Namespacing
 
 Imagine that you are writing an XML generation library, and in it, you have a class to generate your XML documents. Perhaps uncreatively, you choose the name <tt>Document</tt> for your class, creating something similar to what is shown below.
 
-<pre name = "code" class = "ruby">
+<pre name="code" class="ruby">
 class Document
   def generate
     # ...
@@ -23,7 +23,7 @@ end
 
 On its own, this seems to make a lot of sense; a user could do something simple like the following to make use of your library.
 
-<pre name = "code" class = "ruby">
+<pre name="code" class="ruby">
 require "your_xml_lib"
 document = Document.new
 # do something with document
