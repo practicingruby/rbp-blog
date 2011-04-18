@@ -1,0 +1,42 @@
+=title What have the RBP bloggers up to?
+=timestamp 2011-04-18 16:00 UTC
+=description
+While we've seen a small resurgence in activity on this blog due to the gradual release of the Practicing Ruby newsletter, it's been quite a while since we've seen any posts that were specifically written for this blog. I went ahead and caught up with the RBP bloggers to see what they've been up to.
+=entry
+The last few weeks of releasing Practicing Ruby articles have been fun, but part of me still feels a bit of nostalgia for the days when Ruby Best Practices was an active blog on its own. Writing posts alongside Robert Klemme, James Britt, and Magnus Holm was a lot of fun for me, and it's a bit of a melancholy feeling to know that those days are behind us. To fight back against that feeling, I've caught up with each of them to ask them what they've been up to, and what they're working on now.
+
+<hr>
+
+<blockquote>
+<a href="https://github.com/jamesbritt">James Britt</a>: While still using Ruby as my bread-and-butter language I've been trying to avoid getting stuck in a Ruby-rut, so I'm exploring other technologies, both hard and soft.
+
+I'm still getting up to speed with "Haskell":http://www.haskell.org/haskellwiki/Haskell, and it's a real head trip. For the last year I've been buried in a Ruby project, so switching over to Haskell when time allows has not been easy for me.  However, I'm making progress.  Interested readers should check out the books Real World Haskell and Learn You a Haskell for Great Good!
+
+I've also been trying to make time for Mirah.  Mirah is quite the same sort of leap from Ruby as is Haskell.  In fact, it's so similar that I've been using the vim Ruby syntax files for Mirah hacking.  However, it does have some type inferencing, a Haskell-ish quality.  I'm currently using it to do the heavy lifting in a Monkeybars application that interacts with yet another of my interests: the Microsoft Kinect.
+
+I've become increasingly interested in physical computing, wearable technology, and inutuitive gesture-based human-computer interaction. So, in addition to messing with the Kinect I've been doing some Arduino experiementing as well.
+</blockquote>
+
+<hr>
+
+<blockquote>
+<a href="https://github.com/rklemme">Robert Klemme</a>: I still do Java development for a living while using Ruby for all sorts of development tools that make my daily work simpler - or even possible at all.  For example, over time I have created quite a lot of Ruby scripts that automate interactions with the <a href="http://perforce.com">Perforce revision control system</a>.  These scripts typically interact with "p4" (the Perforce command line client) via IO.popen, parse output and either display results in different ways or further interact with Perforce.
+
+Currently I am experimenting with "JRuby":https://github.com/jruby/jruby integration into one of our products.  I use it to script certain parts of the business logic which need to be configurable at customer sites.  So far it is going quite well and I am impressed by the good integration which allows to augment Java classes with additional mixin Ruby modules.  The JRuby team has really done a great job here!
+
+I have yet to dive further into "Scala":http://www.scala-lang.org/ which features some interesting concepts.  But this has to wait - as has my blogging activity which got buried under loads of other matters.  I do hope to return to blogging though.
+</blockquote>
+
+<hr>
+
+<blockquote>
+<a href="https://github.com/judofyr">Magnus Holm</a>: I've been working on template engines lately: Both writing a little template compilation framework (<a href="http://github.com/judofyr/temple">Temple</a>), contributing to a new template engine (<a href="http://github.com/stonean/slim">Slim</a>) and helping <a href="http://github.com/rtomayko/tilt">Tilt</a> glue everything together. It's surprisingly fun to work with template engines: it's kinda like writing a compiler, but you're targeting an "architecture" that you really know - Ruby!
+
+Blogging-wise, I've started <a href="timelessrepo.com">Timeless</a>, a blog doesn't try to be a blog. Timeless turned out how I always wanted the Ruby Best Practices Blog to be: interesting content that's easily browsable. I haven't been able to write any more articles lately, but I have tons of ideas, so hopefully it'll continue to live.
+
+I've also tried to not get stuck in Ruby-land and start exploring other technologies, but so far it's been way too tempting to just use Ruby. However, I *have* been able to finally learn myself some C, and been hacking on some data structures. It's something very pleasing about reading computer science papers you barely understand, but still being able to extract out the important ideas and implement it.
+</blockquote>
+
+<hr>
+
+After hearing what the other guys have been up to, you might be wondering what I've been doing too. But since I'm still maintaining this blog to post the Practicing Ruby issues, my "bio page":http://blog.rubybestpractices.com/about/gregory.html is up to date, so just check that out if you want to catch up with what I've been doing.
