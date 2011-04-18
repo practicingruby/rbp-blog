@@ -10,9 +10,9 @@ The last few weeks of releasing Practicing Ruby articles have been fun, but part
 <blockquote>
 <a href="https://github.com/jamesbritt">James Britt</a>: While still using Ruby as my bread-and-butter language I've been trying to avoid getting stuck in a Ruby-rut, so I'm exploring other technologies, both hard and soft.
 
-I'm still getting up to speed with "Haskell":http://www.haskell.org/haskellwiki/Haskell, and it's a real head trip. For the last year I've been buried in a Ruby project, so switching over to Haskell when time allows has not been easy for me.  However, I'm making progress.  Interested readers should check out the books Real World Haskell and Learn You a Haskell for Great Good!
+I'm still getting up to speed with "Haskell":http://www.haskell.org/haskellwiki/Haskell, and it's a real head trip. For the last year I've been buried in a Ruby project, so switching over to Haskell when time allows has not been easy for me.  However, I'm making progress.  Interested readers should check out the books <a href="http://book.realworldhaskell.org/">Real World Haskell</a> and <a href="http://learnyouahaskell.com/">Learn You a Haskell for Great Good!</a>
 
-I've also been trying to make time for Mirah.  Mirah is quite the same sort of leap from Ruby as is Haskell.  In fact, it's so similar that I've been using the vim Ruby syntax files for Mirah hacking.  However, it does have some type inferencing, a Haskell-ish quality.  I'm currently using it to do the heavy lifting in a Monkeybars application that interacts with yet another of my interests: the Microsoft Kinect.
+I've also been trying to make time for <a href="https://github.com/mirah/mirah">Mirah</a>.  Mirah is quite the same sort of leap from Ruby as is Haskell.  In fact, it's so similar that I've been using the vim Ruby syntax files for Mirah hacking.  However, it does have some type inferencing, a Haskell-ish quality.  I'm currently using it to do the heavy lifting in a Monkeybars application that interacts with yet another of my interests: the Microsoft Kinect.
 
 I've become increasingly interested in physical computing, wearable technology, and inutuitive gesture-based human-computer interaction. So, in addition to messing with the Kinect I've been doing some Arduino experiementing as well.
 </blockquote>
