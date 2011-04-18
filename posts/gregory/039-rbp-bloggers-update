@@ -32,7 +32,7 @@ I have yet to dive further into "Scala":http://www.scala-lang.org/ which feature
 <blockquote>
 <a href="https://github.com/judofyr">Magnus Holm</a>: I've been working on template engines lately: Both writing a little template compilation framework (<a href="http://github.com/judofyr/temple">Temple</a>), contributing to a new template engine (<a href="http://github.com/stonean/slim">Slim</a>) and helping <a href="http://github.com/rtomayko/tilt">Tilt</a> glue everything together. It's surprisingly fun to work with template engines: it's kinda like writing a compiler, but you're targeting an "architecture" that you really know - Ruby!
 
-Blogging-wise, I've started <a href="timelessrepo.com">Timeless</a>, a blog doesn't try to be a blog. Timeless turned out how I always wanted the Ruby Best Practices Blog to be: interesting content that's easily browsable. I haven't been able to write any more articles lately, but I have tons of ideas, so hopefully it'll continue to live.
+Blogging-wise, I've started <a href="http://timelessrepo.com">Timeless</a>, a blog doesn't try to be a blog. Timeless turned out how I always wanted the Ruby Best Practices Blog to be: interesting content that's easily browsable. I haven't been able to write any more articles lately, but I have tons of ideas, so hopefully it'll continue to live.
 
 I've also tried to not get stuck in Ruby-land and start exploring other technologies, but so far it's been way too tempting to just use Ruby. However, I *have* been able to finally learn myself some C, and been hacking on some data structures. It's something very pleasing about reading computer science papers you barely understand, but still being able to extract out the important ideas and implement it.
 </blockquote>
