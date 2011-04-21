@@ -1,0 +1,122 @@
+=title Issue #10.5: Addendum to <i>Uses For Modules, Part 3</i>
+=timestamp 2011-04-21 20:00 UTC
+=description
+Issue #10.5 of Practicing Ruby, originally published on December 15, 2010. This issue adds a bit more context to what was discussed in Issue #10.
+=entry
+<small><i>Originally published as part of the Practicing Ruby newsletter on December 15, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
+
+In the <a href="http://blog.rubybestpractices.com/posts/gregory/040-issue-10-uses-for-modules.html">last issue</a>, we discussed the use of <tt>extend self</tt> in great detail, but neglected to cover a pair of alternatives that seem on the surface to be functionally equivalent. While I don't want to spend too much time rehashing an old topic, I want to at least provide an example of each approach and comment on their quirks.
+
+h3. Defining methods at the module level
+
+Occasionally folks ask whether mixing a module into itself via <tt>extend()</tt> is equivalent to the code shown below.
+
+<pre name = "code" class = "ruby">
+module Greeter
+  def self.hello
+    "hi"
+  end
+end
+</pre>
+
+The short answer to that question is "no", but it is easy to see where the confusion comes from, because calling <tt>Greeter.hello</tt> does indeed work as expected. But the important distinction is that methods defined in this way are simply directly defined on the module itself and so cannot be mixed into anything at all. There is really very little difference between the above code and the example below.
+
+<pre name = "code" class = "ruby">  
+obj = Object.new
+
+def obj.hello
+  "hi"
+end
+</pre>
+
+Consider our earlier example of Ruby's <tt>Math</tt> or <tt>FileUtils</tt> modules. With both of these modules, you can envision scenarios in which you would call the functions on the modules themselves. But there are also cases where using these modules as mixins would make a lot of sense. For example, Ruby itself ships with a math mode (-m) for irb which mixes in the <tt>Math</tt> module at the top level so you can call its functions directly.
+
+<pre name = "code" class = "ruby">
+$ irb -m
+>> sin(Math::PI/2)
+=> 1.0
+</pre>
+
+In the above example, if <tt>sin()</tt> were implemented by simply defining the method directly on the <tt>Math</tt> module, there would be no way to mix it into anything. While sometimes it might make sense to force a module to never be used as a mixin, that use case is rare, and so very little is gained by directly defining methods on modules rather than using the <tt>extend self</tt> technique.
+
+h3. Using <tt>module_function</tt>
+
+Before people got in the habit of mixing modules into themselves, they often relied on a more specialized feature called <tt>module_function</tt> to accomplish the same goals.
+
+<pre name = "code" class = "ruby">
+module Greeter
+  module_function
+
+  def hello
+    "hi"
+  end
+end
+</pre>
+
+This code allows the direct calling of <tt>Greeter.hello</tt>, and does not prevent <tt>Greeter</tt> from being mixed into other objects. It also has a neat alternative syntax that allows you to selectively choose certain methods to be module functions while leaving others accessible via mixin only.
+
+<pre name = "code" class = "ruby">
+module Greeter
+  def hello
+    "hi"
+  end
+
+  def goodbye
+    "bye"
+  end
+
+  module_function :hello
+end
+</pre>
+
+With this modified definition, it is still possible to call <tt>Greeter.hello</tt>, but attempting to call <tt>Greeter.goodbye</tt> would raise a <tt>NoMethodError</tt>. This sort of sounds like it offers the benefits of extending a module with itself, but with some added granularity. Unfortunately, there is something about <tt>module_function</tt> that makes it quite weird to work with.
+
+As it turns out, <tt>module_function</tt> works very different under the hood than self-mixins do. This is because <tt>module_function</tt> actually doesn't manipulate the method lookup path, but instead, it makes a direct copy of the specified methods and attaches them to the module itself. If that sounds to weird to be true, check out the code below.
+
+<pre name = "code" class = "ruby"> 
+module Greeter
+  def hello
+    "hi"
+  end
+
+  module_function :hello
+
+  def hello
+    "howdy"
+  end
+end
+
+Greeter.hello #=> "hi"
+
+class Foo
+  include Greeter
+end
+
+Foo.new.hello #=> "howdy"
+</pre>
+
+Pretty weird behavior, right? You may find it interesting to know that I was not actually aware that <tt>module_function</tt> made copies of methods until I wrote Issue #10 and was tipped off about this by one of our readers. However, I did know about one of the consequences of <tt>module_function</tt> being implemented in this way: private methods cannot be used in conjunction with <tt>module_function</tt>. That means that the following example cannot be literally translated to use <tt>module_function</tt>.
+
+<pre name = "code" class = "ruby">
+module MinimalAnswer
+  extend self
+
+  def match?(pattern, input)
+    pattern.split(/,/).any? do |e|
+      normalize(input) =~ /\b#{normalize(e)}/i
+    end
+  end
+
+  private
+
+  def normalize(input)
+    input.downcase.strip.gsub(/\s+/," ").gsub(/[?.!\-,:'"]/, '')
+  end
+end 
+</pre>
+
+From these examples, we see that <tt>module_function</tt> is more flexible than defining methods directly on your modules, but not nearly as versatile as extending a module with itself. While the ability to selectively define which methods can be called directly on the module is nice in theory, I've yet to see a use case for it where it would lead to a much better design.
+
+h3. Reflections
+
+With the alternatives to <tt>extend self</tt> having unpleasant quirks, it's no surprise that they're quickly falling out of fashion in the Ruby world. But since no technical decision should be made based on dogma or a blind-faith acceptance of community conventions, these notes hopefully provide the necessary evidence to help you make good design decisions on your own.
