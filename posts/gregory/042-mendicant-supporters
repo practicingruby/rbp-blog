@@ -1,0 +1,65 @@
+=title Supporting the Ruby Mendicant experiment
+=timestamp 2011-04-29 9:00 UTC
+=description
+Want an extremely easy way to help make a huge impact on the software
+development community? I have an idea!
+=entry
+Lots of people contribute to open source, but few labor at it. In a way, it's amazing how much progress we can make with what folks can do in the spare time. However, certain projects can't even get off the ground as a side project. Those are the kinds of problems I like to focus on.
+
+h3. My Story 
+
+In early 2008, I was able to take 22 weeks off of work to focus on building the PDF generation library Prawn for the Ruby community, because 70 individual Ruby developers along with RubyCentral helped me raise over $11,000 in funding in just a few weeks time. At the time they contributed, they did not know exactly what I was going to work on, but knew that I wanted to focus on big, hard problems that might not get solved in the traditional way of hacking in one's spare time. This initial investment from the community kickstarted development on Prawn and now I am proud to say the library has been downloaded over 130,000 times and has a core team of five people, with patches accepted from over 50 contributors.
+
+In June 2010, I decided to tackle a new project by founding Ruby Mendicant University. Through pledgie, I was able to raise a few thousand dollars to help with the initial build-out of the online school, but quickly realized that it would be come a much bigger task than I initially anticipated. At this point in time, I spend 40+ hours a week focusing on running Ruby Mendicant University, with 15-25 of that going directly to mentoring students during our courses. But the fruits of our labor have been tremendous: with my guidance, our students have produced a total of <a href="http://university.rubymendicant.com/resources/student_projects.html">40 new contributions</a> to open source software, and I've produced over <a href="http://university.rubymendicant.com/resources/learning_materials.html">25 exercises</a> that have been released to the public. Additionally, the entire inspiration behind the Practicing Ruby articles you've been reading on this blog have come from RbMU.
+
+Since December 1, 2010 I've been dedicating myself to RbMU full time, and have only a trickle of income coming in from project management consulting work, the occasional paid training, and some of my paid writing work. While we've managed to get between that and what my wife makes, I'm burning money faster than I can make it. I need a way to plug the leak that isn't a huge distraction to me, and so I'm reaching out to the community for help.
+
+h3. Helping me work for the community full time
+
+What I'd like is for you to do is sign up for a small subscription payment to me, so that I can continue doing my work and not focus on monetization right now. By paying a monthly fee of as low as $4/mo, you'll be helping me do the following things:
+
+* Teach roughly two classes a month at Ruby Mendicant University
+* Continue to edit and release Practicing Ruby articles to this blog
+* Work on my new experimental book publishing toolchain: "Bookie":https://github.com/sandal/bookie
+* Work on two books that will be released under a 'pay-what-you-want-or-not-at-all' model; one on software design, the other on the Ruby object system.
+* Run field studies where I lead a team of RbMU alumni on making contributions to important open source projects. Currently RubySpec, rubygems.org, and HacketyHack are on our radar.
+* Run monthly public Q&A sessions with special guests.
+* Work on some sandbox learning environments that could be fun open source projects, such as my tower defense game engine "IvoryTower":https://github.com/rmu/ivory_tower and the elevator simulator "UpsAndDowns":https://github.com/rmu/ups_and_downs
+* Anything else that comes up that's important and of benefit to the community.
+
+In return, I'd want to give you a couple things as well:
+
+* A weekly newsletter about what I've been working on, occassionally outlining interesting tools or techniques I've come across as I work on things.
+* Access to a mailing list and IRC channel where you can ask me about the things I'm working on and my plans for the future.
+* Access to a weekly office hours session where I spend a couple hours answering questions or giving code reviews to those who are supporting me through this program (with some restrictions depending on demand)
+* Provide a weekly updated report of my revenue from this program, so you can compare what I'm taking in to what I'm producing.
+
+Here are a couple caveats to keep in mind:
+
+* Supporting me through this program doesn't give you any direct influence over the projects I'm working on, but you're free to cancel your subscription at any time, if I diverge from things you find valuable.
+* This is not a tax-deductible donation. I do want to sent up a NPO for running Ruby Mendicant University, but that will be several months from now. Instead, this is essentially a group-sourced investment in community projects.
+* I may cancel this program at any time, if it isn't working out.
+
+If you're okay with those things and think this sounds promising, please go ahead and subscribe via the button below.
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="KXTB8JV2ZDEEL">
+<table>
+<tr><td><input type="hidden" name="on0" value="How much do you want to help?">How much do you want to help?</td></tr><tr><td><select name="os0">
+	<option value="A lot">A lot : $8.00USD - monthly</option>
+	<option value="A whole lot">A whole lot : $16.00USD - monthly</option>
+	<option value="A ton">A ton : $32.00USD - monthly</option>
+	<option value="A little">A little : $4.00USD - monthly</option>
+</select> </td></tr>
+</table>
+<input type="hidden" name="currency_code" value="USD">
+<input type="image" src="https://www.paypalobjects.com/WEBSCR-640-20110401-1/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110401-1/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+
+I may have a more permanent home for this button at some point in the future, but right now want to see who's interested and take it from there. 
+
+h3. Questions?
+
+I know that this is a little different than what you might usually expect in the ways of community funding, and it might seem strange to you. I will answer any question you leave in the comments here!
