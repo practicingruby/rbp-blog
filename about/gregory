@@ -16,9 +16,8 @@ While RMU keeps me busy and is quickly causing me to run out of money, I am stil
 
 h3. Upcoming Events
 
-* "Red Dirt RubyConf":http://reddirtrubyconf.com/presentations/module-ruby-extend-self-end @ Oklahoma City, OK (April 21-22)
-
 * "BohConf":http://www.bohconf.com/ @ Baltimore, MD (May 16-19)
+* "GoRuCo":http://goruco.com/ @ New York, NY (June 4)
 
 <div style="float: right">
 "Articles by Gregory":<%= @author.index_uri %> | "RSS Feed":<%= @author.feed_uri %>
