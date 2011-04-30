@@ -12,8 +12,6 @@ In a past life, I was a professional technical author, trainer, developer, and p
 When I'm not actively teaching or trying to push forward my ideas for an educational parallel to the Free Software Movement, I tend to write a lot. I've written the <a href="http://rubybestpractices.com">Ruby Best Practices</a> book for O'Reilly, and am currently working on two independently published eBooks: One on the Ruby object system, and one on software design. Those two books are still very much in the planning phase, but I'm doing a "backstage pass":https://spreadsheets.google.com/viewform?hl=en&formkey=dEd0MENtMXVmMElGNW1RamREZ1laNWc6MQ#gid=0 for them that is sort of like a beta books program on steriods. It's in closed beta right now, but I send out invites often. If all that isn't enough writing for you, you can also check out <a href="http://blog.majesticseacreature.com">my personal blog</a>, which covers topics that are either too general or too specific to be included on this site.
 
 While RMU keeps me busy and is quickly causing me to run out of money, I am still reasonably active within the Ruby community. I attend users groups and conferences, and even teach live trainings from time to time. The amazing people in the Ruby community have always been what makes me want to do this kind of work, so please catch up with me and introduce yourself if you see me at any of the following events.
-
-<i>Want to help me continue to work on open source and free technical education full time? <a href='http://blog.rubybestpractices.com/posts/gregory/042-mendicant-supporters.html'>Read about my commmunity subscriptions program.</a></i>
 </div>
 
 h3. Upcoming Events
@@ -21,6 +19,7 @@ h3. Upcoming Events
 * "BohConf":http://www.bohconf.com/ @ Baltimore, MD (May 16-19)
 * "GoRuCo":http://goruco.com/ @ New York, NY (June 4)
 
+<i>Want to help me continue to work on open source and free technical education full time? <a href='http://blog.rubybestpractices.com/posts/gregory/042-mendicant-supporters.html'>Read about my commmunity subscriptions program.</a></i>
 <div style="float: right">
 "Articles by Gregory":<%= @author.index_uri %> | "RSS Feed":<%= @author.feed_uri %>
 </div>
