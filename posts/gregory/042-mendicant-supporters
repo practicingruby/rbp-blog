@@ -4,6 +4,8 @@
 Want an extremely easy way to help make a huge impact on the software
 development community? I have an idea!
 =entry
+<i>tl; dr; Since December 1, 2010 I've been working full time working on community projects for software developers, primarily focusing on building out <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>, but also working on some writing and open source code as well. I'm asking for small monthly payments from the community so that I can keep living this way. There is a subscription button and a list of benefits at the bottom of this post. Over 40 people have subscribed in the first 72 hours!</i>
+
 Lots of people contribute to open source, but few labor at it. In a way, it's amazing how much progress we can make with what folks can do in the spare time. However, certain projects can't even get off the ground as a side project. Those are the kinds of problems I like to focus on.
 
 h3. My Story 
@@ -40,7 +42,7 @@ Here are a couple caveats to keep in mind:
 * This is not a tax-deductible donation. I do want to sent up a NPO for running Ruby Mendicant University, but that will be several months from now. Instead, this is essentially a group-sourced investment in community projects.
 * I may cancel this program at any time, if it isn't working out.
 
-If you're okay with those things and think this sounds promising, please go ahead and subscribe via the button below. I had 40 subscribers within the first 72 hours, but I need a whole lot more to make this work!
+<i>If you're okay with those things and think this sounds promising, please go ahead and subscribe via the button below. I had 40 subscribers within the first 72 hours, but we need a whole lot more to make this work!</i>
 
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_s-xclick">
