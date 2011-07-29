@@ -1,23 +1,22 @@
 =title Issue #19: Thoughts on Mocking (1 of 2)
 =timestamp 2011-07-29 14:00 UTC
 =description
-Issue #18 of Practicing Ruby, originally published on January 19, 2011. This
+Issue #19 of Practicing Ruby, originally published on January 19, 2011. This
 article is the first in a two part series about using mocks in testing.
 =entry
 <small><i>Originally published as part of the Practicing Ruby newsletter on
 January 19, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 When I originally published my <a
-href="http://blog.rubybestpractices.com/posts/gregory/050-issues-18-testing-dogma.html"><small rant on testing</a>, it generated a spirited discussion about a number of different topics. It even lead <a href="http://twitter.com/bryanl">Bryan Lyles</a> to post a great set of "testing guidelines":https://gist.github.com/785610 to balance out my unfocused rant. But the topic that overshadowed almost everything else was that of best practices regarding mock objects. In this two part article, we'll try to shine some light on that topic, because it is clearly still a point of confusion and occasionally even controversy within our community.
+href="http://blog.rubybestpractices.com/posts/gregory/050-issues-18-testing-dogma.html">small rant on testing</a>, it generated a spirited discussion about a number of different topics. It even lead <a href="http://twitter.com/bryanl">Bryan Liles</a> to post a great set of "testing guidelines":https://gist.github.com/785610 to balance out my unfocused rant. But the topic that overshadowed almost everything else was that of best practices regarding mock objects. In this two part article, we'll try to shine some light on that topic, because it is clearly still a point of confusion and occasionally even controversy within our community.
 
 In Issue #20, I will go over some examples of when I use mock objects and when I don't, and try to come up with some guidelines for building test suites that do their job without becoming too brittle. But before we can really discuss practices, we need to establish a baseline level of theory and background knowledge, which is what this post is all about.
 
-Rather than doing the heavy lifting myself, I will point you to what is essentially *the* article to read to better understand mock objects. It was originally written in 2004 (which is about the time that I first read it), and then revised in 2007. It is of course, Martin Fowler's essay <a href="Mocks Aren't Stubs
-">http://martinfowler.com/articles/mocksArentStubs.html</a>.
+Rather than doing the heavy lifting myself, I will point you to what is essentially *the* article to read to better understand mock objects. It was originally written in 2004 (which is about the time that I first read it), and then revised in 2007. It is of course, Martin Fowler's essay <a href="http://martinfowler.com/articles/mocksArentStubs.html">Mocks Aren't Stubs</a>.
 
 The article is long, somewhat dry, and includes large amounts of Java code. Don't let that discourage you from reading the whole thing from end to end, and if necessary, reading it again. Despite the title, Fowler goes into much deeper topics than mocks vs. stubs, and hits on many of the key ideas that separate 'mockists' from 'classicist'. Personally, I feel this is a false dichotomy, but you'll still be hard pressed to find a better article that gives the historical background of the design ideas that motivated the creation of testing and mocking frameworks in the first place.
 
-I find Fowler's assessment to be reasonable fair, incredibly comprehensive, and a very useful place to start from if you are to form any argument about one approach vs. another when it comes to mocking. That having been said, I am critical of certain aspects of this essay, partly because I am looking at it with a 2011 perspective, and partly because I didn't come to Ruby from Java. For this reason, I've included my commentary on Fowler's article below. <b>I encourage you to read his article in full before reading my comments, as they'll make much more sense that way.</b>
+I find Fowler's assessment to be reasonable fair, incredibly comprehensive, and a very useful place to start from if you are to form any argument about one approach vs. another when it comes to mocking. That having been said, I am critical of certain aspects of this essay, partly because I am looking at it with a 2011 perspective, and partly because I didn't come to Ruby from Java. For this reason, I've included my commentary on Fowler's article below. I encourage you to read his article in full before reading my comments, as they'll make much more sense that way.
 
 h3. Commentary on Fowler's "Mocks Aren't Stubs"
 
