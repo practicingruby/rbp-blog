@@ -407,3 +407,5 @@ Mocking frameworks are big guns, and should be treated as such. They can be life
 In summary, it's a bad idea to swallow bad tasting medicine with the abstract promise that it will be better for you in the end. If you can see clear benefits from the use of mocks and have weighed them out on a case by case basis against your other options, you should be fine. But if you are mostly using them because the RSpec team tells you to, you're basically screwed :)
 
 My final disclaimer about what I've said here is that it is entirely based on my own experiences. You've probably worked on different problems in different environments than I have, and I'd love to know how those experiences have influenced your own thoughts on mocking. So, what do you think?
+
+<i>Did you enjoy this article? If so, you should consider signing up <a href="http://practicingruby.com">Practicing Ruby: Volume 2</a>, which features my more recent work.</i>
