@@ -4,8 +4,7 @@
 Issue #19 of Practicing Ruby, originally published on January 19, 2011. This
 article is the first in a two part series about using mocks in testing.
 =entry
-<small><i>Originally published as part of the Practicing Ruby newsletter on
-January 19, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
+<small><i>Originally published as part of the Practicing Ruby newsletter on January 19, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 When I originally published my <a
 href="http://blog.rubybestpractices.com/posts/gregory/050-issues-18-testing-dogma.html">small rant on testing</a>, it generated a spirited discussion about a number of different topics. It even lead <a href="http://twitter.com/bryanl">Bryan Liles</a> to post a great set of "testing guidelines":https://gist.github.com/785610 to balance out my unfocused rant. But the topic that overshadowed almost everything else was that of best practices regarding mock objects. In this two part article, we'll try to shine some light on that topic, because it is clearly still a point of confusion and occasionally even controversy within our community.
