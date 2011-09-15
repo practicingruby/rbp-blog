@@ -13,9 +13,9 @@ SOLID is a collection of five object oriented design principles that go nicely t
 
  * Liskov substitution principle: objects in a program should be replaceable with instances of their subtypes without altering the correctness of that program
 
- * Interface segregation principle many client specific interfaces are better than one general purpose interface.
+ * Interface segregation principle: many client specific interfaces are better than one general purpose interface.
 
- * Dependency inversion principle depend upon abstractions, do not depend upon concretions
+ * Dependency inversion principle: depend upon abstractions, do not depend upon concretions
 
 The term SOLID was coined by Uncle Bob Martin to group together these important concepts. I had heard of each of the design principles SOLID covers over the years, but didn't really think much of them until I attended a great talk by Sandi Metz at GoRuCo 2009. Fortunately, Confreaks recorded <a href="http://confreaks.net/videos/240-goruco2009-solid-object-oriented-design
 ">Sandi's talk</a> so I won't need to try to summarize it here.
