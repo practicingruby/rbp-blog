@@ -1,6 +1,6 @@
-=title Prerequisite Knowledge
+=title USP: Prerequisite Knowledge
 =timestamp Sep 13, 2011 at 1:29 AM
-=description First article in the series of our guest author Eric Wong
+=description This is the first article in the series of our guest author Eric Wong about Unix systems programming (USP).
 =entry
 
 * You should know basic Ruby syntax.
