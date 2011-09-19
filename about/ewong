@@ -1,0 +1,25 @@
+<div style="float: right">
+"Articles by Eric":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
+</div>
+
+<div style="width: 100px; float: left;">
+!<%= @author.gravatar %>!
+</div>
+
+<div style="margin-left: 100px;">
+
+h2. Eric Wong
+
+RBP mirrors Eric's articles about Unix system programming in Ruby from mailing list usp.ruby@librelist.org.
+
+License: GPLv3 (or later, at the discretion of Eric Wong)
+http://www.gnu.org/licenses/gpl-3.0.txt
+
+h3. Contact
+
+You can reach Eric via <a href="mailto:normalperson@yhbt.net">email</a>.
+
+<div align="right">
+"Articles by Eric":<%= @author.index_uri %> | "Feed":<%= @author.feed_uri %>
+</div>
+</div>

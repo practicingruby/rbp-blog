@@ -34,3 +34,7 @@ authors:
     name: "Aaron Patterson"
     email: aaron.patterson@gmail.com
     guest: true
+  ewong:
+    name: "Eric Wong"
+    email: normalperson@yhbt.net
+    guest: true
