@@ -302,4 +302,4 @@ While we dug deep into some heavy theory in <a href="http://blog.rubybestpractic
 
 In the two articles to follow this one, we'll be looking at particular patterns and techniques that can help you design better code. Now that you're armed with both the SOLID principles and the metrics of connascence, you have a solid basis for thinking about these problems in more specific contexts. I encourage you to re-read these first two articles as you continue on with this series, and get back to me with any questions you might have.
 
-<b>NOTE: There are two articles left to release from Practicing Ruby Volume 1. If you want to keep receiving great content like this on a weekly basis, please sign up for <a href="http://practicingruby.com">Practicing Ruby Volume 2</a>, which already has five new articles published as of 2011-09-20.</b>
+<b>NOTE: There are only two articles left to release from Practicing Ruby Volume 1. If you want to keep receiving great content like this on a weekly basis, please sign up for <a href="http://practicingruby.com">Practicing Ruby Volume 2</a>, which already has five new articles published as of 2011-09-20.</b>
