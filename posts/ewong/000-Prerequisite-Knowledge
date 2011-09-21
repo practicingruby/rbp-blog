@@ -9,8 +9,7 @@ This series started out with "this posting of Eric":http://blade.nagaokaut.ac.jp
 
 ??I would like to do a series of mailing list posts on the subject of Unix systems programming in Ruby.  I only intend to cover standardized, POSIX-compliant features of the standard Ruby distribution.  No extensions or Linux-only parts.??
 
-I volunteered to edit his postings and mirror them on the "Practicing Ruby" blog
-(formerly "Ruby Best Practices").  I will try to mirror articles as quickly as possible but the blog will certainly be lagging behind a bit.
+I volunteered to edit his postings and mirror them on the "Practicing Ruby" blog (formerly "Ruby Best Practices").  I will try to mirror articles as quickly as possible but the blog will certainly be lagging behind a bit.
 
 You may discuss articles here on the blog or on the mailing list where there are originally published: "usp.ruby@librelist.org":mailto:usp.ruby@librelist.org ("subscribe":mailto:usp.ruby-subscribe@librelist.com)
 
