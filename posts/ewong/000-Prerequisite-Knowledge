@@ -3,6 +3,21 @@
 =description This is the first article in the series of our guest author Eric Wong about Unix systems programming (USP).
 =entry
 
+h2. Introduction (by RKlemme)
+
+This series started out with "this posting of Eric":http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-talk/387469 to ruby-talk:
+
+??I would like to do a series of mailing list posts on the subject of Unix systems programming in Ruby.  I only intend to cover standardized, POSIX-compliant features of the standard Ruby distribution.  No extensions or Linux-only parts.??
+
+I volunteered to edit his postings and mirror them on the "Practicing Ruby" blog (formerly "Ruby Best Practices").  I will try to mirrow articles as quickly as possible but the blog will certainly be lagging behind a bit.
+
+You may discuss articles here on the blog or on the mailing list where there are originally published: "usp.ruby@librelist.org":mailto:usp.ruby@librelist.org ("subscribe":mailto:usp.ruby-subscribe@librelist.com)
+
+Now let's start with the original text.
+
+
+h2. What you should know
+
 * You should know basic Ruby syntax.
 * Bourne shell knowledge will be useful, but not required.
 * You do not need to know C, though I'll refer to and map Ruby methods to corresponding or analogous C functions.
