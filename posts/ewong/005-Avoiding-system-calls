@@ -1,0 +1,47 @@
+=title USP: Avoiding system calls
+=timestamp Sep 15, 2011 at 12:34 AM
+=description Eric describes common strategies to reduce the number of system calls done.  This does make sense since they come with an overhead.
+=entry
+
+Eric Wong wrote:
+
+??As mentioned before, syscalls are the interface user space interacts with kernel space.  When a user space application makes a syscall, it is telling the kernel to execute code on its behalf.??
+
+The mode switch from user space to kernel space has more overhead and is slower than a normal library function call[1].
+
+Thus user space can (and will often attempt to) aggregate several user space calls into fewer system calls to avoid this switching overhead.  This is a common concept found in user space code and Ruby itself is no exception.  This aggregation often does not happen transparently, so it should be understood and explained to avoid confusion.
+
+
+h2. I/O Buffering
+
+As a Ruby programmer, you'll notice the IO class (and subclasses like File) will buffer data you write and you need to call IO#flush or set "IO#sync = true" to ensure other processes can read it.
+
+If you're a C programmer, you'll know the stdio library can do the same type of buffering in user space.   In fact, MRI 1.8 used the stdio library internally for its user space buffering needs.
+
+Kernel space may also implement its own buffering to avoid overhead when interacting with the storage and network layers.  This buffering can be influenced in some cases from Ruby.  We'll cover this later.
+
+
+h2. Memory Allocation
+
+While Ruby programmers do not often worry about memory allocation, sometimes the following question comes up:
+
+p(. Why did my Ruby process stay so big even after I've cleared all references to big objects?  I'm /sure/ GC has run several times and freed my big objects and I'm not leaking memory.
+
+A C programmer might ask the same question:
+
+p(. I free()-ed a lot of memory, why is my process still so big?
+
+Memory allocation to user space from the kernel is cheaper in large chunks, thus user space avoids interaction with the kernel by doing more work itself.
+
+User space libraries/runtimes implement a memory allocator (e.g.: malloc(3) in libc) which takes large chunks of kernel memory[2] and divides them up into smaller pieces for user space applications to use.
+
+Thus, several user space memory allocations may occur before user space needs to ask the kernel for more memory.  Thus if you got a large chunk of memory from the kernel and are only using a small part of that, that large chunk of memory remains allocated.
+
+Releasing memory back to the kernel also has a cost.  User space memory allocators may hold onto that memory (privately) in the hope it can be reused within the same process and not give it back to the kernel for use in other processes.
+
+fn1. Why this is expensive outside the scope of this list so explaining this is left as an exercise for the reader :)
+
+fn2. Via brk(2), sbrk(2), mmap(2) or various non-portable methods.
+
+
+??License: "GPLv3":http://www.gnu.org/licenses/gpl-3.0.txt (or later, at the discretion of Eric Wong)??
