@@ -3,77 +3,51 @@
 =description Eric introduces fundamental concepts of the runtime architecture of a Unix system: processes and file descriptors.
 =entry
 
-If you're a Rubyist, you may already be familiar with object-oriented
-designs.  A running Unix/Unix-like kernel exposes two primary types of
-objects to userspace:
+If you're a Rubyist, you may already be familiar with object-oriented designs.  A running Unix/Unix-like kernel exposes two primary types of objects to userspace:
 
 # Processes
 # Open files
 
 h2. Processes
 
-Processes are instances of running applications.  Ruby programs
-typically run as their own process[1] in userspace.  Kernels expose
-a Process IDentifier (PID) as positive integers to userspace programs
-to uniquely identify processes.
+Processes are instances of running applications.  Ruby programs typically run as their own process[1] in userspace.  Kernels expose a Process IDentifier (PID) as positive integers to userspace programs to uniquely identify processes.
 
-Each PID represents one (private) process object in the OS kernel.  The
-PID is only a reference or pointer to that object.  Two running
-processes cannot have the same PID, and two PIDs cannot refer to the
-same process, but PIDs can be recycled and reused over time.
+Each PID represents one (private) process object in the OS kernel.  The PID is only a reference or pointer to that object.  Two running processes cannot have the same PID, and two PIDs cannot refer to the same process, but PIDs can be recycled and reused over time.
 
 PIDs are global in scope to each running Unix system.
 
-Processes are created from its parent using the fork(2) system call
-(which is wrapped by the Kernel#fork method in Ruby).
+Processes are created from its parent using the fork(2) system call (which is wrapped by the Kernel#fork method in Ruby).
 
-We will cover processes more in later chapters/posts.
+We will cover processes more in later chapters / posts.
 
 
-fn1. although experimental Multi-VM implementations exist that allow
-multiple Ruby VMs within a single process
+fn1. although experimental Multi-VM implementations exist that allow multiple Ruby VMs within a single process
 
 
 h2. Open Files
 
-Running processes may create, open, and release objects known as "files"
-in kernel space using APIs provided in user space.  Much of Unix systems
-programming revolves around manipulating "file" objects of various
-types.
+Running processes may create, open, and release objects known as "files" in kernel space using APIs provided in user space.  Much of Unix systems programming revolves around manipulating "file" objects of various types.
 
-The kernel exposes non-negative integers known as "file descriptors" to
-userspace.  These are similar to PIDs as they are integers which point
-to objects within the kernel.
+The kernel exposes non-negative integers known as "file descriptors" to userspace.  These are similar to PIDs as they are integers which point to objects within the kernel.
 
 You may have heard the term: "everything is a file" in Unix literature.
 
-Indeed, each integer file descriptor may refer to one of several types
-of objects within a running kernel.  All of these objects can be called
-"files" even if they're not stored on hard disks or visible on the
-filesystem.
+Indeed, each integer file descriptor may refer to one of several types of objects within a running kernel.  All of these objects can be called "files" even if they're not stored on hard disks or visible on the filesystem.
 
-File descriptors may be reused and recycled within the lifetime a
-process.  They are more frequently recycled than PIDs.
+File descriptors may be reused and recycled within the lifetime a process.  They are more frequently recycled than PIDs.
 
-Each process has its own file descriptor table (inherited from its
-parent).
+Each process has its own file descriptor table (inherited from its parent).
 
-Unlike PIDs, several file descriptors may refer to the same file
-object inside the kernel.
+Unlike PIDs, several file descriptors may refer to the same file object inside the kernel.
 
-File descriptors have properties of their own that are not tied
-to the underlying file object in the kernel.
+File descriptors have properties of their own that are not tied to the underlying file object in the kernel.
 
-As open files are the primary interface for processes to interact with
-the kernel, I expect the majority of my future posts to cover various
-aspects of file manipulation in-depth.
+As open files are the primary interface for processes to interact with the kernel, I expect the majority of my future posts to cover various aspects of file manipulation in-depth.
 
 
 h2. Summary
 
-Processes are containers for open files (among other things).  Open
-files are objects in the Unix kernel that can be accessed from within
-processes.
+Processes are containers for open files (among other things).  Open files are objects in the Unix kernel that can be accessed from within processes.
 
 
 ??License: "GPLv3":http://www.gnu.org/licenses/gpl-3.0.txt (or later, at the discretion of Eric Wong)??
