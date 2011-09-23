@@ -1,0 +1,32 @@
+=title USP: The Unix object model (as seen in procfs)
+=timestamp Sep 17, 2011 at 3:32 AM
+=description This is an introduction to places where information about processes in a running Unix system can be found.
+=entry
+
+Eric Wong wrote:
+
+??If you're a Rubyist, you may already be familiar with object-oriented designs.  A running Unix/Unix-like kernel exposes two primary types of objects to userspace:??
+
+# ??Processes??
+# ??Open files??
+
+Now that we know what filesystems and virtual filesystems are, several systems have a procfs virtual filesystem mounted under /proc.  I don't believe it's standardized anywhere between different systems, but your system probably supports it.
+
+Among other things, procfs allows you to see the relationship between processes and their file descriptors on the filesystem.
+
+You can inspect which file descriptors a particular process is using by looking in the "fd" subdirectory belonging to the PID belonging to the process.  For example, my current mutt process has PID=19245 and file descriptors 0, 1, 2, and 4 open:
+
+<pre>
+       /proc/19245/fd
+       /proc/19245/fd/0
+       /proc/19245/fd/1
+       /proc/19245/fd/2
+       /proc/19245/fd/4
+</pre>
+
+Each PID has a directory in /proc/, and for each directory belonging to a particular PID, there is an "fd"
+
+Utilities like ps(1) (are likely to) use information found in procfs to generate its output.  Other information in procfs is less-consistent across different implementations, so consult your OS documentation.
+
+??License: "GPLv3":http://www.gnu.org/licenses/gpl-3.0.txt (or later, at the discretion of Eric Wong)??
+
