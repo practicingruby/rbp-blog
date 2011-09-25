@@ -1,0 +1,71 @@
+=title USP: Unix time and the Ruby Time class
+=timestamp Sep 24, 2011 at 2:28 AM
+=description Eric explains Unix time concepts and how time related functionality is accessed from Ruby.
+=entry
+
+The Unix epoch is defined as January 1, 1970, 00:00:00 UTC (Coordinated Universal Time[1]).  Unix systems return the time in seconds as a signed integer relative to the Unix epoch.  Negative numbers are interpreted as dates before the Unix epoch.
+
+Using seconds (and fractions of a second) to represent time allows application authors to rely on arithmetic rather than specialized functions for calculating time intervals.
+
+File systems expose timestamps for all files in Unix time with varying degrees of accuracy and granularity.  The Ruby File and File::Stat classes can support timestamps with sub-second granularity on some systems.
+
+Modern kernels do not know nor care about timezones.  Conversions from UTC to the local timezone (and vice versa) are done in user space[2]. Different processes running concurrently on the same machine do not necessarily share the same local timezone.
+
+h3. Ruby Time class
+
+The Ruby Time class includes methods for reading the system time and allows converting from an Integer (seconds since the epoch) to a Ruby Time object.
+
+Ruby Time objects have a timezone attached to them, but remember this is a user space construct.
+
+h3. Time.now / gettimeofday(2) / clock_gettime(2)
+
+gettimeofday(2) is the commonly available system call for reading the Unix time with (up to) microsecond resolution.  On some systems, clock_gettime(2) may be used for nanosecond resolution[3].
+
+Time.now will return the current time as a Time object taking into account the timezone of the current process (in user space).  Ruby 1.9 may use clock_gettime(2) internally if available, but fall back to
+gettimeofday(2) to retrieve the system time.
+
+h3. Time#tv_sec / Time#tv_usec / Time#tv_nsec
+
+These accessors allow access to the underlying values returned by gettimeofday(2) or clock_gettime(2) as Integers.  For systems without nanosecond resolution, Time#tv_nsec may just be the value of Time#tv_usec multiplied by 1000.
+
+h3. Time.at - converts from Unix time to a Time object
+
+If you have the number of seconds (and maybe microseconds) as integer seconds since the Unix epoch, you can convert that into a Ruby Time object using the Time.at class method:
+
+<pre name="code" class="ruby">
+       Time.at(seconds[, microseconds ])
+</pre>
+
+This is is useful if you encounter a Unix timestamp anywhere but want to have a Ruby Time object.  The local timezone is attached to the created object.
+
+There is no underlying syscall needed for this, this conversion can be performed entirely in user space (although it may require memory allocation).
+
+h3. Process timezone
+
+The "TZ" environment variable controls the timezone for a given process, and thus the timezone attached to a Ruby Time object.  If "TZ" is unset, the timezone of the process is implementation-defined.
+
+h3. Time#utc
+
+If your process is not running under UTC, you may wish to convert Time objects to UTC with this method.
+
+h3. Setting system time
+
+Ruby does not provide methods to change the system time.  Changing system time typically requires administrator (root) privileges and few applications (especially high-level ones) need to change the system time.  For machines with network access, system time is commonly synchronized via NTP and gradually adjusted via adjtime(3) and/or non-portable syscalls.
+
+h3. Monotonic clocks
+
+Some systems support a monotonic clock which is not adjustable (even by the administrator).  A monotonic clock is useful for maintaining consistent timing and scheduling across system time changes.
+
+Ruby currently (as of 1.9.3) does not provide access to the monotonic clock.  However, Ruby implementations may use the monotonic clock internally for timing (via clock_gettime(2)) and recording time differences.
+
+h3. Avoiding system calls
+
+You may notice the lack of gettimeofday(2) or clock_gettime(2) syscalls if you're tracing syscalls.  This is because C libraries can work with the kernel to optimize away the syscalls for gettimeofday(2) and clock_gettime(2).  These implementations may trade accuracy for speed, but may be disabled (by the administrator) if accuracy is more important (than speed).
+
+fn1. One should know UTC is not exactly the same as Greenwich Mean Time (GMT)
+
+fn2. Timezone information is usually on (regular) files, so it may require syscalls to read those files.
+
+fn3. You're not guaranteed this level of accuracy is supported by your kernel nor your hardware.  Consult your operating system and hardware documentation for more information.
+
+??License: "GPLv3":http://www.gnu.org/licenses/gpl-3.0.txt (or later, at the discretion of Eric Wong)??
