@@ -1,0 +1,56 @@
+=title USP: An introduction to the Unix pipe
+=timestamp Sep 23, 2011 at 12:35 AM
+=description We learn what pipes are and how they are realized in a Unix kernel.
+=entry
+
+The Unix pipe is the first example of an anonymous file we will cover.
+
+Unlike regular files and directories, anonymous files do not exist on the filesystem and do not persist across reboots.  Only the process that creates the anonymous file (and its descendants) can access anonymous files.  Anonymous files only persist until the last process using it closes it.
+
+At its heart, the Unix pipe is just like a pipe in plumbing, a one-way buffer for transporting payload from one end to another.
+
+It is implemented as a circular ring buffer in the kernel:
+
+<pre>
+                     user space  | kernel space
+       -----------------------------------------------
+                                 |
+         data in --> fd[writer] ->- file[writer] -->\
+                                 |                   \
+                                 |                [buffer]
+                                 |                   /
+        data out <-- fd[reader] -<- file[reader] <--/
+                                 |
+</pre>
+
+The buffer is created by the pipe(2) system call and persists until both files are closed.  In Ruby, the IO.pipe method calls pipe(2) and returns an array of two Ruby IO objects, a reader and writer:
+
+<pre name="code" class="ruby">
+       reader, writer = IO.pipe # kernel creates internal buffer
+</pre>
+
+Writing can be accomplished by making the write(2) syscall, the writer IO object should default to IO#sync=true at creation.
+
+<pre name="code" class="ruby">
+       writer.write("HELLO")
+</pre>
+
+Reading can be accomplished by making the read(2) syscall.
+
+<pre name="code" class="ruby">
+       reader.read(5)  # => "HELLO"
+</pre>
+
+Finally, the kernel memory for the buffer is released after both file objects (through file descriptors and IO) are closed:
+
+<pre name="code" class="ruby">
+       writer.close
+       reader.close
+       # Kernel frees the buffer
+</pre>
+
+As with regular files, pipes operate on byte streams and leaves higher-level functionality (like encoding) to user space.
+
+Pipes also have important atomicity requirements standardized by "POSIX":http://pubs.opengroup.org/onlinepubs/9699919799/. Given the importance of pipes in Unix programming, we will revisit and give pipes much more coverage in the future.
+
+??License: "GPLv3":http://www.gnu.org/licenses/gpl-3.0.txt (or later, at the discretion of Eric Wong)??
