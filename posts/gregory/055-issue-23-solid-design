@@ -132,7 +132,7 @@ Early on in the course, Carlos came to me with an implementation that more-or-le
 
 <pre name = "code" class = "ruby">
 some_model = SomeModel.where(something)
-some_model.a_number     #=> <a localized string>
+some_model.a_number     #=> <a localized value>
 some_model.a_number_raw #=> <the original numeric value>
 </pre>
 
@@ -143,7 +143,7 @@ some_model = SomeModel.where(something)
 some_model.a_number     #=> <the original numeric value>
 
 localized_model = some_model.localized
-localized_model.a_number #=> <the original numeric value>
+localized_model.a_number #=> <a localized value>
 </pre>
 
 In this new implementation, you do have to explicitly ask for a localized object, but that small change gains us a lot. The module that gives us <tt>SomeModel#localized</tt> only introduces that one method, rather than a hook that gets run for every <tt>ActiveRecord::Base</tt> method that is called. That means that ordinary calls to models extended by i18n_alchemy still work as they always did.
