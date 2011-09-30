@@ -18,7 +18,7 @@ h3. Upcoming Events
 
 * "RubyConf":http://rubyconf.org @ New Orleans, LA (Sept 29 - Oct 1)
 
-<i>Want to help me continue to work on open source and free technical education full time? Read about my <a href='http://blog.rubybestpractices.com/posts/gregory/042-mendicant-supporters.html'>commmunity subscriptions program.</a></i>
+<i>If you want to support my projects, you can either subscribe to Practicing Ruby or join the Mendicant Supporters network. The less time I need to think about paying the bills, the more time I can focus on building cool stuff for the community</i>
 <div style="float: right">
 "Articles by Gregory":<%= @author.index_uri %> | "RSS Feed":<%= @author.feed_uri %>
 </div>
