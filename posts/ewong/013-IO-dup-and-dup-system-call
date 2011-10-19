@@ -1,0 +1,61 @@
+=title USP: IO#dup and the dup(2) system call
+=timestamp Oct 19, 2011 at 4:59 AM
+=description Eric explains duplicating file descriptors.
+=entry
+
+h2. IO#dup vs. Object#dup
+
+IO#dup is Object#dup in Ruby: it creates a shallow copy of an existing object.  To create a shallow copy, the IO#initialize_copy callback method performs the dup(2) syscall on the underlying file descriptor the IO object wraps.
+
+Like Object#dup in Ruby, dup(2) is a shallow clone that does not copy the underlying open file object in the kernel, but creates a new reference to an existing kernel object.
+
+Thus, two (or more) file descriptors in the same process can refer to the same open file in the kernel.
+
+Before calling IO#dup, we have a 1:1:1 relationship:
+
+ * one Ruby IO object
+ * one file descriptor
+ * one open file object in the kernel
+
+<pre>
+    [Ruby]    user space   |  kernel space
+    ------------------------------------------------
+                           |
+    io_orig ----------- fd[orig] ----> file object
+                           |
+    ------------------------------------------------
+    (file descriptors (fd) are the bridge here kernel and user space)
+</pre>
+
+After we call IO#dup, we have two 2:2:1 relationship:
+
+ * two Ruby IO objects
+ * two file descriptors
+ * one file object in the kernel
+
+<pre>
+    [Ruby]    user space   |  kernel space
+    ------------------------------------------------
+                           |
+    io_orig ----------- fd[orig] -\
+                           |       >---> file object
+    io_copy ----------- fd[copy] -/
+                           |
+    ------------------------------------------------
+</pre>
+
+IO#dup can be called on the same IO object any number times, so there may be an N:N:1 relationship as long as the process (and system) resource limits are not exceeded.
+
+Most kernel-level (but not user space) changes to one IO object are immediately visible in the IO object(s) it was copied from (or copied to).
+
+h2. Effect on IPC
+
+IO#dup means IO#close / close(2) will only remove a _reference_ to the file object in the kernel.  Only when the last file descriptor for a given file object is closed is the actual file object closed and released in the kernel.
+
+For applications relying on receiving an end-of-file condition (from a socket or pipe), IO#dup[1] can (sometimes inadverdantly) prevent the end-of-file condition from being reached in the reader.
+
+
+[1] - and similar functions, like fork()
+
+
+??License: "GPLv3":http://www.gnu.org/licenses/gpl-3.0.txt (or later, at the discretion of Eric Wong)??
