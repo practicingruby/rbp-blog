@@ -3,7 +3,7 @@
 =description
 The Practicing Ruby Journal publishes new Ruby articles by Gregory Brown on a weekly basis. It is the source of many of the articles on this blog, and is how Gregory pays his bills. Read on to find out how things have been going for the last three months. Links to three free articles are included in this post!
 =entry
-Three months ago today I relaunched my subscription-based weekly Ruby journal. Over the last 13 weeks I've shared my thoughts with over 250 subscribers and wrote close to 150 pages of content. The work I've done on Practicing Ruby has better prepared me to teach at "Mendicant University":http://university.rubymendicant.com and vice-versa. Because this has been so much fun for me, and appears to be trending towards becoming a sustainable business, I will keep doing it!
+Three months ago today I relaunched my subscription-based weekly Ruby journal. Over the last 13 weeks I've shared my thoughts with over 250 subscribers and wrote close to 150 pages of content. The work I've done on Practicing Ruby has better prepared me to teach at <a href="http://university.rubymendicant.com" target="_blank">Mendicant University</a> and vice-versa. Because this has been so much fun for me, and appears to be trending towards becoming a sustainable business, I will keep doing it!
 
 To celebrate the fact that this second generation of the Practicing Ruby has made it through a full quarter of a year, I've decided to publicly release the three articles that my subscribers enjoyed the most. Go ahead and check them out if you want to see for yourself what the journal is like:
 
@@ -17,7 +17,7 @@ While reading these articles might give you a sense of the quality of the conten
 * I am highly available to my readers, doing extra legwork where necessary to make sure their questions are answered and thoughts considered.
 * I am doing the kind of research that I was never able to do when I was spending most of my time doing consulting work, leading me to write about things not because they are easy, but because they are challenging and interesting. 
 * All of the back issues are available to new subscribers, because I treat Practicing Ruby more like a subscription to a digital library and less like a newsletter.
-* I am not alone in running this project: <a href="mailto:nancykotary@gmail.com">Nancy Kotary</a> provides me with awesome copyediting and Mendicant Univerity co-founder <a href="http://twitter.com/jordan_byron">Jordan Byron</a> maintains the Rails app that runs this service.
+* I am not alone in running this project: <a href="mailto:nancykotary@gmail.com" target="_blank">Nancy Kotary</a> provides me with awesome copyediting and Mendicant Univerity co-founder <a href="http://twitter.com/jordan_byron" target="_blank">Jordan Byron</a> maintains the Rails app that runs this service.
 
 If you look even deeper than this, you'll find that similar to my work on Mendicant University, the Practicing Ruby journal is an experiment in social responsibility for me. In particular, I've committed to do a few things that I think ought to make paying subscribers feel good for supporting this project:
 
