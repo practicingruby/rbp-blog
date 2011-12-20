@@ -71,7 +71,7 @@ end
 
 With this modified definition, it is still possible to call <tt>Greeter.hello</tt>, but attempting to call <tt>Greeter.goodbye</tt> would raise a <tt>NoMethodError</tt>. This sort of sounds like it offers the benefits of extending a module with itself, but with some added granularity. Unfortunately, there is something about <tt>module_function</tt> that makes it quite weird to work with.
 
-As it turns out, <tt>module_function</tt> works very different under the hood than self-mixins do. This is because <tt>module_function</tt> actually doesn't manipulate the method lookup path, but instead, it makes a direct copy of the specified methods and attaches them to the module itself. If that sounds to weird to be true, check out the code below.
+As it turns out, <tt>module_function</tt> works very different under the hood than self-mixins do. This is because <tt>module_function</tt> actually doesn't manipulate the method lookup path, but instead, it makes a direct copy of the specified methods and attaches them to the module itself. If that sounds too weird to be true, check out the code below.
 
 <pre name = "code" class = "ruby"> 
 module Greeter
