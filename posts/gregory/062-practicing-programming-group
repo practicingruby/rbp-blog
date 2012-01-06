@@ -1,0 +1,72 @@
+=title Kicking ass together: How to practice software development with a group
+=timestamp 2011-12-27 18:00 UTC
+=description
+In this article, I provide some advice for folks who want to create local or online communities that help folks get better at programming. While these ideas are based on the values of Mendicant University, they should be relevant to anyone who wants to get a group of programmers together for serious practice.
+=entry
+Over the last year and a half, I have worked with a small group of students and staff to create an excellent online learning community at Mendicant University. Unfortunately, because Mendicant is something that we're intentionally scaling at a very slow pace, we won't directly reach as many people as we'd like to any time soon.
+
+In this post, I've collected some of the things that I think contribute to making Mendicant University a great place to learn. I'd love to see these ideas integrated into more local and online groups, so that we can create a lot more great places for programmers to learn and grow.
+
+h3. Emphasize the personal goals and interests of your group
+
+Getting a small group together to discuss the currently trending topics in the tech community while ignoring what is going on within your community is a tremendously waste of effort. It is much more effective to focus on the things that relate to the projects your community members are actively working on, as well as the challenges they face in their daily work.
+
+Rather that having talks or study sessions on topics of general interest, it is more effective to figure out some concrete problems that members of your group need to solve, and then use your combined resources to help identify the right learning materials or people to talk to in order to get past the obstacles in your way. 
+
+While there are probably a lot of ways to do this, one interesting approach might be to have folks announce what they're working on and what topics they're interested in at the beginning of each meeting and then group together those with common interests. For an online group, you can use something like a wiki or periodic mailing list roundups to achieve similar results.
+
+h3. Practice formal code reviews
+
+Rather than just talking in the abstract about ideas or strategies, it is best to actually sit down with editors open and code in front of you ready to review. A lot can be learned just through the process of explaining your code to someone else, and it is impossible to overstate the value of trying to teach others, even about tiny things like idioms or conventions.
+
+If a particular bit of code would be too gnarly to review effectively, it can still be productive to hammer out a simplified example that illustrates the core concept you're trying to study. The more concrete you can make your discussion, the more likely it is that you'll get more directly valuable information while interacting with others.
+
+h3. Prefer evidence based arguments
+
+Arguments based on authority ("So and so said...") and arguments based on popularity ("Everyone does this...") are very common in programming communities, but ultimately distract and divide more than they enlighten. Fortunately, there is a more productive way to have a discussion about code.
+
+The most important thing for any discussion about different approachs to solving a given problem is to establish a clear context. Without context, it's unclear whether a hammer or a bulldozer is the right tool for the job. With a context established, all discussion can refer back to it as a basis for determining whether a given approach is suitable or not.
+
+From there, it's mostly a matter of weighing tradeoffs between different approaches. For example, you might say something like "Sqlite is convenient to use because it doesn't require you to run a database server, but because you're going to be working with GIS data, you will probably want to work with PostgreSQL because PostGIS provides a ton of useful functionality there". This statement is not bulletproof, but it will lead to a much better conversation than "Sqlite sucks, use PostgreSQL".
+
+Sometimes, you will want to express things that are purely personal preferences, and that's okay. But when you do so, it helps to point out that you're not trying to have a reasoned argument but instead just sharing your gut feeling. This will help avoid religious arguments in most cases.
+
+h3. Seek purposeful ways of practicing and studying
+
+Every day you will find some new recommendation for what the next revolutionary way to learn how to code is. You'll also discover that some new topic of interest is the one that every just needs to learn and talk about RIGHT NOW. Of course, this false sense of importance and urgency is nothing more than smoke and mirrors, and if you get caught up in it you'll spend more time chasing your tail than you do building useful stuff.
+
+Whenever possible, use a goal based, hands-on approach to learning new things. Try out new ideas and technology on low-risk projects that might end up being useful to you later if possible. If you do spend some time on deliberate practice as opposed to practicing-while-working, make sure that it's to address a specific need or problem you've encountered. For example: a code kata might be just the right tool for learning the syntax of a new language or trying out learning new tricks in your text editor, but it's a bad idea to practice code katas just waiting for serindipitous learning. Happy accidents do happen, but you shouldn't rely on luck as a way to move you forward.
+
+While this particular point is more focused on individual practice than it is on practicing in a group, the same set of goals should be present in any group activities you engage in. Whenever possible, break into focus groups as needed to avoid forcing several members to practice/study something only remotely interesting or relevant to them. Our available time and attention is a precious resource, and should be spent wisely.
+
+It's worth noting that this advice is NOT meant to be taken as a push to focus only on narrow and practical goals. Deep studying of theory or classical topics can be very useful and is particularly suitable for group activities. It's just essential to tie this back in some way to a deep and personal goal rather than just a vague intellectual interest.
+
+h3. Create a good balance between socializing and getting stuff done
+
+Without room for socializing, it will be hard for any group to develop a common culture and a shared set of interests. However, I've seen far too many users group "hackfests" turn into water cooler discussions, and if the social norms are established to encourage this sort of behavior, there will be no chance for the values of deep practice to set in.
+
+For in-person gatherings, it might make sense to have either a working session followed by some social event, or separate nights for social and working sessions. Online, similar separations can be made by having some activities designed for work and others for casual socialization. You don't need to be a fascist about enforcing this dividing line, but setting some clear expectations go a long way.
+
+h3. Establish a culture of participation and sharing
+
+Your group should be defined by what its members do, not just what they talk about. Do what you can to highlight the contributions of your members, and favor activities that involve active collaboration rather than ones that require one person to do the bulk of the work while everyone else passively consumes information.
+
+For in-person gatherings, I like things like lightning talks and hackfests, as long as they are mostly focused on what group members are working on, as opposed to just repeating something that someone else said or did. I also think that group discussions can be very effective as long as some structure and decent moderation is provided.
+
+Online, similar results can be achieved by focusing on code reviews and discussions of specific articles or questions about how to solve a given problem.
+
+Both online and in personal, work on and discussion of open source software goes a long way. Doing everything you can to encourage your members to share their work publicly will make a huge difference and create a positive form of social pressure to actively share. Of course, not everyone will have time to run their own projects or contribute large patches to other projects. But as soon as you hear someone complain about a bug or problem that they haven't reported yet, that's the time to sit down and show them how to write a minimal reproducing example and file a ticket. Sometimes a few minutes of guidance is all it takes to transform someone who does little more than complain on twitter to an active contributor to open source projects.
+
+h3. Practice social awareness and take care not to exclude marginalized groups
+
+Many technical groups (both online and local) fail at breaking away from some pretty embarrassing social norms. While we may not feel this way as individuals, as a group we are consistently guilty of tolerating exclusionary behavior that would not be tolerated in most other social settings. Remember that while the bulk of programmers who attend technical events are heterosexual upper-middle class white males in their 20s and 30s, there is a whole world of folks who are just as passionate and capable of achieving great things technically but do not fit that stereotype.
+
+This does not mean being excessively politically correct or losing your sense of humor. It does mean that if you would not make a certain joke or statement in front of a more diverse group of people, you might want to avoid saying it to your programmer buddies. It also means that you should check your cultural assumptions about others at the door, and focus instead on what people can do rather than what makes them different from you. 
+
+Most of the advice I've given in this article will naturally create an environment that is more inviting to a broader-based community than the one we're currently serving, but I wanted to call out this issue in particular as being one that is too important to ignore. Organizers of communities need to specifically keep these issues in mind, as they are the ones that have the best chance at setting expectations for what is expected of group members. 
+
+People work and learn best in an environment in which they feel safe, welcome, and appreciated. If each member in your group values that sort of environment, you'll end up achieving more as a group than you would in a group where some folks feel marginalized or unappreciated.
+
+h3. Questions?
+
+I care a lot about these ideas, and would love to help spread them beyond the digital walls of Mendicant University and out into the world. If you want to start up your own group based on these ideas or want some help incorporating them into a group you're currently organizing, I'd be happy to help. You can leave a comment here, or you can even catch up with me over Skype. Send an email to gregory.t.brown@gmail.com with your availability in UTC time and I will be happy to meet with you.
