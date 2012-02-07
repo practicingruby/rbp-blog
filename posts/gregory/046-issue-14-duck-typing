@@ -96,7 +96,7 @@ This issue will cause <tt>read_data()</tt> to raise an <tt>ArgumentError</tt> wh
 <pre name = "code" class = "ruby">
 def read_data(source)
   begin 
-    source.read 
+    return source.read 
   rescue NoMethodError
     # do nothing, just catch the specific error you'd expect if
     # read() was not present.
