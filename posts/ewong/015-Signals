@@ -1,6 +1,6 @@
 =title USP: Unix signals - primitive interprocess communication
 =timestamp Mar 20, 2012 at 9:56 PM
-=description Today Eric presents various bits of information that the kernel manages for a process.
+=description Today Eric talks about signal handling basics.
 =entry
 
 Signals are the most basic way for processes to communicate with each other on a Unix system.  Each process has signal handlers configured by default, so some actions (e.g. killing a process) are always available.
