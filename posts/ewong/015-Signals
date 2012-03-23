@@ -1,0 +1,31 @@
+=title USP: Unix signals - primitive interprocess communication
+=timestamp Mar 20, 2012 at 9:56 PM
+=description Today Eric presents various bits of information that the kernel manages for a process.
+=entry
+
+Signals are the most basic way for processes to communicate with each other on a Unix system.  Each process has signal handlers configured by default, so some actions (e.g. killing a process) are always available.
+
+There are two distinct classes of signals defined by POSIX:
+
+       standard and real-time
+
+Currently, Ruby implementations (that I'm aware of) only deal with standard signals.  Ruby implementations also control the signal mask and will temporarily block/unblock signals to perform critical operations in the interest of (portable) thread/async-safety.
+
+Operating systems have a pre-defined list of signals.  This list of signals is available for all processes to send and receive.  Each signal has a human-readable name (e.g.  "KILL" or "SIGKILL") and non-negative number (e.g. 9) associated with it.  To see which ones are supported by both Ruby and your OS, the "Signal.list" method returns a Hash mapping their names to respective signal numbers.
+
+Some signals (e.g. SEGV, VTALRM) may be reserved by the Ruby implementation for internal use.  Other signals (STOP, KILL) may not be blocked, ignored, or handled at all by any userspace process.
+
+Signals may be assigned (and reassigned) handler functions (aka "callbacks") which execute upon delivery of a signal.  Those of you familiar with event-driven programming models will realize signals are another type of event (not much unlike I/O) which you may define callbacks for.
+
+However, writing signal handlers requires more care and attention than "normal" code in your application.  The universal wisdom is to keep signal handlers simple and short, regardless of the programming language you're writing in.
+
+While Ruby helps users avoid many of the low-level details and caveats of implementing signal handling, there are still pitfalls to be aware of and avoid.
+
+
+h2. Methods for working with signals in Ruby
+
+"Process.kill" maps to the kill(2) / killpg(2) system calls for sending signals to processes or process groups.  "Signal.trap" (Kernel#trap) is analogous (but not directly mapped to sigaction(2) (or signal(2)).
+
+Read more about them via ri or rdoc.
+
+??License: "GPLv3":http://www.gnu.org/licenses/gpl-3.0.txt (or later, at the discretion of Eric Wong)??
