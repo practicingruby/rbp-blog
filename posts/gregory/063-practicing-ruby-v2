@@ -1,0 +1,26 @@
+=title Practicing Ruby's second volume now freely available
+=timestamp 2012-03-26 14:00 UTC
+=description
+I've decided to publicly release 15 more articles from my Practicing Ruby journal. Read on if you want a bunch of links to some of the best Ruby content I've ever written.
+=entry
+Keeping with my promise to release content from my <a href="http://practicingruby.com">Practicing Ruby journal</a>, I've put together a massive link dump of articles from its second volume. Please enjoy them and share them with your friends.
+
+* <a href="http://practicingruby.com/articles/shared/tmxmprhfrpwq">Issue 2.1: Ways to load code</a>
+* <a href="http://practicingruby.com/articles/shared/bhftubljbomqpmifbibmzmptlxhoin">Issue 2.2: How to attack sticky problems</a>
+* <a href="http://practicingruby.com/articles/shared/mvzhovpjbghr">Issue 2.3: A closure is a double edged sword</a>
+* <a href="http://practicingruby.com/articles/shared/ggcwduoyfqmz">Issue 2.4: Implementing Enumerable & Enumerator in Ruby</a>
+* <a href="http://practicingruby.com/articles/shared/afshdqdholth">Issue 2.5: Thoughts on regression testing</a>
+* <a href="http://practicingruby.com/articles/shared/vbmlgkdtahzd">Issue 2.6: Learning new things step-by-step</a>
+* <a href="http://practicingruby.com/articles/shared/ozkzbsdmagcm">Issue 2.7: "Unobtrusive Ruby" in Practice</a>
+* <a href="http://practicingruby.com/articles/shared/jleygxejeopq">Issue 2.8: Ruby and the singleton pattern don't get along</a>
+* <a href="http://practicingruby.com/articles/shared/qyxvmrgmhuln">Issue 2.9: Building Unix-style command line applications</a>
+* <a href="http://practicingruby.com/articles/shared/nlhxgszkgenq">Issue 2.10: From requirements discovery to release</a>
+* <a href="http://practicingruby.com/articles/shared/iptocucwujtj">Issue 2.11: Domain specific API construction</a>
+* <a href="http://practicingruby.com/articles/shared/oelhlibhtlkx">Issue 2.12: Working with binary file formats</a>
+* <a href="http://practicingruby.com/articles/shared/gthgvfebjvyn">Issue 2.13: Designing business reporting applications</a>
+* <a href="http://practicingruby.com/articles/shared/vpxpovppchww">Issue 2.14: Thoughts on "Arguments and Results", Part 1</a>
+* <a href="http://practicingruby.com/articles/shared/wdykkrmdfjvf">Issue 2.15: Thoughts on "Arguments and Results", Part 2</a>
+
+Practicing Ruby is a subscriber-supported service, and is literally how I pay my bills. If you like these articles and want to help make sure I can keep writing more of them, please <a href="http://practicingruby.com/">become a subscriber</a>. There is lots of content available to members that has not been publicly released yet, and I'm adding more articles regularly.
+
+<i>PS: Anyone who can't pay the full $8/month fee for ANY reason is welcome to contact gregory.t.brown@gmail.com for a free account.</i>
