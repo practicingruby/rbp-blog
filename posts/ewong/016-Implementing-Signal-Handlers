@@ -1,0 +1,80 @@
+=title USP: Implementing signal handlers - some caveats
+=timestamp Mar 27, 2012 at 12:25 AM
+=description Today Eric talks about how to implement signal handlers properly and what pitfalls to look out for.
+=entry
+
+h2. Signal handlers may run at any time
+
+If your program receives a signal, Ruby will invoke the associated signal handler as soon as it is able to.  This means a signal handler can hijack your existing code flow just about anywhere in your program (including inside methods of any libraries you use).  Normal code execution resumes once the signal handler finishes execution.
+
+This is a big difference from most event-driven programming frameworks where callbacks for a given object/event fire synchronously and will not step over existing code flow.
+
+
+h2. Reentrancy vs thread-safety
+
+While reentrancy and thread-safety are related concepts, it is absolutely critical to understand is they are NOT the same, and one does not imply the other.
+
+(There are existing articles on this, so I won't dive into this more.)
+
+
+h2. Signal handlers must be reentrant
+
+When writing a signal handler, you must ask yourself:
+
+       What happens when another signal arrives while this handler is still running?
+
+Since signal handlers are invoked as soon as possible, they can even run while another (or the same) signal handler is running.  Thus signal handlers must be able to tolerate reentrancy.
+
+Back to thread-safety: some constructs required for thread-safety fail horribly when used in situations that require reentrancy.  Most mutex implementations (including the Ruby Mutex class) deadlock when used inside a signal handler.
+
+Consider the following snippet:
+
+<pre name="code" class="ruby">
+       lock = Mutex.new
+
+       # XXX this is an example of what NOT to do inside a signal handler:
+       trap(:USR1) do
+         lock.synchronize do
+           # if a second SIGUSR1 arrives here, this block of code
+           # will fire again.   Attempting Mutex#synchronize twice
+           # the same thread leads to a deadlock error
+         end
+       end
+</pre>
+
+Thus, you must ensure any code you use inside a signal handler is reentrant-safe.  Even using the Logger class in the Ruby standard library (which can call Mutex#synchronize) can deadlock inside a signal handler.
+
+
+h2. Signal reliability
+
+Signals are not completely reliable in Ruby (nor many applications, for that matter).  If multiple, identical signals are received in a short time frame, you're guaranteed to fire a handler for /at least/ one of the signals, but not all of the signals received.
+
+This is because Ruby implementations must[1] block signals from firing while manipulating internal data structures.  When normal signals get blocked, they do not queue up in the OS kernel and instead only get a boolean bit set.
+
+
+[1] - back to reentrancy, temporarily blocking signals to ensure reentrant-safe data manipulation is analogous to using a mutex lock to accomplish thread-safe data manipulation.
+
+
+h2. Untrappable, unblockable signals
+
+Regardless of the Ruby runtime state, SIGSTOP still suspend a process immediately (until SIGCONT is received), and cannot be trapped by the Ruby runtime (or any userspace process).
+
+Similarly, SIGKILL terminates a process immediately.  Processes are are given no chance to stop or react to them.  Thus, no blocks registered via Kernel#at_exit, END, nor object finalizers can run upon SIGKILL.
+
+Sending "Ctrl-Z" from a terminal generates SIGTSTP, not SIGSTOP, and SIGTSTP is trappable.
+
+
+h2. Deferred signal handling
+
+POSIX defines a very small number of C functions that are safe to use inside a signal handler[2].  As Ruby programmers have little direct control over which C functions they end up calling, Ruby implementations (at least modern ones) implement deferred signal handling.
+
+Thus Ruby implementations register trap signals using C functions (via sigaction(2)) and dispatch Ruby signal handlers out when the VM/interpreter is in a safe state.
+
+Modern versions of Perl (and presumably other high-level languages) also use deferred signal handling.
+
+Even with deferred signal handling implemented by the language runtime, it is still a good idea to _also_ implement deferred signal handling in your Ruby applications to avoid the same reentrancy pitfalls.
+
+
+[2] - Linux signal(7) manpage is one place that lists these functions
+
+License: GPLv3 or later, http://www.gnu.org/licenses/gpl-3.0.txt
