@@ -1,0 +1,65 @@
+=title USP: Handling excessive CPU Usage within a Process
+=timestamp Mar 27, 2012 at 1:11 AM
+=description Eric presents an example of a process which monitors itself for excessive CPU usage derived from PulseAudio source code.
+=entry
+
+If you've ever had issues with a runaway process eating up CPU time and want to kill it automatically, it's possible to use Process.{get,set}rlimit and a signal handler for SIGXCPU to accomplish this.
+
+The following snippet of code implements an example of a CPU limiter.  This self-contained example aborts itself once CPU utilization reaches 50%.
+
+<pre name="code" class="ruby">
+# Users of older Rubies may want to use Process::RLIMIT_CPU
+# instead of :CPU in this code.
+
+soft, hard = Process.getrlimit(:CPU)
+last_update = Time.now
+max_cpu_time = 5
+
+# this signal handler runs once we've hit max_cpu_time:
+trap(:XCPU) do
+
+ # Calculate CPU utilization based on elapsed (wall clock) time
+ # and max_cpu_time
+ elapsed = Time.now - last_update
+ cpu_usage = max_cpu_time / elapsed
+ puts "CPU utilization: #{"%0.2f" % (cpu_usage * 100)}"
+ if cpu_usage > 0.5 # 50%
+   abort "CPU utilization exceeded 50%"
+ end
+
+ # If we're below our CPU usage threshold, install a new limit based on
+ # current Process.times
+ last_update = Time.now
+ t = Process.times
+ Process.setrlimit(:CPU, max_cpu_time + t.utime.round + t.stime.round, hard)
+
+ # We now return to our regularly scheduled looping ...
+end
+
+
+# Install an initial limit for max_cpu_time using existing process times
+t = Process.times
+Process.setrlimit(:CPU, max_cpu_time + t.utime.round + t.stime.round, hard)
+
+# The signal handler registered for :XCPU will run automatically
+# after the CPU time hits max_cpu_time seconds
+loop do
+ # do something to use the CPU...
+ 100000.times { 1 + 1 }
+
+ # you can change the amount of time slept to influence CPU utilization
+ sleep 0.01
+end
+</pre>
+
+
+I learned this example a few years ago from reading the PulseAudio source code:
+
+<pre name="code" class="shell">
+       $ git clone git://git.0pointer.de/pulseaudio
+       $ $EDITOR src/daemon/cpulimit.c
+</pre>
+
+
+GPLv3 does _not_ cover this message, which is CC0: To the extent possible under law, Eric Wong has waived all copyright and related or neighboring rights to the contents of this message.
+
