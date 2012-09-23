@@ -1,0 +1,74 @@
+=title USP: fcntl: file descriptor flags vs file status flags 
+=timestamp Sun, Sep 23, 2012 at 10:43 AM
+=description Eric explains how to use fcntl system call from Ruby to set various properties of IO objects.
+=entry
+
+The fcntl(2) system call is one several system calls used to get and set internal attributes of file descriptors and open files they point to.
+
+Ruby exposes the IO#fcntl method and provides some useful constants in the Fcntl module of the standard library.
+
+fcntl(2) has several uses, but commonly it is used to get/set two types of flags:
+
+* file descriptor flags
+* file status flags
+
+To a Rubyist, these flags can be thought of as instance variables, with fcntl() providing getter/setter methods for these variables.
+
+As you may remember[1], IO#dup creates a new file descriptor and a new Ruby IO object, but does not create a new file object within the kernel.  This is an important distinction for understanding this post.
+
+[1] - http://mid.gmane.org/20111019025953.GA10010@dcvr.yhbt.net
+
+
+h2. File descriptor flags (Fcntl::F_GETFD, Fcntl::F_SETFD)
+
+File descriptor flags only pertain to one file descriptor (FD) owned by one process.  If an IO object is created with IO#dup, changing the descriptor flags of either the newly-created or original IO object does not affect the other.
+
+To get the file descriptor flags of a given IO object:
+
+<pre name="code" class="ruby">
+        # flags is an Integer (used as a bit mask)
+        flags = io.fcntl(Fcntl::F_GETFD)
+</pre>
+
+To set file descriptor flags of a given IO object:
+
+<pre name="code" class="ruby">
+        io.fcntl(Fcntl::F_SETFD, flags)
+</pre>
+
+There is only one standardized file descriptor flag (which will be covered in a separate post).
+
+
+h2. File status flags (Fcntl::F_GETFD, Fcntl::F_SETFL)
+
+File status flags share more in common with other file attributes (e.g.  file offsets) than file descriptor flags.  Status flags affect the underlying file object in the kernel (and not just the file descriptor).
+
+With IO#dup-ed objects (and thus file descriptors), changing the file status flag on one of the IO objects _will_ affect the other one.
+
+To get the file status flags of a given IO object:
+
+<pre name="code" class="ruby">
+        # flags is an Integer (used as a bit mask)
+        flags = io.fcntl(Fcntl::F_GETFL)
+</pre>
+
+To set the file status flags of a given IO object:
+
+<pre name="code" class="ruby">
+        io.fcntl(Fcntl::F_SETFL, flags)
+</pre>
+
+Since there may be several processes sharing and using an open file simultaneously, setting file status flags can be a relatively expensive operation in the kernel compared to setting file descriptor flags.
+
+Examples of file status flags include _some_ of the flags which may be passed to File.open:
+
+<pre name="code" class="ruby">
+        IO::APPEND, IO::RDWR, IO::RDONLY, IO::WRONLY, IO::NONBLOCK
+</pre>
+
+        (The Fcntl module provides Fcntl::O_* versions of these
+        constants, e.g. Fcntl::O_RDWR)
+
+Some of these flags may be changed with Fcntl::F_SETFL, while others are read-only and only available for informational purposes.
+
+License: GPLv3 or later, http://www.gnu.org/licenses/gpl-3.0.txt
