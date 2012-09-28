@@ -39,7 +39,7 @@ To set file descriptor flags of a given IO object:
 There is only one standardized file descriptor flag (which will be covered in a separate post).
 
 
-h2. File status flags (Fcntl::F_GETFD, Fcntl::F_SETFL)
+h2. File status flags (Fcntl::F_GETFL, Fcntl::F_SETFL)
 
 File status flags share more in common with other file attributes (e.g.  file offsets) than file descriptor flags.  Status flags affect the underlying file object in the kernel (and not just the file descriptor).
 
