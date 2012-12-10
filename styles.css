@@ -168,3 +168,10 @@ div#meta {
   margin:0 auto;
   width:750px;
 }
+
+div#nudge {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  background-color: #F4FA7F;
+}
