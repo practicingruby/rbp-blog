@@ -1,1 +1,2 @@
 engine=rack
+dns_alias='blog.rubybestpractices.com'
