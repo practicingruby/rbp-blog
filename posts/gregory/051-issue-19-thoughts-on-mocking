@@ -4,6 +4,11 @@
 Issue #19 of Practicing Ruby, originally published on January 19, 2011. This
 article is the first in a two part series about using mocks in testing.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/thoughts-on-mocking-1"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on January 19, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 When I originally published my <a

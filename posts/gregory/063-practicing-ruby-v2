@@ -3,6 +3,11 @@
 =description
 I've decided to publicly release 15 more articles from my Practicing Ruby journal. Read on if you want a bunch of links to some of the best Ruby content I've ever written.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "http://practicingruby.com"
+//-->
+</script>
 Keeping with my promise to release content from my <a href="http://practicingruby.com">Practicing Ruby journal</a>, I've put together a massive link dump of articles from its second volume. Please enjoy them and share them with your friends.
 
 * <a href="http://practicingruby.com/articles/shared/tmxmprhfrpwq">Issue 2.1: Ways to load code</a>

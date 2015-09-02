@@ -3,6 +3,11 @@
 =description
 Issue #4 of Practicing Ruby, originally published on November 18, 2010. The focus is on how to build configurable applications that don't suck.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/configurable-applications-2"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on November 18, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>.</i></small>
 
 In Issue #3, we discussed the numerous downsides of mixing configuration code with application code. We then went on to discuss how using YAML files can eliminate many of those problems. But since nothing is perfect, we're back again today to discuss some of the downsides of YAML based configurations as well as some alternative approaches that have their own ups and downs. We'll also touch on some practices that should be followed regardless of how you implement your configuration systems.

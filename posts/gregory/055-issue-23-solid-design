@@ -3,6 +3,11 @@
 =description
 Issue #23 of Practicing Ruby, originally published on February 5, 2011. This article is about apply the SOLID design principles to Ruby programs.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/solid-design-principles"
+//-->
+</script>
 <i>Originally published as part of the first volume of the <a href="http://practicingruby.com">Practicing Ruby newsletter</a> on February 5, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>.</i>
 
 SOLID is a collection of five object oriented design principles that go nicely together. Here's a super brief summary pulled from <a href="http://en.wikipedia.org/wiki/SOLID">the wikipedia page</a> on the topic:

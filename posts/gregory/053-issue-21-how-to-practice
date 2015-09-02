@@ -3,6 +3,11 @@
 =description
 Issue #21 of Practicing Ruby, originally published on January 26, 2011. This article is the first half of a two part series about my way of practicing software development.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/how-to-practice-1"
+//-->
+</script>
 <i>Originally published as part of the first volume of the <a href="http://practicingruby.com">Practicing Ruby newsletter</a> on January 22, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>.</i>
 
 When I was 17 years old, I was asked by an Air Force military training instructor how to get to Carnegie Hall. Before I could even think of why he'd ask me this question, he shouted "Practice! Practice! Practice!" This was followed by an hour long monologue about the finer points of properly making a bed and stowing underwear in a locker, which might explain why my aspirations for a military career started and ended in JROTC. But that cliché of a first line stuck with me, even to this day.

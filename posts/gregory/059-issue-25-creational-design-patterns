@@ -3,6 +3,11 @@
 =description
 Issue #25 of Practicing Ruby Volume 1, originally published on February 22, 2011. This article is about the various creational design patterns originally laid out by the Gang of Four.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/creational-design-patterns"
+//-->
+</script>
 <i>Originally published as part of the first volume of the <a href="http://practicingruby.com">Practicing Ruby newsletter</a> on February 22, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>.</i>
 
 In this issue and the next one, I look at several design patterns laid out by the Gang of Four and explore their relevance to modern day Ruby programming. My goal is not so much to teach the design patterns themselves, but instead give practical examples using real code so that you can consider what their strengths and weaknesses are. 

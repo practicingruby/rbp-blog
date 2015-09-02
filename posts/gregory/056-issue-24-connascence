@@ -3,6 +3,11 @@
 =description
 Issue #24 of Practicing Ruby, originally published on February 11, 2011. This article is about how to use the concept of connascence when reasoning about software design problems.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/connascence"
+//-->
+</script>
 <i>Originally published as part of the first volume of the <a href="http://practicingruby.com">Practicing Ruby newsletter</a> on February 11, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>.</i>
 
 <a href="http://blog.rubybestpractices.com/posts/gregory/055-issue-23-solid-design.html">Last week's massive article on SOLID</a> was inspired by a great talk I saw by Sandi Metz at GoRuCo 2009. Coincidentally, this week's article is inspired by another great talk I saw in 2009, called <a href="http://confreaks.net/videos/77-mwrc2009-the-building-blocks-of-modularity">"The Building Blocks of Modularity".</a> This talk was given by Jim Weirich at MWRC, and if you haven't seen it yet, I urge you to stop what you're doing and head on over to Confreaks right now:

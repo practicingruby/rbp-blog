@@ -3,6 +3,11 @@
 =description
 Issue #7 of Practicing Ruby, originally published on December 3, 2010. This article describes a learning technique I use frequently to help me reflect on my software design and development practices.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/meditations-on-bad-and-good-code-2"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on December 3, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 In Issue #6, you got to see my intentionally bad implementation of Tic Tac Toe. For today, I have promised to show you some better code and the steps I took to get there. But before we move forward, let's take a quick look back at where we started.

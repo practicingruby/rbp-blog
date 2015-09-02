@@ -3,6 +3,11 @@
 =description
 Issue #10.5 of Practicing Ruby, originally published on December 15, 2010. This issue adds a bit more context to what was discussed in Issue #10.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/uses-for-modules-3a"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on December 15, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 In the <a href="http://blog.rubybestpractices.com/posts/gregory/040-issue-10-uses-for-modules.html">last issue</a>, we discussed the use of <tt>extend self</tt> in great detail, but neglected to cover a pair of alternatives that seem on the surface to be functionally equivalent. While I don't want to spend too much time rehashing an old topic, I want to at least provide an example of each approach and comment on their quirks.

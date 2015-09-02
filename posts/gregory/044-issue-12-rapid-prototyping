@@ -3,6 +3,11 @@
 =description
 Issue #12 of Practicing Ruby, originally published on December 21, 2010. This issue discusses how to use Ruby for coding up quick proof-of-concept prototypes.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/rapid-prototyping"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on December 21, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 Ruby makes it easy to quickly put together a proof-of-concept for almost any kind of project, as long as you have some experience in rapid application development. In this article, I will go over how I build prototypes, sharing the tricks that have worked well for me.

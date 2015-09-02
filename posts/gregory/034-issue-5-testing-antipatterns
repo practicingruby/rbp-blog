@@ -3,6 +3,11 @@
 =description
 Issue #5 of Practicing Ruby, originally published on November 25, 2010. This article covers various alternatives to testing private methods explicitly in your unit tests.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/testing-private-methods"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on November 25, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 Ruby has been described as having a test-obsessed culture. In many ways, this is a key strength of our community, as it often leads to producing better, more reliable software. Unfortunately, Ruby developers often focus more on the quantity of tests through metrics such as code coverage than they do on the quality of the tests they're writing. 

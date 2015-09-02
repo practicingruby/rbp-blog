@@ -4,6 +4,11 @@
 Issue #10 of Practicing Ruby, originally published on December 14, 2010. This
 article was the third in a four part series on modules, and what you can use them for. 
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/uses-for-modules-3"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on December 14, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 In the last two issues, we covered mixins and namespacing, two of the most common uses for modules. In the second half of this series, we'll look at some other ways to use modules that are not quite so obvious.

@@ -3,6 +3,11 @@
 =description
 Issue #8 of Practicing Ruby, originally published on December 8, 2010. This article was the start of a four part series on modules, and what you can use them for. 
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/uses-for-modules-1"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on December 8, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 Modules are part of what makes Ruby's design beautiful. However, since they do not have a direct analogy in any mainstream programming language, it is easy to get a bit confused about what they should be used for. While most folks quickly encounter at least some of their use cases, typically only very experienced Ruby developers know their true versatilty.

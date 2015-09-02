@@ -4,6 +4,11 @@
 Issue #14 of Practicing Ruby, originally published on December 28, 2010. This
 article is the first in a two part series about duck typing.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/duck-typing-in-practice-1"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on December 21, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 Type systems are a fundamental part of every programming language. In fact, the way a language designer approaches typing goes a long way towards outlining the way that thoughts are expressed in that language.

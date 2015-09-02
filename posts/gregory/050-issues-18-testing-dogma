@@ -3,6 +3,11 @@
 =description
 Issue #18 of Practicing Ruby, originally published on January 14, 2011. This article is a small rant about TDD practices.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/dirty-testing-secrets"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on January 14, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 Today I have a small rant about the test obsessed culture of Ruby. This area in particular is one in which the incredible enthusiasm surrounding the methodology seems to have outpaced the individual practitioner's ability to evaluate its utility. I'm not just talking about beginners here, but seasoned professionals as well. The sheer volume of rapidly changing testing tools and techniques is an indicator that we're nowhere near convergence, but that doesn't stop many from describing automated testing, particularly in the _Behavior Driven Development_ style, as if it were some sort of magic bullet. It isn't.

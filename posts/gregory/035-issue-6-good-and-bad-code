@@ -3,6 +3,11 @@
 =description
 Issue #6 of Practicing Ruby, originally published on December 1, 2010. This article describes a learning technique I use frequently to help me reflect on my software design and development practices.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/meditations-on-bad-and-good-code-1"
+//-->
+</script>
 <small><i>Originally published as part of the Practicing Ruby newsletter on December 1, 2010. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Ruby Mendicant University</a>. You should <a href="http://twitter.com/seacreature">follow @seacreature on twitter</a> if you want to keep up with my more recent projects.</i></small>
 
 In this issue and the next one, I'd like to demonstrate one of my favorite learning exercises while inviting you to follow along at home. It's something I usually do while teaching in a live, one-on-one setting, but I think we can adapt it for a broader audience and still get a lot out of it.

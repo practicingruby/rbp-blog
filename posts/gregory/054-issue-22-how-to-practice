@@ -3,6 +3,11 @@
 =description
 Issue #22 of Practicing Ruby, originally published on January 28, 2011. This article is the second half of a two part series about my way of practicing software development.
 =entry
+<script type="text/javascript">
+<!--
+window.location = "https://practicingruby.com/articles/how-to-practice-2"
+//-->
+</script>
 <i>Originally published as part of the first volume of the <a href="http://practicingruby.com">Practicing Ruby newsletter</a> on January 28, 2011. Most of these issues draw inspiration from discussions and teaching sessions at my free online school, <a href="http://university.rubymendicant.com">Mendicant University</a>.</i>
 
 <b>NOTE: I usually edit these articles before posting on the blog to avoid temporal references such as "today" or "this week", because it can get confusing due to the fact that these articles were originally published many months ago. But for this particular issue, it seemed like a good idea to keep those references intact. Just keep in mind that all of this is written in the context of January 2011, not September 2011.</b>
