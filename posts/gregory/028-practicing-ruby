@@ -3,6 +3,12 @@
 =description
 My work with students at Ruby Mendicant University over the last several months has taught me a ton about what topics are stumbling points for intermediate Ruby developers.  In an effort to help support the ongoing operations of RMU while simultaneously helping others learn, I'm launching an inexpensive bi-weekly newsletter.  
 =entry
+<script type="text/javascript">
+<!--
+window.location = "http://practicingruby.com"
+//-->
+</script>
+
 <i>Welcome, Hacker News folks.  If you find the following project worthwhile, I'd really appreciate an "up vote":http://news.ycombinator.com/item?id=1883108 so that I can reach a broader audience.  Please read a bit about "Ruby Mendicant University":http://blog.rubybestpractices.com/posts/gregory/025-ruby-mendicant-university.html to see what cause this goes to support.</i>
 
 Since the first Ruby Mendicant University session began in August, I've interacted with and mentored roughly 50 students.  The fascinating thing is that despite the wide gradient in skill levels we see at RMU, there are many common obstacles that trip up the majority of students attending our sessions.  
